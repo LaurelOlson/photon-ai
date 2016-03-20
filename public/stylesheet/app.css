@@ -23,30 +23,6 @@ body:before {
   width: 100%;
   z-index: 9999; }
 
-.container {
-  position: relative; }
-
-.container > div {
-  position: absolute; }
-
-.container .layer1 {
-  z-index: 1;
-  background-color: red;
-  height: 150px;
-  width: 150px; }
-
-.container .layer2 {
-  z-index: 2;
-  background-color: green;
-  height: 100px;
-  width: 100px; }
-
-.container .layer3 {
-  z-index: 3;
-  background-color: blue;
-  height: 50px;
-  width: 50px; }
-
 body {
   margin: 0;
   max-width: % 100;
@@ -57,21 +33,6 @@ body {
     clear: both;
     content: "";
     display: table; }
-
-article {
-  background-color: cyan; }
-
-.emptyHolder {
-  height: 100%;
-  width: 100%;
-  background-color: yellow;
-  position: fixed;
-  top: 0px;
-  display: none; }
-
-.images > img {
-  height: auto;
-  width: 100%; }
 
 aside {
   color: blue;
@@ -87,3 +48,37 @@ aside {
   transition: all 2s ease-out; }
   aside:last-child {
     margin-right: 0; }
+
+.container {
+  position: relative; }
+
+.images > img {
+  height: auto;
+  width: 100%; }
+
+.container > div {
+  position: absolute; }
+
+.container .layer1 {
+  z-index: 1;
+  background-color: lightyellow;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; }
+
+.container .layer2 {
+  z-index: 2;
+  background-color: green;
+  width: 100%;
+  height: auto; }
+
+.container .layer3 {
+  z-index: 3;
+  background-color: lightblue;
+  height: 70px;
+  width: 70px; }
+
+.is-top {
+  z-index: 52; }

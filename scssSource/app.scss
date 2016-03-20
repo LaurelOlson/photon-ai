@@ -28,66 +28,14 @@
 // }
 
 
-// theme variables
+// theme variables ////////////////////////////////////////////////
 
-// base
-
-// layout
-.container {
-  position: relative;
-}
-
-// module
-.container>div {
-  position: absolute;
-}
-.container .layer1 {
-  z-index: 1;
-  background-color: red;
-  @include size(150px);
-}
-.container .layer2 {
-  z-index: 2;
-  background-color: green;
-  @include size(100px);
-}
-.container .layer3 {
-  z-index: 3;
-  background-color: blue;
-  @include size(50px);
-}
-
-// state
-
-
-
+// base ///////////////////////////////////////////////////////////
 body {
   margin: 0;
   @include outer-container;
   font-family: $helvetica;
 }
-
-article {
-  background-color: cyan;
-}
-
-.emptyHolder {
-  @include size(100%);
-  background-color: yellow;
-  position: fixed;
-  top: 0px;
-  display: none;
-}
-
-.images {
-  // @include clearfix; //NOTE probably not be necessary until desktop version
-}
-
-.images > img {
-  height: auto;
-  width: 100%;
-}
-
 aside {
   color: blue;
   background-color: pink;
@@ -97,4 +45,46 @@ aside {
   top: 0px;
   @include span-columns(4);
   transition: all 2s ease-out;
+}
+
+// layout /////////////////////////////////////////////////////////
+.container {
+  position: relative;
+}
+
+// module /////////////////////////////////////////////////////////
+
+.images > img {
+  height: auto;
+  width: 100%;
+}
+.container > div {
+  position: absolute;
+}
+
+.container .layer1 {
+  z-index: 1;
+  background-color: lightyellow;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+.container .layer2 {
+  z-index: 2;
+  background-color: green;
+  width: 100%;
+  height: auto;
+}
+.container .layer3 {
+  z-index: 3;
+  // below is for construction and testing
+  background-color: lightblue;
+  @include size(70px);
+}
+
+// state //////////////////////////////////////////////////////////
+.is-top {
+  z-index: 52;
 }
