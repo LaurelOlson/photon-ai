@@ -23,6 +23,30 @@ body:before {
   width: 100%;
   z-index: 9999; }
 
+.container {
+  position: relative; }
+
+.container > div {
+  position: absolute; }
+
+.container .layer1 {
+  z-index: 1;
+  background-color: red;
+  height: 150px;
+  width: 150px; }
+
+.container .layer2 {
+  z-index: 2;
+  background-color: green;
+  height: 100px;
+  width: 100px; }
+
+.container .layer3 {
+  z-index: 3;
+  background-color: blue;
+  height: 50px;
+  width: 50px; }
+
 body {
   margin: 0;
   max-width: % 100;
@@ -35,9 +59,7 @@ body {
     display: table; }
 
 article {
-  background-color: cyan;
-  width: 100%;
-  min-height: 100%; }
+  background-color: cyan; }
 
 .emptyHolder {
   height: 100%;

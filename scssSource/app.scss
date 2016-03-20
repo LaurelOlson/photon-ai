@@ -1,6 +1,66 @@
 @import 'bourbon/bourbon';
 @import 'neat/neat';
 
+// ## Base example
+// - html, body, form { margin: 0; padding: 0; }
+// - input[type=text] { border: 1px solid #999; }
+// - a { color: #039; }
+// - a:hover { color: #03C; }
+//
+// ## Layout example
+// - html, body, form { margin: 0; padding: 0; }
+// - input[type=text] { border: 1px solid #999; }
+// - a { color: #039; }
+// - a:hover { color: #03C; }
+//
+// ## Module example
+// .module > h2 {
+//     padding: 5px;
+// }
+// .module span {
+//     padding: 5px;
+// }
+//
+// ## State example
+// .is-tab-active {
+//     background-color: white;
+//     color: black;
+// }
+
+
+// theme variables
+
+// base
+
+// layout
+.container {
+  position: relative;
+}
+
+// module
+.container>div {
+  position: absolute;
+}
+.container .layer1 {
+  z-index: 1;
+  background-color: red;
+  @include size(150px);
+}
+.container .layer2 {
+  z-index: 2;
+  background-color: green;
+  @include size(100px);
+}
+.container .layer3 {
+  z-index: 3;
+  background-color: blue;
+  @include size(50px);
+}
+
+// state
+
+
+
 body {
   margin: 0;
   @include outer-container;
@@ -9,9 +69,6 @@ body {
 
 article {
   background-color: cyan;
-  width: 100%;
-  min-height: 100%;
-
 }
 
 .emptyHolder {
