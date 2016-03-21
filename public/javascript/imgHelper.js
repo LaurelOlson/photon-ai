@@ -1,7 +1,7 @@
 // NOTE auto-render currently hardwired to the .images class
 // get a random placeholder image url: genURL(); default can be configured
 // get a specific image size: genURL(x, y);
-// attach an image to DOM: render();
+// attach an image to DOM: render(); render(x, y);
 // attach multiple images to DOM: multiRender(howManyTimes); default 12 times
 
 var imgHelper = (function() {
@@ -32,8 +32,13 @@ var imgHelper = (function() {
   }
 
   // UI
-  function render() {
-    var imgTag = $('<img>').attr('src', genURL());
+  function render(x, y) {
+    var imgTag;
+    if (typeof x == 'number' && typeof y == 'number'){
+      imgTag = $('<img>').attr('src', genURL(x, y));
+    } else {
+      imgTag = $('<img>').attr('src', genURL());
+    }
     $imgDiv.append(imgTag);
   }
   function multiRender(times){
