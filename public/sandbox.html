@@ -53,16 +53,8 @@
           <li>item 01</li>
           <li>item 02</li>
           <li>item 03</li>
-          <li>item 04</li>
-          <li>item 05</li>
-          <li>item 06</li>
-          <li>item 07</li>
-          <li>item 08</li>
-          <li>item 09</li>
-          <li>item 10</li>
-          <li>item 11</li>
-          <li>item 12</li>
         </ul>
+        <img src="images/8.jpg" />
       </div>
     </aside>
   </section>
@@ -79,6 +71,9 @@
           var img = $('<img>').attr('src', 'images/' + (i+1) + '.jpg');
           $target.append(img);
         }
+      });
+      $('.layer3').on('click', function(){
+        $(this).toggleClass('is-fullscreen');
       });
     }());
   </script>

@@ -1,18 +1,36 @@
 @import 'bourbon/bourbon';
 @import 'neat/neat';
 
+// theme variables ////////////////////////////////////////////////
+
+// base ///////////////////////////////////////////////////////////
 // ## Base example
 // - html, body, form { margin: 0; padding: 0; }
 // - input[type=text] { border: 1px solid #999; }
 // - a { color: #039; }
 // - a:hover { color: #03C; }
-//
+body {
+  margin: 0;
+  @include outer-container;
+  font-family: $helvetica;
+}
+
+// layout /////////////////////////////////////////////////////////
 // ## Layout example
 // - html, body, form { margin: 0; padding: 0; }
 // - input[type=text] { border: 1px solid #999; }
 // - a { color: #039; }
 // - a:hover { color: #03C; }
-//
+aside {
+  background-color: #f1d3f7; //purple lavender
+  height: 100vh;
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  @include span-columns(5);
+}
+
+// module /////////////////////////////////////////////////////////
 // ## Module example
 // .module > h2 {
 //     padding: 5px;
@@ -20,71 +38,57 @@
 // .module span {
 //     padding: 5px;
 // }
-//
+.images > img {
+  height: auto;
+  width: 100%;
+}
+
+.menu > img {
+  height: auto;
+  width: 100%;
+}
+
+.container {
+  position: relative;
+  div {
+    position: absolute;
+  }
+  .layer1 { // background
+    position: fixed;
+    z-index: 1;
+    background-color: #8ef4cc; //green tint blue
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .layer2 {
+    z-index: 2;
+    background-color: green;
+    width: 100%;
+    height: auto;
+  }
+  .layer3 {
+    position: fixed;
+    z-index: 3;
+    // below is for construction and testing
+    background-color: #91bef4; // blue sky
+    @include size(60px);
+    transition: all 0.4s ease-out;
+  }
+  .is-fullscreen {
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+// state //////////////////////////////////////////////////////////
 // ## State example
 // .is-tab-active {
 //     background-color: white;
 //     color: black;
 // }
-
-
-// theme variables ////////////////////////////////////////////////
-
-// base ///////////////////////////////////////////////////////////
-body {
-  margin: 0;
-  @include outer-container;
-  font-family: $helvetica;
-}
-aside {
-  color: blue;
-  background-color: pink;
-  height: 100%;
-  position: fixed;
-  right: 0px;
-  top: 0px;
-  @include span-columns(4);
-  transition: all 2s ease-out;
-}
-
-// layout /////////////////////////////////////////////////////////
-.container {
-  position: relative;
-}
-
-// module /////////////////////////////////////////////////////////
-
-.images > img {
-  height: auto;
-  width: 100%;
-}
-.container > div {
-  position: absolute;
-}
-
-.container .layer1 {
-  z-index: 1;
-  background-color: lightyellow;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-.container .layer2 {
-  z-index: 2;
-  background-color: green;
-  width: 100%;
-  height: auto;
-}
-.container .layer3 {
-  z-index: 3;
-  // below is for construction and testing
-  background-color: lightblue;
-  @include size(70px);
-}
-
-// state //////////////////////////////////////////////////////////
 .is-top {
   z-index: 52;
 }
