@@ -36,14 +36,15 @@ body {
 
 aside {
   background-color: #f1d3f7;
-  height: 100vh;
+  height: 120vh;
   position: fixed;
   right: 0px;
   top: 0px;
   float: left;
   display: block;
   margin-right: 2.35765%;
-  width: 40.29137%; }
+  width: 40.29137%;
+  overflow: hidden; }
   aside:last-child {
     margin-right: 0; }
 

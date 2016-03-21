@@ -23,11 +23,12 @@ body {
 // - a:hover { color: #03C; }
 aside {
   background-color: #f1d3f7; //purple lavender
-  height: 100vh;
+  height: 120vh; // > 100% to compensate for mobile scrolling
   position: fixed;
   right: 0px;
   top: 0px;
   @include span-columns(5);
+  overflow: hidden;
 }
 
 // module /////////////////////////////////////////////////////////
