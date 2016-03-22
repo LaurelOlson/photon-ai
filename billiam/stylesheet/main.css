@@ -23,32 +23,26 @@ body:before {
   width: 100%;
   z-index: 9999; }
 
+html,
 body {
   font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
-  margin: 0;
-  padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden; }
-  body .has-grid {
-    max-width: % 100;
-    margin-left: auto;
-    margin-right: auto; }
-    body .has-grid::after {
-      clear: both;
-      content: "";
-      display: table; }
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  background-color: #222; }
 
-.layer.l1 {
+.layer.one {
   background: #dc6c5f; }
 
-.layer.l2 {
+.layer.two {
   background: #95dc84; }
 
-.layer.l3 {
+.layer.three {
   background: #64b9d2; }
 
-.layer.l4 {
+.layer.four {
   background: #9999ff; }
 
 .is-top {
