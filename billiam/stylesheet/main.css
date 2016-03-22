@@ -4,40 +4,35 @@ body {
   position: relative;
   overflow-x: hidden; }
 
-aside,
-nav {
-  position: fixed;
-  height: 100%;
-  width: 99%;
-  top: 0;
-  transition: all 0.4s ease; }
-
-nav {
-  right: 0;
-  z-index: 4;
-  background: #95dc84;
-  box-shadow: -1px 0px 6px 0px rgba(0, 0, 0, 0.2); }
-  nav.hidden {
-    transform: translateX(99%); }
-  nav.background {
+@media screen and (max-width: 767px) {
+  nav {
+    position: fixed;
+    height: 100%;
+    width: 99%;
+    top: 0;
+    transition: all 0.4s ease; }
+  nav {
+    right: 0;
+    z-index: 4;
+    background: #95dc84;
+    box-shadow: -1px 0px 6px 0px rgba(0, 0, 0, 0.2); }
+    nav.hidden {
+      transform: translateX(99%); }
+    nav.background {
+      width: 100%;
+      background: #1f9b23;
+      left: 99%;
+      z-index: 1; }
+      nav.background.hidden {
+        transform: translateX(-100%); }
+  main {
+    height: 100%;
     width: 100%;
-    background: #1f9b23;
-    left: 99%;
-    z-index: 1; }
-    nav.background.hidden {
-      transform: translateX(-100%); }
-
-main {
-  transition: all 0.4s ease;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  z-index: 2; }
-  main.active {
-    z-index: 5; }
-  main img {
+    position: absolute;
+    z-index: 2; }
+  article picture img {
     height: auto;
-    max-width: 100%; }
+    max-width: 100%; } }
 
 .flex-parent {
   -webkit-box-align: center;

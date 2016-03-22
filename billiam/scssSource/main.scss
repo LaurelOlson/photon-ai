@@ -3,7 +3,9 @@
 
 
 // theme variables ////////////////////////////////////////////////
-
+$mobileBreakpoint: 767px;
+$tabletBreakpoint: 959px;
+$desktopBreakpoint: 1179px;
 // base ///////////////////////////////////////////////////////////
 // ## Base example
 // - html, body, form { margin: 0; padding: 0; }
@@ -21,49 +23,6 @@ body {
   overflow-x: hidden;
 }
 
-aside,
-nav {
-  position: fixed;
-  height: 100%;
-  width: 99%;
-  top: 0;
-  transition: all 0.4s ease;
-}
-
-nav { // the main menu that comes in from the right
-  right: 0;
-  z-index: 4;
-  background: #95dc84;
-  box-shadow: -1px 0px 6px 0px rgba(0,0,0,0.2);
-  &.hidden{
-    transform: translateX(99%);
-  }
-  &.background{
-    width: 100%;
-    background: #1f9b23;
-    left: 99%;
-    z-index: 1;
-    &.hidden{
-      transform: translateX(-100%);
-
-    }
-  }
-}
-
-main {
-  transition: all 0.4s ease;
-  @include size(100%);
-  position: absolute;
-  z-index: 2;
-  &.active {
-    z-index: 5;
-  }
-
-  img {
-    height: auto;
-    max-width: 100%;
-  }
-}
 // layout /////////////////////////////////////////////////////////
 // ## Layout example
 // #header, #article, #footer {
@@ -74,15 +33,56 @@ main {
 //     border: solid #CCC;
 //     border-width: 1px 0 0;
 // }
-.flex-parent {
-  @include align-items(center);
-  @include display(flex);
-  @include flex-direction(column);
-  @include justify-content(center);
-  .flex-child {
-    @include flex(1);
+@media screen and (max-width: $mobileBreakpoint) {
+  nav {
+    position: fixed;
+    height: 100%;
+    width: 99%;
+    top: 0;
+    transition: all 0.4s ease;
+  }
+
+  nav { // the main menu that comes in from the right
+    right: 0;
+    z-index: 4;
+    background: #95dc84;
+    box-shadow: -1px 0px 6px 0px rgba(0,0,0,0.2);
+    &.hidden{
+      transform: translateX(99%);
+    }
+    &.background{
+      width: 100%;
+      background: #1f9b23;
+      left: 99%;
+      z-index: 1;
+      &.hidden{
+        transform: translateX(-100%);
+      }
+    }
+  }
+
+  main {
+    @include size(100%);
+    position: absolute;
+    z-index: 2;
+  }
+
+  article {
+    .thumbnail{
+
+    }
+    small {
+
+    }
+    picture {
+      img {
+        height: auto;
+        max-width: 100%;
+      }
+    }
   }
 }
+
 
 
 
@@ -94,6 +94,17 @@ main {
 // .module span {
 //     padding: 5px;
 // }
+
+.flex-parent {
+  @include align-items(center);
+  @include display(flex);
+  @include flex-direction(column);
+  @include justify-content(center);
+  .flex-child {
+    @include flex(1);
+  }
+}
+
 .thumbnail {
 
 }
