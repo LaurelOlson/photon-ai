@@ -2,60 +2,84 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>testing app</title>
   <link rel="stylesheet" href="stylesheet/main.css">
   <!-- begin main js -->
   <script src="/javascript/jquery-2.2.2.js"></script>
-  <script src="/javascript/imgHelper.js"></script>
-  <script src="/javascript/eventBus.js"></script>
+  <script src="/javascript/imghelper.js"></script>
+  <script src="/javascript/eventbus.js"></script>
   <script src="/javascript/touch.js"></script>
-  <script src="/javascript/app.js"></script>
+  <script src="/javascript/photon.js"></script>
   <!-- end main js -->
 </head>
 <body>
 
-  <!-- <aside>
-    left fixed menu
-  </aside> -->
   <nav>
-    <header>
-      header
+    <header class="flex-parent">
+      <p class="flex-child">
+        header
+      </p>
     </header>
-    <section>
-      section
+    <section class="flex-parent">
+      <p class="flex-child">
+        section
+      </p>
+      <p class="flex-child">
+        section
+      </p>
+      <p class="flex-child">
+        section
+      </p>
     </section>
-    <footer>
-      footer
+    <footer class="flex-parent">
+      <p class="flex-child">
+        footer
+      </p>
     </footer>
     <script>
+      // temp slider controls
       (function(){
         eventBus.on('leftSwipe', function(){
           $('nav').removeClass('hidden');
+          $('nav.background').removeClass('hidden');
         });
         eventBus.on('rightSwipe', function(){
           $('nav').addClass('hidden');
+          $('nav.background').addClass('hidden');
         });
       }());
     </script>
   </nav>
+  <nav class="background"></nav>
 
   <main>
-    <script>
-      // image element constructor
-      (function(){
-        var howmany = 3;
-        for (var i = 0; i < howmany; i++){constructor();}
-        function constructor(){
-          var $img = $('<article>');
-          var $thumb = $img.append($('<div>').addClass('thumbnail'));
-          $thumb.append($('<img>').attr('src', 'http://placehold.it/400x400'))
-          $img.append($('<small>').text('image description description description'));
-          var $pic = $img.append($('<picture>'));
-          $pic.append($('<img>').attr('src', '/images/1.jpg'));
-          $('main').append($img);
-        }
-      }());
-    </script>
+
+
+    <article>
+      <div class="thumbnail flex-parent">
+        <img src="http://placehold.it/400x400">
+      </div>
+      <small>
+        image description description description
+      </small>
+      <picture>
+        <img src="/images/1.jpg">
+      </picture>
+    </article>
+    <article>
+      <div class="thumbnail flex-parent">
+        <img src="http://placehold.it/400x400">
+      </div>
+      <small>
+        image description description description
+      </small>
+      <picture>
+        <img src="/images/2.jpg">
+      </picture>
+    </article>
+
   </main>
 
 <!-- content goes above here -->

@@ -10,9 +10,9 @@
 // - input[type=text] { border: 1px solid #999; }
 // - a { color: #039; }
 // - a:hover { color: #03C; }
-* {
-  border: 1px solid #ccc;
-}
+// * {
+//   border: 1px solid #ccc; // for construction and debugging purposes
+// }
 
 body {
   font-family: $helvetica;
@@ -25,36 +25,38 @@ aside,
 nav {
   position: fixed;
   height: 100%;
-  width: 97%;
+  width: 99%;
   top: 0;
-  transition: all 0.6s ease-out;
+  transition: all 0.4s ease;
 }
 
-aside {
-  left: 0;
-  z-index: 3;
-  background: #64b9d2;
-  &.hidden{
-    transform: translateX(-99%);
-  }
-}
-
-nav {
+nav { // the main menu that comes in from the right
   right: 0;
   z-index: 4;
   background: #95dc84;
+  box-shadow: -1px 0px 6px 0px rgba(0,0,0,0.2);
   &.hidden{
     transform: translateX(99%);
+  }
+  &.background{
+    width: 100%;
+    background: #1f9b23;
+    left: 99%;
+    z-index: 1;
+    &.hidden{
+      transform: translateX(-100%);
+
+    }
   }
 }
 
 main {
+  transition: all 0.4s ease;
   @include size(100%);
+  position: absolute;
+  z-index: 2;
   &.active {
     z-index: 5;
-  }
-  &.inactive {
-    z-index: 2;
   }
 
   img {
@@ -72,12 +74,12 @@ main {
 //     border: solid #CCC;
 //     border-width: 1px 0 0;
 // }
-.flex-container {
-  @include align-items(stretch);
+.flex-parent {
+  @include align-items(center);
   @include display(flex);
-  @include flex-direction(row);
-  @include justify-content(flex-start);
-  .flex-item {
+  @include flex-direction(column);
+  @include justify-content(center);
+  .flex-child {
     @include flex(1);
   }
 }
@@ -92,16 +94,8 @@ main {
 // .module span {
 //     padding: 5px;
 // }
-.layer {
-  &.one{
-    background: #dc6c5f;
-  }
-  &.two{
-    background: #95dc84;
-  }
-  &.three{
-    background: #64b9d2;
-  }
+.thumbnail {
+
 }
 
 // state //////////////////////////////////////////////////////////
@@ -116,7 +110,13 @@ main {
 
 // media //////////////////////////////////////////////////////////
 @media screen and (max-width: 768px) {
-  img {
-    width: 100%;
-  }
+
+}
+
+@media screen and (min-width: 769px) {
+
+}
+
+@media screen and (min-width: 980px) {
+
 }

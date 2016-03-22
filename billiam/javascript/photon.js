@@ -8,8 +8,8 @@
   // touch.js emits a swipe event and swipe html target ('leftSwipe', <p>oeu</p>)
 
 
-// myApp main
-var myApp = (function() {
+// photon main
+var photon = (function() {
 
   function placehold (){
     console.log('this is a private placeholder template!');
@@ -18,7 +18,19 @@ var myApp = (function() {
   function initialise (){
     console.log('myApp is initialised');
   }
-  
+
+  function ImageArticle(imgObj){
+    // var sampleInputObj = {
+    //   thumbURL: 'http://placehold.it/400x400',
+    //   imgURL: 'http://placehold.it/1200x800',
+    //
+    // };
+    var thumbURL = imgObj.thumbURL;
+    var imgURL = imgObj.imgURL;
+  }
+
+
+
   // API
   return {
     init: initialise
