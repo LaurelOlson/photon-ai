@@ -27,10 +27,10 @@ var eventBus = (function(){
     console.log(bus);
   }
 
-  var API = {
+  // API
+  return {
     listEvents: listEvents,
     emit: emit,
     on: on
   };
-  return API;
 }());

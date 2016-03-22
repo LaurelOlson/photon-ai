@@ -7,10 +7,10 @@
 
   // config: minimum swipe distance over a given time
   // i.e.: must swipe at least (x || y) pixels under (dur) milliseconds
-  var sensitivityX = 50; // pixels
-  var sensitivityY = 50; // pixels
+  var sensitivityX = 30; // pixels
+  var sensitivityY = 30; // pixels
   var maxDuration = 1000; // milliseconds, set timeout, can't swipe forever..
-  var minDuration = 100;  // milliseconds, below this, it's a tap event
+  var minDuration = 80;  // milliseconds, below this, it's a tap event
   var safetyDuration = 20; // milliseconds, prevent unintentional touches
   var pubsub = eventBus; // your global listener variable
 
@@ -96,18 +96,19 @@
   }
 
   function handleArrowKeys(evt){
+    var msg = 'arrow triggered, no target';
     switch(evt.keyCode){
       case 37:
-        pubsub.emit('leftSwipe', 'arrow, no data');
+        pubsub.emit('leftSwipe', msg);
         break;
       case 39:
-        pubsub.emit('rightSwipe', 'arrow, no data');
+        pubsub.emit('rightSwipe', msg);
         break;
       case 38:
-        pubsub.emit('upSwipe', 'arrow, no data');
+        pubsub.emit('upSwipe', msg);
         break;
       case 40:
-        pubsub.emit('downSwipe', 'arrow, no data');
+        pubsub.emit('downSwipe', msg);
         break;
     }
   }

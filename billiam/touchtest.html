@@ -7,7 +7,7 @@
   <title>testing app</title>
   <!-- begin main js -->
   <script src="/javascript/jquery-2.2.2.js"></script>
-  <script src="/javascript/eventBus.js"></script>
+  <script src="/javascript/eventbus.js"></script>
   <script src="/javascript/touch.js"></script>
   <script src="/javascript/app.js"></script>
   <!-- end main js -->
@@ -19,6 +19,7 @@
 </div>
   <script>
     (function(){
+      document.addEventListener('touchmove', function(evt){evt.preventDefault();}, false);
       var i = 0;
       function logger (text){
         $('#logger').prepend($('<p>').text(i+'. '+text));
@@ -29,6 +30,7 @@
       eventBus.on('rightSwipe', function(){logger('rightSwipe');});
       eventBus.on('upSwipe', function(){logger('upSwipe');});
       eventBus.on('downSwipe', function(){logger('downSwipe');});
+
     }());
   </script>
 </body>

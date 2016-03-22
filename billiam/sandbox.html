@@ -8,9 +8,8 @@
   <link rel="stylesheet" href="stylesheet/app.css">
   <!-- begin main js -->
   <script src="/javascript/jquery-2.2.2.js"></script>
-  <script src="/javascript/eventBus.js"></script>
-  <script src="/javascript/imgHelper.js"></script>
-  <script src="/javascript/mobileSideMenu.js"></script>
+  <script src="/javascript/eventbus.js"></script>
+  <script src="/javascript/imghelper.js"></script>
   <script src="/javascript/touch.js"></script>
   <script src="/javascript/app.js"></script>
   <!-- end main js -->
@@ -76,6 +75,28 @@
         $(this).toggleClass('is-fullscreen');
       });
     }());
+
+    $(function(){
+      document.addEventListener("DOMContentLoaded", cacheDOM);
+
+      var $aside;
+      function cacheDOM(){
+          $aside = $('aside');
+      }
+
+      function hide(){
+        $aside.hide();
+      }
+
+      function show(){
+        $aside.show();
+      }
+
+      // interaction
+      eventBus.on('leftSwipe', show);
+      eventBus.on('rightSwipe', hide);
+
+    });
   </script>
 </body>
 </html>

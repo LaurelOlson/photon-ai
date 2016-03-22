@@ -8,7 +8,6 @@
 
   <!-- begin main js -->
   <script src="/javascript/jquery-2.2.2.js"></script>
-  <script src="/javascript/kontext.js"></script>
   <script src="/javascript/imgHelper.js"></script>
   <script src="/javascript/eventBus.js"></script>
   <script src="/javascript/touch.js"></script>
@@ -17,34 +16,34 @@
 </head>
 <body>
 
-    <div class="kontext">
-      <div class="layer one show">
-        layer one
-      </div>
-      <div class="layer two">
-        layer two
-        <button id="icanhas">i can has pics</button>
-        <div id="images">
-          <!-- auto fill -->
-        </div>
-      </div>
-      <div class="layer three">
-        layer three
-      </div>
-    </div>
+  <nav>
+    <header>
+      header
+    </header>
+    <section>
+      section
+    </section>
+    <footer>
+      footer
+    </footer>
+  </nav>
 
+  <main>
+    <article>
+      <div class="thumbnail">
+        <img src="http://placehold.it/400x400" />
+      </div>
+      <small>
+        lorem ipsum ya ya ya osnat.h,arckd asnud .parcdk eau.h, acr.da,
+      </small>
+      <picture>
+        <img src="/images/1.jpg" />
+      </picture>
+    </article>
+  </main>
+
+<!-- content goes above here -->
 <script>
-  (function(){
-    var k = kontext(document.querySelector('.kontext'));
-    eventBus.on('leftSwipe', function(){k.next();});
-    eventBus.on('rightSwipe', function(){k.prev();});
-  }());
-
-  (function(){
-    $('#icanhas').on('click', function(){
-      imgHelper.multiRender($('#images'));
-    });
-  }());
 </script>
 </body>
 </html>

@@ -1,8 +1,7 @@
-// NOTE auto-render currently hardwired to the .images class
 // get a random placeholder image url: genURL(); default can be configured
 // get a specific image size: genURL(x, y);
-// attach an image to DOM: render(); render(x, y);
-// attach multiple images to DOM: multiRender(howManyTimes); default 12 times
+// attach an image to DOM: render($target); render($target, x, y);
+// attach multiple images to DOM: multiRender($target, howManyTimes); default 12 times
 
 var imgHelper = (function() {
 
@@ -24,9 +23,9 @@ var imgHelper = (function() {
   }
 
   // UI
-  function render(target, x, y) {
-    if (!target){
-      console.log('no target provided to render(target, x, y)');
+  function render($target, x, y) {
+    if (!$target){
+      console.log('no target provided to render($target, x, y)');
       return;
     }
     var imgTag;
@@ -37,14 +36,14 @@ var imgHelper = (function() {
     }
     target.prepend(imgTag);
   }
-  function multiRender(target, times){
-    if (!target){
-      console.log('no target provided to render(target, x, y)');
+  function multiRender($target, times){
+    if (!$target){
+      console.log('no target provided to render($target, x, y)');
       return;
     }
     var standard = times ? times : 12;
     for (var i = 0; i < standard; i++){
-      render(target);
+      render($target);
     }
   }
 
