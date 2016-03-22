@@ -17,8 +17,12 @@ body {
 .layer.three {
   background: #64b9d2; }
 
-.layer.four {
-  background: #9999ff; }
+#images {
+  overflow: scroll;
+  height: 100%;
+  width: 100%; }
+  #images img {
+    max-width: 100%; }
 
 .is-top {
   z-index: 52; }

@@ -6,18 +6,10 @@
 
 var imgHelper = (function() {
 
-  document.addEventListener("DOMContentLoaded", cacheDOM);
-
   // config
   var sourceURL = 'http://placehold.it/';
   var max = 1440;
   var min = 480;
-
-  // cache DOM
-  var $imgDiv;
-  function cacheDOM (){
-    $imgDiv = $('.images');
-  }
 
   // helper
   function randAxis(){
@@ -32,19 +24,27 @@ var imgHelper = (function() {
   }
 
   // UI
-  function render(x, y) {
+  function render(target, x, y) {
+    if (!target){
+      console.log('no target provided to render(target, x, y)');
+      return;
+    }
     var imgTag;
     if (typeof x == 'number' && typeof y == 'number'){
       imgTag = $('<img>').attr('src', genURL(x, y));
     } else {
       imgTag = $('<img>').attr('src', genURL());
     }
-    $imgDiv.append(imgTag);
+    target.prepend(imgTag);
   }
-  function multiRender(times){
+  function multiRender(target, times){
+    if (!target){
+      console.log('no target provided to render(target, x, y)');
+      return;
+    }
     var standard = times ? times : 12;
     for (var i = 0; i < standard; i++){
-      render();
+      render(target);
     }
   }
 

@@ -23,6 +23,10 @@
       </div>
       <div class="layer two">
         layer two
+        <button id="icanhas">i can has pics</button>
+        <div id="images">
+          <!-- auto fill -->
+        </div>
       </div>
       <div class="layer three">
         layer three
@@ -34,6 +38,12 @@
     var k = kontext(document.querySelector('.kontext'));
     eventBus.on('leftSwipe', function(){k.next();});
     eventBus.on('rightSwipe', function(){k.prev();});
+  }());
+
+  (function(){
+    $('#icanhas').on('click', function(){
+      imgHelper.multiRender($('#images'));
+    });
   }());
 </script>
 </body>

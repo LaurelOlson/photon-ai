@@ -31,12 +31,16 @@ body {
   &.three{
     background: #64b9d2;
   }
-  &.four{
-    background: #9999ff;
-  }
 }
 
-
+#images {
+  overflow: scroll;
+  @include size(100%);
+  // border: 2px solid black;
+  img {
+    max-width: 100%;
+  }
+}
 // layout /////////////////////////////////////////////////////////
 // ## Layout example
 // #header, #article, #footer {
