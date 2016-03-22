@@ -60,6 +60,7 @@
   }
 
   function handleTouchMove(evt){
+    evt.preventDefault(); // on mobile it prevents window scrolling
     if (!newTouchFlag){
       return;
     }

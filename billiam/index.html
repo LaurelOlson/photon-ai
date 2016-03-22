@@ -3,66 +3,38 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>testing app</title>
-  <link rel="stylesheet" href="stylesheet/app.css">
+  <link rel="stylesheet" href="stylesheet/main.css">
+  <link rel="stylesheet" href="stylesheet/kontext.css">
+
   <!-- begin main js -->
   <script src="/javascript/jquery-2.2.2.js"></script>
-  <script src="/javascript/eventBus.js"></script>
+  <script src="/javascript/kontext.js"></script>
   <script src="/javascript/imgHelper.js"></script>
-  <script src="/javascript/mobileSideMenu.js"></script>
+  <script src="/javascript/eventBus.js"></script>
   <script src="/javascript/touch.js"></script>
   <script src="/javascript/app.js"></script>
   <!-- end main js -->
 </head>
 <body>
-  <section class="is-mobile">
-    <article>
-      <div class="emptyHolder">
-        the page is empty (i.e. no images)
+
+    <div class="kontext">
+      <div class="layer l1 show">
+        layer one
       </div>
-      <div class="images">
-        <!-- imgHelper.js hard-wired to render to this class -->
+      <div class="layer l2">
+        layer two
       </div>
-    </article>
-    <aside>
-      <div class="menu">
-        <small>placeholder needs internet connection</small>
-        <button id="imgGen">placeholder</button>
-        <small>load pics from server's own folder</small>
-        <button id="imgLoad">load pics</button>
-        <small>startover? nuke it</small>
-        <button id="nuke">nuke</button>
-        <ul>
-          <li>item 01</li>
-          <li>item 02</li>
-          <li>item 03</li>
-          <li>item 04</li>
-          <li>item 05</li>
-          <li>item 06</li>
-          <li>item 07</li>
-          <li>item 08</li>
-          <li>item 09</li>
-          <li>item 10</li>
-          <li>item 11</li>
-          <li>item 12</li>
-        </ul>
+      <div class="layer l3">
+        layer three
       </div>
-    </aside>
-  </section>
-  <!-- script used for building and debugging -->
-  <script>
-    (function(){
-      var $target = $('.images');
-      $('#nuke').on('click', function(){
-        $target.children().remove();
-      });
-      $('#imgGen').on('click', function(){imgHelper.multiRender();});
-      $('#imgLoad').on('click', function(){
-        for (var i = 0; i < 9; i++){
-          var img = $('<img>').attr('src', 'images/' + (i+1) + '.jpg');
-          $target.append(img);
-        }
-      });
-    }());
-  </script>
+    </div>
+
+<script>
+  (function(){
+    var k = kontext(document.querySelector('.kontext'));
+    eventBus.on('leftSwipe', function(){k.next();});
+    eventBus.on('rightSwipe', function(){k.prev();});
+  }());
+</script>
 </body>
 </html>
