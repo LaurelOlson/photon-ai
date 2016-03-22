@@ -14,22 +14,52 @@
   border: 1px solid #ccc;
 }
 
-html,
 body {
   font-family: $helvetica;
   margin: 0;
+  position: relative;
+  overflow-x: hidden;
 }
 
-img {
-  max-height: 100%;
-  max-width: 100%;
+aside,
+nav {
+  position: fixed;
+  height: 100%;
+  width: 97%;
+  top: 0;
+  transition: all 0.6s ease-out;
+}
+
+aside {
+  left: 0;
+  z-index: 3;
+  background: #64b9d2;
+  &.hidden{
+    transform: translateX(-99%);
+  }
+}
+
+nav {
+  right: 0;
+  z-index: 4;
+  background: #95dc84;
+  &.hidden{
+    transform: translateX(99%);
+  }
 }
 
 main {
   @include size(100%);
-  article,
-  figure {
-    padding: 0;
+  &.active {
+    z-index: 5;
+  }
+  &.inactive {
+    z-index: 2;
+  }
+
+  img {
+    height: auto;
+    max-width: 100%;
   }
 }
 // layout /////////////////////////////////////////////////////////

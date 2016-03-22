@@ -4,8 +4,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>testing app</title>
   <link rel="stylesheet" href="stylesheet/main.css">
-  <link rel="stylesheet" href="stylesheet/kontext.css">
-
   <!-- begin main js -->
   <script src="/javascript/jquery-2.2.2.js"></script>
   <script src="/javascript/imgHelper.js"></script>
@@ -16,6 +14,9 @@
 </head>
 <body>
 
+  <!-- <aside>
+    left fixed menu
+  </aside> -->
   <nav>
     <header>
       header
@@ -26,20 +27,35 @@
     <footer>
       footer
     </footer>
+    <script>
+      (function(){
+        eventBus.on('leftSwipe', function(){
+          $('nav').removeClass('hidden');
+        });
+        eventBus.on('rightSwipe', function(){
+          $('nav').addClass('hidden');
+        });
+      }());
+    </script>
   </nav>
 
   <main>
-    <article>
-      <div class="thumbnail">
-        <img src="http://placehold.it/400x400" />
-      </div>
-      <small>
-        lorem ipsum ya ya ya osnat.h,arckd asnud .parcdk eau.h, acr.da,
-      </small>
-      <picture>
-        <img src="/images/1.jpg" />
-      </picture>
-    </article>
+    <script>
+      // image element constructor
+      (function(){
+        var howmany = 3;
+        for (var i = 0; i < howmany; i++){constructor();}
+        function constructor(){
+          var $img = $('<article>');
+          var $thumb = $img.append($('<div>').addClass('thumbnail'));
+          $thumb.append($('<img>').attr('src', 'http://placehold.it/400x400'))
+          $img.append($('<small>').text('image description description description'));
+          var $pic = $img.append($('<picture>'));
+          $pic.append($('<img>').attr('src', '/images/1.jpg'));
+          $('main').append($img);
+        }
+      }());
+    </script>
   </main>
 
 <!-- content goes above here -->
