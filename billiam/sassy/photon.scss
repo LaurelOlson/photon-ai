@@ -2,17 +2,24 @@ $tablet: 769px;
 $desktop: 980px;
 $widescreen: 1180px;
 
-.fixbottom {
-  display: none;
+.fixnav {
   position: fixed;
   z-index: 999;
-  bottom: 0;
+  top: 0;
   width: 100%;
-  // transition: all 1s ease;
+  transition: all 1s ease;
 }
 
-.bottomghost {
-  height: 120px;
+.navpadding {
   width: 100%;
-  visibility: none;
+  height: 110px; // height set by jquery || default
+}
+
+#tags {
+  margin: 0;
+  height: 63px;
+  overflow: scroll;
+  .tag {
+    margin: 2px;
+  }
 }

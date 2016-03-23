@@ -10,83 +10,72 @@
 </head>
 <body>
 
-  <section class="hero is-medium is-primary is-bold">
+<div class="fixnav">
+  <section class="hero is-primary is-bold">
     <div class="hero-content">
       <div class="container is-fluid">
-
-
-        <nav class="navbar">
-          <div class="navbar-item is-text-centered">
-            <p class="heading">Tweets</p>
-            <p class="title">3,456</p>
+        <div class="columns is-gap-1 is-mobile">
+          <div class="column is-2 is-text-centered">
+            <p class="heading">SAVED</p>
+            <p class="title">456</p>
           </div>
-          <div class="navbar-item is-text-centered">
-            <p class="heading">Following</p>
-            <p class="title">123</p>
+          <div class="column is-3">
+            <p class="control is-grouped">
+              <span class="select">
+                <select>
+                  <option>tags</option>
+                  <option>mood</option>
+                  <option>domain</option>
+                </select>
+              </span>
+              <input class="input" type="text" placeholder="search, or feeling lucky?">
+              <a class="button">
+                Search
+              </a>
+            </p>
           </div>
-          <div class="navbar-item is-text-centered">
-            <p class="heading">Followers</p>
-            <p class="title">456K</p>
+          <div class="column">
+            <!-- padding -->
           </div>
-          <div class="navbar-item is-text-centered">
-            <p class="heading">Likes</p>
-            <p class="title">789</p>
+          <div id="tags" class="column is-6 is-text-left">
+            <!-- automatic tags -->
           </div>
-        </nav>
-
+        </div>
       </div>
     </div>
   </section>
+</div>
+<div class="navpadding"></div>
 
+
+<!-- <div class="test">
+</div> -->
 
   <section class="section">
     <div class="container is-fluid">
       <div class="columns is-gap-1">
         <div id="column1" class="column">
           <p class="button is-fullwidth is-success">#column1</p>
+          <img src="/images/1.jpg" alt="">
+          <img src="/images/2.jpg" alt="">
+          <img src="/images/3.jpg" alt="">
         </div>
         <div id="column2" class="column">
           <p class="button is-fullwidth is-success">#column2</p>
+          <img src="/images/4.jpg" alt="">
+          <img src="/images/5.jpg" alt="">
+          <img src="/images/6.jpg" alt="">
         </div>
         <div id="column3" class="column">
           <p class="button is-fullwidth is-success">#column3</p>
+          <img src="/images/7.jpg" alt="">
+          <img src="/images/8.jpg" alt="">
+          <img src="/images/9.jpg" alt="">
         </div>
       </div>
-
     </div>
   </section>
 
-
-<div class="fixbottom">
-  <section class="hero is-primary">
-    <div class="hero-content">
-      <div class="container is-fluid">
-
-        <div class="columns is-gap-1 is-mobile">
-          <div class="column is-text-centered">
-            <p class="heading">TWEETS</p>
-            <p class="title">3,456</p>
-          </div>
-          <div class="column is-text-centered">
-            <p class="heading">FOLLOWING</p>
-            <p class="title">123</p>
-          </div>
-          <div class="column is-text-centered">
-            <p class="heading">FOLLOWERS</p>
-            <p class="title">456K</p>
-          </div>
-          <div class="column is-text-centered">
-            <p class="heading">LIKES</p>
-            <p class="title">789</p>
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-  </section>
-</div>
-<div class="bottomghost"></div>
 
 <!-- begin main js -->
 <script src="/javascript/jquery-2.2.2.js"></script>
