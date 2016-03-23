@@ -5,10 +5,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // Photo.hasMany(models.PhotoTag);
-        Photo.belongsToMany(models.tag, {through: 'PhotoTag'});
-        Photo.belongsToMany(models.user, {through: 'UserLike'});
-        Photo.belongsToMany(models.user, {through: 'UserAdded'});
+        Photo.belongsToMany(models.tag, { as: { singular: 'tag', plural: 'tags' }, through: 'photo_tags' });
+        Photo.belongsToMany(models.user, { as: { singular: 'liker', plural: 'likers' }, through: 'liked_photos' });
+        Photo.belongsToMany(models.user, { as: { singular: 'adder', plural: 'adders' }, through: 'added_photos' });
       }
     }
   });
