@@ -7,84 +7,93 @@
   <title>testing app</title>
   <link rel="stylesheet" href="stylesheet/bulma.css">
   <link rel="stylesheet" href="stylesheet/photon.css">
-  <!-- begin main js -->
-  <script src="/javascript/jquery-2.2.2.js"></script>
-  <script src="/javascript/imghelper.js"></script>
-  <script src="/javascript/eventbus.js"></script>
-  <script src="/javascript/touch.js"></script>
-  <script src="/javascript/photon.js"></script>
-  <!-- end main js -->
 </head>
 <body>
 
-
-<section class="section">
-  <div class="container">
-    <div class="columns is-gap-1">
-      <div id="column1" class="column">
-        <script>imgHelper.multiRender($('#column1'), 24);</script>
-      </div>
-      <div id="column2" class="column">
-        <script>imgHelper.multiRender($('#column2'), 24);</script>
-      </div>
-      <div id="column3" class="column">
-        <script>imgHelper.multiRender($('#column3'), 24);</script>
-      </div>
-    </div>
-  </div>
-</section>
+  <section class="hero is-medium is-primary is-bold">
+    <div class="hero-content">
+      <div class="container is-fluid">
 
 
-  <!-- <div class="columns is-gapless">
-    <div class="column is-9">
-
-      <div class="columns is-gapless is-vcentered is-multiline">
-
-        <div class="column is-3">
-          <article>
-            <picture>
-              <img src="/images/2.jpg" alt="">
-            </picture>
-            <div class="imgback"></div>
-          </article>
-        </div>
-
-        <div class="column is-3">
-          <article>
-            <picture>
-              <img src="http://placehold.it/800x800" alt="">
-            </picture>
-            <div class="imgback"></div>
-          </article>
-        </div>
-
-        <div class="column is-3">
-          <article>
-            <picture>
-              <img src="http://placehold.it/500x600" alt="">
-            </picture>
-            <div class="imgback"></div>
-          </article>
-        </div>
-
-        <div class="column is-3"><img src="/images/2.jpg" alt=""></div>
-        <div class="column is-3"><img src="/images/3.jpg" alt=""></div>
-        <div class="column is-3"><img src="/images/4.jpg" alt=""></div>
-        <div class="column is-3"><img src="/images/5.jpg" alt=""></div>
-        <div class="column is-3"><img src="/images/6.jpg" alt=""></div>
-        <div class="column is-3"><img src="/images/7.jpg" alt=""></div>
-        <div class="column is-3"><img src="/images/8.jpg" alt=""></div>
-        <div class="column is-3"><img src="/images/9.jpg" alt=""></div>
+        <nav class="navbar">
+          <div class="navbar-item is-text-centered">
+            <p class="heading">Tweets</p>
+            <p class="title">3,456</p>
+          </div>
+          <div class="navbar-item is-text-centered">
+            <p class="heading">Following</p>
+            <p class="title">123</p>
+          </div>
+          <div class="navbar-item is-text-centered">
+            <p class="heading">Followers</p>
+            <p class="title">456K</p>
+          </div>
+          <div class="navbar-item is-text-centered">
+            <p class="heading">Likes</p>
+            <p class="title">789</p>
+          </div>
+        </nav>
 
       </div>
     </div>
-    <div class="column">
+  </section>
 
-      <div class="section">
-        section
+
+  <section class="section">
+    <div class="container is-fluid">
+      <div class="columns is-gap-1">
+        <div id="column1" class="column">
+          <p class="button is-fullwidth is-success">#column1</p>
+        </div>
+        <div id="column2" class="column">
+          <p class="button is-fullwidth is-success">#column2</p>
+        </div>
+        <div id="column3" class="column">
+          <p class="button is-fullwidth is-success">#column3</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+<div class="fixbottom">
+  <section class="hero is-primary">
+    <div class="hero-content">
+      <div class="container is-fluid">
+
+        <div class="columns is-gap-1 is-mobile">
+          <div class="column is-text-centered">
+            <p class="heading">TWEETS</p>
+            <p class="title">3,456</p>
+          </div>
+          <div class="column is-text-centered">
+            <p class="heading">FOLLOWING</p>
+            <p class="title">123</p>
+          </div>
+          <div class="column is-text-centered">
+            <p class="heading">FOLLOWERS</p>
+            <p class="title">456K</p>
+          </div>
+          <div class="column is-text-centered">
+            <p class="heading">LIKES</p>
+            <p class="title">789</p>
+          </div>
+        </div>
+
+
       </div>
     </div>
-  </div> -->
+  </section>
+</div>
+<div class="bottomghost"></div>
 
+<!-- begin main js -->
+<script src="/javascript/jquery-2.2.2.js"></script>
+<script src="/javascript/imghelper.js"></script>
+<script src="/javascript/eventbus.js"></script>
+<script src="/javascript/touch.js"></script>
+<script src="/javascript/photon.js"></script>
+<!-- end main js -->
 </body>
 </html>

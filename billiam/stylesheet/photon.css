@@ -1,0 +1,11 @@
+.fixbottom {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  bottom: 0;
+  width: 100%; }
+
+.bottomghost {
+  height: 120px;
+  width: 100%;
+  visibility: none; }

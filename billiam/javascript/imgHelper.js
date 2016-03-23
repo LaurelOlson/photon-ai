@@ -34,7 +34,7 @@ var imgHelper = (function() {
     } else {
       imgTag = $('<img>').attr('src', genURL());
     }
-    $target.prepend(imgTag);
+    $target.append(imgTag);
   }
   function multiRender($target, times){
     if (!$target){

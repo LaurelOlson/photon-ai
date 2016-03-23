@@ -1,3 +1,18 @@
 $tablet: 769px;
 $desktop: 980px;
 $widescreen: 1180px;
+
+.fixbottom {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  bottom: 0;
+  width: 100%;
+  // transition: all 1s ease;
+}
+
+.bottomghost {
+  height: 120px;
+  width: 100%;
+  visibility: none;
+}
