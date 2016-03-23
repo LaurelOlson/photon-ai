@@ -1,7 +1,7 @@
 // listens for touch events and emit an eventName and touch target to an event bus
 // config UX(sensitivity) and pubsub
 // currently handles swipe + direction and tap
-// NOTE: arrow keys simulate swipe
+// NOTE: arrow keys simulate swipe can be enabled, comment it back in
 
 (function(){
 
@@ -17,7 +17,7 @@
   document.addEventListener('touchstart', handleTouchStart, false);
   document.addEventListener('touchmove', handleTouchMove, false);
   document.addEventListener('touchend', handleTouchEnd, false);
-  document.addEventListener('keyup', handleArrowKeys, false);
+  // document.addEventListener('keyup', handleArrowKeys, false);
 
   var xDown;
   var yDown;
@@ -95,22 +95,23 @@
     }
   }
 
-  function handleArrowKeys(evt){
-    var msg = 'arrow triggered, no target';
-    switch(evt.keyCode){
-      case 37:
-        pubsub.emit('leftSwipe', msg);
-        break;
-      case 39:
-        pubsub.emit('rightSwipe', msg);
-        break;
-      case 38:
-        pubsub.emit('upSwipe', msg);
-        break;
-      case 40:
-        pubsub.emit('downSwipe', msg);
-        break;
-    }
-  }
+  // NOTE: enable this for arrow-key testing of touch on desktop
+  // function handleArrowKeys(evt){
+  //   var msg = 'arrow triggered, no target';
+  //   switch(evt.keyCode){
+  //     case 37:
+  //       pubsub.emit('leftSwipe', msg);
+  //       break;
+  //     case 39:
+  //       pubsub.emit('rightSwipe', msg);
+  //       break;
+  //     case 38:
+  //       pubsub.emit('upSwipe', msg);
+  //       break;
+  //     case 40:
+  //       pubsub.emit('downSwipe', msg);
+  //       break;
+  //   }
+  // }
 
 }());

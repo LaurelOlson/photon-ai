@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "build-css": "node-sass --include-path scss billiam/scssSource/app.scss billiam/stylesheet/app.css",
+    "build-css": "node-sass --include-path scss billiam/sassy/photon.scss billiam/stylesheet/photon.css",
     "watch-css": "nodemon -e scss -x \"npm run build-css\"",
-    "build-css-main": "node-sass --include-path scss billiam/scssSource/main.scss billiam/stylesheet/main.css",
-    "watch-css-main": "nodemon -e scss -x \"npm run build-css-main\""
+    "build-css-bulma": "node-sass --include-path sass billiam/sassy/bulma.sass billiam/stylesheet/bulma.css",
+    "watch-css-bulma": "nodemon -e sass -x \"npm run build-css-bulma\""
   },
   "dependencies": {
     "async": "^2.0.0-rc.1",
