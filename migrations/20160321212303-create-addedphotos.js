@@ -9,11 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      userId: {
         foreignkey: true,
         type: Sequelize.INTEGER
       },
-      photo_id: {
+      photoId: {
         foreignKey: true,
         type: Sequelize.INTEGER
       },
