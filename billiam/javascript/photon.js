@@ -25,8 +25,23 @@ var photon = (function() {
       $('#tags').append($('<span>').addClass('tag '+ randColor()).text('tag label'));
     }
   }
-
   addDummy();
+
+  var colHeights = {};
+  function updateColHeights(){
+    var $cols = $('.section').find('.columns').children(); // array: each a $element
+    $cols.each(function(){
+      record($(this));
+    });
+    function record($ele){
+      var id = $ele.attr('id');
+      var $lastItem = $ele.children().last();
+      var lastY = $lastItem.position().top;
+      var lastHeight = $lastItem.height();
+      colHeights[id] = lastY + lastHeight;
+    }
+  }
+
 
   // footer fade in
   $(window).on('scroll', function() {
@@ -38,16 +53,19 @@ var photon = (function() {
     }
   });
 
-  function testInit(){
-    addDummy();
-  }
-
   // API
   return {
-    testInit: testInit
+    addDummy: addDummy,
+    test: colHeights
   };
 
 }());
+
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
 
 var sampleUser = {
 
