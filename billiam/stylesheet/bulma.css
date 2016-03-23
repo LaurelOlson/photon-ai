@@ -1951,6 +1951,14 @@ table {
     .columns.is-gapless > .column {
       margin: 0;
       padding: 0; }
+  .columns.is-gap-1 {
+    margin-left: 0;
+    margin-right: 0; }
+    .columns.is-gap-1:not(:last-child) {
+      margin-bottom: 20px; }
+    .columns.is-gap-1 > .column {
+      margin: 1px;
+      padding: 1px; }
   .columns.is-multiline {
     flex-wrap: wrap; }
   .columns.is-vcentered {
