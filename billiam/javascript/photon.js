@@ -27,7 +27,31 @@ var photon = (function() {
   }
   addDummy();
 
-  var colHeights = {};
+  // überHack to extend JS Hash function
+  // so columns can find the shortest one
+  Object.prototype.getKeyByValue = function(value) {
+    for (var prop in this) {
+      if (this.hasOwnProperty(prop)) {
+        if (this[prop] === value) {
+          return prop;
+        }
+      }
+    }
+  };
+
+  var columns = {
+    heights: {
+      // column1: 1234 (auto parsed by updateColHeights)
+    },
+    shortest: function(){
+      var values = [];
+      for (var key in this.heights) {
+          values.push(this.heights[key]);
+      }
+      values.sort();
+      return this.heights.getKeyByValue(values[0]);
+    }
+  };
   function updateColHeights(){
     var $cols = $('.section').find('.columns').children(); // array: each a $element
     $cols.each(function(){
@@ -36,10 +60,16 @@ var photon = (function() {
     function record($ele){
       var id = $ele.attr('id');
       var $lastItem = $ele.children().last();
-      var lastY = $lastItem.position().top;
+      var lastY = $lastItem.offset().top;
       var lastHeight = $lastItem.height();
-      colHeights[id] = lastY + lastHeight;
+      columns.heights[id] = lastY + lastHeight;
     }
+  }
+  function addToColumns(URL){
+    updateColHeights();
+    var target = columns.shortest();
+    console.log(target);
+    $('#'+target).append($('<img>').attr('src', URL));
   }
 
 
@@ -56,7 +86,9 @@ var photon = (function() {
   // API
   return {
     addDummy: addDummy,
-    test: colHeights
+    updateColHeights: updateColHeights,
+    columns: columns,
+    addToColumns: addToColumns
   };
 
 }());
