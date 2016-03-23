@@ -11,13 +11,26 @@ var imgHelper = (function() {
   var min = 480;
 
   // helper
-  function randAxis(){
-    return Math.floor(Math.random() * (max - min + 1)) + max;
+  function randAxis(x){
+    if (typeof x === 'number'){
+      return Math.floor(Math.random() * (x - min + 1)) + x;
+    } else {
+      return Math.floor(Math.random() * (max - min + 1)) + max;
+    }
   }
   function genURL(x, y){
     if (typeof x === 'number' && typeof y === 'number'){
       return sourceURL + x + 'x' + y;
     } else {
+      return sourceURL + randAxis() + 'x' + randAxis();
+    }
+  }
+
+  function genLongEdgeURL(x, y){
+    if (typeof x === 'number' && typeof y === 'number'){
+      return sourceURL + randAxis(x) + 'x' + randAxis(y);
+    } else {
+      console.log('genLongEdgeURL(x,y) needs the longest edge and a minimum edge');
       return sourceURL + randAxis() + 'x' + randAxis();
     }
   }
@@ -51,6 +64,7 @@ var imgHelper = (function() {
   return {
     render: render,
     multiRender: multiRender,
-    genURL: genURL
+    genURL: genURL,
+    genLongEdgeURL: genLongEdgeURL
   };
 }());
