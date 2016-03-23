@@ -2,7 +2,7 @@
 // Global vars:
   // $: jquery
   // eventBus: on('event', callback); emit('event', data); listEvents();
-  // imgHelper: render(); multiRender(); genURL(x, y);
+  // imgHelper: render($target); multiRender($target); genURL(x, y); genLongEdgeURL(x, y);
 
 // eventBus events:
   // touch.js emits a swipe event and swipe html target ('leftSwipe', <p>oeu</p>)
@@ -51,13 +51,13 @@ var photon = (function() {
 
 var sampleUser = {
 
-},
+};
 
 var samplePhotoObj = {
     id: Math.floor(Math.random() * (120 - 22 + 1)) + 120,
     originalURL: imgHelper.genLongEdgeURL(2000, 2000),
     smallURL: imgHelper.genLongEdgeURL(500, 500),
-    lanreURL: imgHelper.genLongEdgeURL(1500, 1500),
+    largeURL: imgHelper.genLongEdgeURL(1500, 1500),
     tags: ['people', 'water', 'city', 'portrait', 'abstract', 'gallery', 'camera', 'lecia', 'canon', 'hipster'],
     faceAnnotations: {
       joyLikelihood: "VERY_LIKELY",
