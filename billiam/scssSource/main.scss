@@ -6,6 +6,8 @@
 $mobileBreakpoint: 767px;
 $tabletBreakpoint: 959px;
 $desktopBreakpoint: 1179px;
+$navForegroundColor: #f2f2f2;
+$navBackgroundColor: #737373;
 // base ///////////////////////////////////////////////////////////
 // ## Base example
 // - html, body, form { margin: 0; padding: 0; }
@@ -35,53 +37,66 @@ body {
 // }
 @media screen and (max-width: $mobileBreakpoint) {
   nav {
-    position: fixed;
-    height: 100%;
     width: 99%;
+    height: 100%;
     top: 0;
-    transition: all 0.4s ease;
-  }
-
-  nav { // the main menu that comes in from the right
     right: 0;
-    z-index: 4;
-    background: #95dc84;
+    position: fixed;
+    z-index: 50;
+    transition: all 0.4s ease;
+    background: $navForegroundColor;
     box-shadow: -1px 0px 6px 0px rgba(0,0,0,0.2);
     &.hidden{
-      transform: translateX(99%);
+      // transform: translateX(99%);
+      right: -98%;
     }
     &.background{
       width: 100%;
-      background: #1f9b23;
+      background: $navBackgroundColor;
       left: 99%;
       z-index: 1;
       &.hidden{
-        transform: translateX(-100%);
+        // transform: translateX(-100%);
+        left: 0;
       }
     }
   }
 
   main {
     @include size(100%);
-    position: absolute;
+    position: relative;
     z-index: 2;
+    overflow-x: hidden;
   }
 
   article {
+    position: relative;
     .thumbnail{
-
+      display: none;
     }
     small {
-
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0));
+      padding: 5px;
+      color: white;
+      z-index: 3;
+      width: 100%;
+      height: 50%;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 0.1s ease-in-out;
+      &.active{
+        opacity: 1;
+      }
     }
     picture {
+      position: relative;
       img {
         height: auto;
         max-width: 100%;
       }
     }
-  }
-}
+  } //article
+} //mediaQuery
 
 
 

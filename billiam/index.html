@@ -43,11 +43,11 @@
       (function(){
         eventBus.on('leftSwipe', function(){
           $('nav').removeClass('hidden');
-          $('nav.background').removeClass('hidden');
+          // $('nav.background').removeClass('hidden');
         });
         eventBus.on('rightSwipe', function(){
           $('nav').addClass('hidden');
-          $('nav.background').addClass('hidden');
+          // $('nav.background').addClass('hidden');
         });
       }());
     </script>
@@ -56,6 +56,14 @@
 
   <main>
 
+    <script>
+      $(function(){
+        $('main').on('click', 'img, small', function(){
+          $(this).closest('article').siblings().find('small').removeClass('active').hide();
+          $(this).closest('article').find('small').toggleClass('active').show();
+        });
+      });
+    </script>
 
     <article>
       <div class="thumbnail flex-parent">
@@ -68,6 +76,7 @@
         <img src="/images/1.jpg">
       </picture>
     </article>
+
     <article>
       <div class="thumbnail flex-parent">
         <img src="http://placehold.it/400x400">
@@ -90,6 +99,40 @@
         <img src="/images/3.jpg">
       </picture>
     </article>
+    <article>
+      <div class="thumbnail flex-parent">
+        <img src="http://placehold.it/400x400">
+      </div>
+      <small>
+        image description description description
+      </small>
+      <picture>
+        <img src="/images/4.jpg">
+      </picture>
+    </article>
+    <article>
+      <div class="thumbnail flex-parent">
+        <img src="http://placehold.it/400x400">
+      </div>
+      <small>
+        image description description description
+      </small>
+      <picture>
+        <img src="/images/5.jpg">
+      </picture>
+    </article>
+    <article>
+      <div class="thumbnail flex-parent">
+        <img src="http://placehold.it/400x400">
+      </div>
+      <small>
+        image description description description
+      </small>
+      <picture>
+        <img src="/images/6.jpg">
+      </picture>
+    </article>
+
 
   </main>
 
