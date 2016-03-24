@@ -1,3 +1,7 @@
+// INSTRUCTIONS
+// Step 1: SEED PHOTOS (comment everything else out), then run node seeders/seed.js
+// Step 2: Comment out SEED PHOTOS, uncomment GET PHOTO TAGS & SEED TAGS/PHOTO_TAGS, then run node seeders/seed.js
+// Step 3: Comment out GET PHOTO TAGS & SEED TAGS/PHOTO_TAGS, uncomment SEED USERS, LIKED_PHOTOS, ADDED_PHOTOS, then run node seeders/seed.js
 
 var fs = require('fs');
 var request = require('request');
@@ -43,65 +47,65 @@ var visionRequest = {
   ]
 };
 
-var download = function(uri, filename, callback) {
-  request.head(uri, function(err, res, body) {
-    if (err) { 
-      return console.error(err);
-    }
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-  });
-};
+// var download = function(uri, filename, callback) {
+//   request.head(uri, function(err, res, body) {
+//     if (err) { 
+//       return console.error(err);
+//     }
+//     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+//   });
+// };
 
-const MIN_LABEL_SCORE = 0.85;
+// const MIN_LABEL_SCORE = 0.85;
 
-models.photo.findAll().then(function(photos) {
-  photos.forEach(function(photo) {
-    download(photo.url, 'seeders/photo.jpeg', convertToBase64);
+// models.photo.findAll().then(function(photos) {
+//   photos.forEach(function(photo) {
+//     download(photo.url, 'seeders/photo.jpeg', convertToBase64);
 
-    function convertToBase64(err, data) {
-      if (err) {
-        return console.error(err);
-      }
-      console.log('convertToBase64');
-      fs.readFile('photo.jpeg', 'base64', sendToGoogleVision);
-    }
+//     function convertToBase64(err, data) {
+//       if (err) {
+//         return console.error(err);
+//       }
+//       console.log('convertToBase64');
+//       fs.readFile('photo.jpeg', 'base64', sendToGoogleVision);
+//     }
 
-    function sendToGoogleVision(err, data) {
-      if (err) {
-        return console.error(err);
-      }
-      visionRequest.requests[0].image.content = data;
-      var request_options = {
-        url: 'https://vision.googleapis.com/v1/images:annotate',
-        qs: { key: 'AIzaSyANu3XdMMEHlIV0ehYSS_83r9HYwRNicoM' },
-        method: 'POST',
-        json: visionRequest
-      };
-      request(request_options, parseResponse);
-    }
+//     function sendToGoogleVision(err, data) {
+//       if (err) {
+//         return console.error(err);
+//       }
+//       visionRequest.requests[0].image.content = data;
+//       var request_options = {
+//         url: 'https://vision.googleapis.com/v1/images:annotate',
+//         qs: { key: 'AIzaSyANu3XdMMEHlIV0ehYSS_83r9HYwRNicoM' },
+//         method: 'POST',
+//         json: visionRequest
+//       };
+//       request(request_options, parseResponse);
+//     }
 
-    function parseResponse(error, response, body) {
-      if (error) {
-        return console.error(error);
-      }
-      var label_info = body.responses[0].labelAnnotations;
-      label_info.forEach(addLabelToDB);
-    }
+//     function parseResponse(error, response, body) {
+//       if (error) {
+//         return console.error(error);
+//       }
+//       var label_info = body.responses[0].labelAnnotations;
+//       label_info.forEach(addLabelToDB);
+//     }
 
-    function addLabelToDB(label) {
-      if (label.score >= MIN_LABEL_SCORE) {
-        console.log('label scored');
-        models.tag.create({ name: label.description }).then(function(tag) {
-          console.log('created tag');
-          photo.addTag(tag).then(function() {
-            photo.hasTag(tag).then(console.log);
-            tag.hasPhoto(photo).then(console.log);
-          });
-        }); 
-      }
-    }
-  });
-});
+//     function addLabelToDB(label) {
+//       if (label.score >= MIN_LABEL_SCORE) {
+//         console.log('label scored');
+//         models.tag.create({ name: label.description }).then(function(tag) {
+//           console.log('created tag');
+//           photo.addTag(tag).then(function() {
+//             photo.hasTag(tag).then(console.log);
+//             tag.hasPhoto(photo).then(console.log);
+//           });
+//         }); 
+//       }
+//     }
+//   });
+// });
 
 // models.photo.findById(100).then(function(photo) {
 //   download(photo.url, 'photo.jpeg', convertToBase64)
@@ -146,7 +150,7 @@ models.photo.findAll().then(function(photos) {
 //   }
 // });
 
-// const NUM_PHOTOS = 600;
+const NUM_PHOTOS = 600;
 
 // SEED USERS, LIKED_PHOTOS, ADDED_PHOTOS
 // var i = 0;
