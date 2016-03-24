@@ -3,12 +3,15 @@
 // Step 2: Comment out SEED PHOTOS, uncomment GET PHOTO TAGS & SEED TAGS/PHOTO_TAGS, then run node seeders/seed.js
 // Step 3: Comment out GET PHOTO TAGS & SEED TAGS/PHOTO_TAGS, uncomment SEED USERS, LIKED_PHOTOS, ADDED_PHOTOS, then run node seeders/seed.js
 
+'use strict';
+
 var fs = require('fs');
 var request = require('request');
 var split = require('split');
 var faker = require('faker');
 var models = require(__dirname + '/../models/index.js');
 var secret_stuff = require('../secret_stuff.js');
+const NUM_PHOTOS = 600;
 
 // SEED PHOTOS
 
@@ -19,6 +22,8 @@ var secret_stuff = require('../secret_stuff.js');
 // });
 
 // GET PHOTO TAGS & SEED TAGS/PHOTO_TAGS
+
+const MIN_LABEL_SCORE = 0.8;
 
 var visionRequest = {
   "requests":[
@@ -33,7 +38,7 @@ var visionRequest = {
         },
         {
           "type": "LABEL_DETECTION",
-          "maxResults": 20
+          "maxResults": 10
         },
         {
           "type": "FACE_DETECTION",
@@ -48,112 +53,82 @@ var visionRequest = {
   ]
 };
 
-// var download = function(uri, filename, callback) {
-//   request.head(uri, function(err, res, body) {
-//     if (err) { 
-//       return console.error(err);
-//     }
-//     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-//   });
-// };
+models.photo.findAll( { limit: 50 }).then(function(promises) {
+  promises.forEach(function(photo) {
+    seedTag(photo);
+  });
+});
 
-// const MIN_LABEL_SCORE = 0.85;
+var download = function(uri, filename, callback) {
+  request.head(uri, function(err, res, body) {
+    if (err) { 
+      return console.error(err);
+    }
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  });
+};
 
-// models.photo.findAll().then(function(photos) {
-//   photos.forEach(function(photo) {
-//     download(photo.url, 'seeders/photo.jpeg', convertToBase64);
+function seedTag(photo) {
+  var file = 'seeders/temp/photo-' + photo.id + '.jpg' 
+  download(photo.url, file, convertToBase64);
 
-//     function convertToBase64(err, data) {
-//       if (err) {
-//         return console.error(err);
-//       }
-//       console.log('convertToBase64');
-//       fs.readFile('photo.jpeg', 'base64', sendToGoogleVision);
-//     }
+  function convertToBase64(err, data) {
+    if (err) {
+      return console.error(err);
+    }
+    fs.readFile(file, 'base64', sendToGoogleVision);
+  }
 
-//     function sendToGoogleVision(err, data) {
-//       if (err) {
-//         return console.error(err);
-//       }
-//       visionRequest.requests[0].image.content = data;
-//       var request_options = {
-//         url: 'https://vision.googleapis.com/v1/images:annotate',
-//         qs: { key: secret_stuff.vision_key },
-//         method: 'POST',
-//         json: visionRequest
-//       };
-//       request(request_options, parseResponse);
-//     }
+  function sendToGoogleVision(err, data) {
+    if (err) {
+      return console.error(err);
+    }
+    visionRequest.requests[0].image.content = data;
+    var request_options = {
+      url: 'https://vision.googleapis.com/v1/images:annotate',
+      qs: { key: secret_stuff.vision_key },
+      method: 'POST',
+      json: visionRequest
+    };
+    request(request_options, parseResponse);
+  }
 
-//     function parseResponse(error, response, body) {
-//       if (error) {
-//         return console.error(error);
-//       }
-//       var label_info = body.responses[0].labelAnnotations;
-//       label_info.forEach(addLabelToDB);
-//     }
+  function parseResponse(error, response, body) {
+    if (error) {
+      return console.error(error);
+    }
+    var tags = [];
+    var landmarks = body.responses[0].landmarkAnnotations;
+    var labels = body.responses[0].labelAnnotations;
+    if (labels) {
+      labels.forEach(function(label) {
+        tags.push({ name: label.description, type: 'label', score: label.score });
+      });
+    }
+    if (landmarks) {
+      landmarks.forEach(function(landmark) {
+        tags.push({ name: landmark.description, type: 'landmark', score: landmark.score });
+      });
+    }
+    tags.forEach(addTagToDB);
+  }
 
-//     function addLabelToDB(label) {
-//       if (label.score >= MIN_LABEL_SCORE) {
-//         console.log('label scored');
-//         models.tag.create({ name: label.description }).then(function(tag) {
-//           console.log('created tag');
-//           photo.addTag(tag).then(function() {
-//             photo.hasTag(tag).then(console.log);
-//             tag.hasPhoto(photo).then(console.log);
-//           });
-//         }); 
-//       }
-//     }
-//   });
-// });
-
-// models.photo.findById(100).then(function(photo) {
-//   download(photo.url, 'photo.jpeg', convertToBase64)
-
-//   function convertToBase64() {
-//     fs.readFile('photo.jpeg', 'base64', sendToGoogleVision)
-//   }
-
-//   function sendToGoogleVision(err, data) {
-//     if (err) {
-//       return console.error(err);
-//     }
-//     visionRequest.requests[0].image.content = data;
-//     var request_options = {
-//       url: 'https://vision.googleapis.com/v1/images:annotate',
-//       qs: { key: 'AIzaSyANu3XdMMEHlIV0ehYSS_83r9HYwRNicoM' },
-//       method: 'POST',
-//       json: visionRequest
-//     };
-//     request(request_options, parseResponse);
-//   }
-
-//   function parseResponse(error, response, body) {
-//     if (error) {
-//       return console.error(error);
-//     }
-//     var label_info = body.responses[0].labelAnnotations;
-//     label_info.forEach(addLabelToDB)
-//   }
-
-//   function addLabelToDB(label) {
-//     if (label.score >= MIN_LABEL_SCORE) {
-//       console.log('label scored');
-//       models.tag.create({ name: label.description }).then(function(tag) {
-//         console.log('created tag');
-//         photo.addTag(tag).then(function() {
-//           photo.hasTag(tag).then(console.log);
-//           tag.hasPhoto(photo).then(console.log);
-//         });
-//       });
-//     }
-//   }
-// });
-
-const NUM_PHOTOS = 600;
+  function addTagToDB(vision_tag) {
+    if (vision_tag.score >= MIN_LABEL_SCORE) {
+      models.tag.findOrCreate({ where: { name: vision_tag.name, type: vision_tag.type } }).then(function(promise) {
+        var tag = promise[0];
+        photo.addTag(tag).then(function() {
+          photo.hasTag(tag).then(console.log);
+          tag.hasPhoto(photo).then(console.log);
+        });
+      });
+    }
+  }
+}
 
 // SEED USERS, LIKED_PHOTOS, ADDED_PHOTOS
+
+// const NUM_PHOTOS = 600;
 // var i = 0;
 // while (i < 5) { // Create 5 users
 //   models.user.create({
