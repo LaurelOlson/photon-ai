@@ -41,10 +41,28 @@ var photon = (function() {
 $(function(){
 
   //////////////////////////////////////////////////////////
-  // all the $vars for CSS manipulation
+  // all the $vars for UI manipulation
     var defaultPadding = 5;
     var scrollPoint = 300;
     var $fixnav = $('.fixnav');
+
+    var nestOptions = {
+      minWidth: 200,
+      minColumns: 1,
+      gutter: 5,
+      centered: true,
+      resizeToFit: false, // will resize block bigger than the gap
+      resizeToFitOptions: {
+        resizeAny: true // will resize any block to fit the gap
+      },
+      animate: false,
+      animationOptions: {
+        speed: 20,
+        duration: 100,
+        queue: true,
+        complete: function () {} // call back :D works w/ or w/o animate
+      }
+    };
 
   //////////////////////////////////////////////////////////
   // footer fade in
@@ -61,7 +79,97 @@ $(function(){
     $('.navpadding').css('height', $fixnav.height() + defaultPadding);
 
   //////////////////////////////////////////////////////////
-  // navpadding
+  // logo
+
+    buildWave(90, 60);
+    function buildWave(w, h) {
+      var pLogo = document.querySelector('#wave');
+      var logoSmoothness = 0.5;
+      var a = h / 4;
+      var y = h / 2;
+      var pathData = [
+        'M', w * 0, y + a / 2,
+        'c',
+          a * logoSmoothness, 0,
+          -(1 - a) * logoSmoothness, -a,
+          a, -a,
+        's',
+          -(1 - a) * logoSmoothness, a,
+          a, a,
+        's',
+          -(1 - a) * logoSmoothness, -a,
+          a, -a,
+        's',
+          -(1 - a) * logoSmoothness, a,
+          a, a,
+        's',
+          -(1 - a) * logoSmoothness, -a,
+          a, -a,
+        's',
+          -(1 - a) * logoSmoothness, a,
+          a, a,
+        's',
+          -(1 - a) * logoSmoothness, -a,
+          a, -a,
+        's',
+          -(1 - a) * logoSmoothness, a,
+          a, a,
+        's',
+          -(1 - a) * logoSmoothness, -a,
+          a, -a,
+        's',
+          -(1 - a) * logoSmoothness, a,
+          a, a,
+        's',
+          -(1 - a) * logoSmoothness, -a,
+          a, -a,
+        's',
+          -(1 - a) * logoSmoothness, a,
+          a, a,
+        's',
+          -(1 - a) * logoSmoothness, -a,
+          a, -a,
+        's',
+          -(1 - a) * logoSmoothness, a,
+          a, a,
+        's',
+          -(1 - a) * logoSmoothness, -a,
+          a, -a
+      ].join(' ');
+      pLogo.setAttribute('d', pathData);
+    }
+
+
+  //////////////////////////////////////////////////////////
+  // nestContainer
+  var $nContainer = $('#nestContainer').nested(nestOptions);
+
+  ////////////////////////////////////////////////////////////////////
+  // generator for building and testing
+  function makeBoxes() {
+    var boxes = [],
+    count = Math.random()*15;
+    if (count < 5) count = 5;
+    for (var i=0; i < count; i++ ) {
+      var box = document.createElement('div');
+      box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
+      // add box DOM node to array of new elements
+      boxes.push( box );
+    }
+    return boxes;
+  }
+
+  $('#nestPrepend').click(function(){
+    var boxes = makeBoxes();
+    $nContainer.prepend(boxes).nested('prepend',boxes);
+  });
+  $('#nestAppend').click(function(){
+    var boxes = makeBoxes();
+    $nContainer.append(boxes).nested('append',boxes);
+  });
+  $('#nestNuke').click(function(){
+    $nContainer.children().remove();
+  });
 
 
 

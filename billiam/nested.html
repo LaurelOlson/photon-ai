@@ -24,7 +24,7 @@
       <section class="hero is-primary is-bold">
         <div class="hero-content">
           <div class="container is-fluid">
-            <div class="columns is-gap-1 is-mobile">
+            <div class="columns is-mobile">
               <div class="column is-2 is-text-centered">
                 <p class="heading">SAVED</p>
                 <p class="title">456</p>
@@ -45,9 +45,9 @@
                 </p>
               </div>
               <div class="column">
-                <a class="button" id="nestPrepend">Prepend</a>
-                <a class="button" id="nestAppend">Append</a>
-                <a class="button" id="nestNuke">Nuke</a>
+                <p id="nestPrepend">Prepend</p>
+                <p id="nestAppend">Append</p>
+                <p id="nestNuke">Nuke</p>
                 <!-- padding -->
               </div>
               <div id="tags" class="column is-6 is-text-left">
@@ -61,7 +61,8 @@
 
     <div class="container is-fluid layer-1">
       <div id="nestContainer">
-        <!-- <div class="nestBox size11">
+        <!-- NOTE: example
+        <div class="nestBox size11">
           <img src="http://blueblots.com/wp-content/uploads/2010/11/12-red-sunset.jpg" />
         </div>
         <div class="nestBox size21">2</div>
@@ -70,59 +71,23 @@
     </div>
 
     <div class="photonLayer layer-0 is-transparent">
-      <p><strong>photon</strong>.ai</p>
+      <!-- below is a safety wrapper so photonLayer flex only has 1 child -->
+      <!-- <div> -->
+        <div class="pLogo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="120px" height="100px" viewBox="5 0 80 60">
+            <path id="wave">
+            </path>
+          </svg>
+        </div>
+        <p><strong>photon</strong>.ai</p>
+      <!-- </div> -->
     </div>
 
-    <script>
-     (function() {
-        var nestOptions = {
-          minWidth: 200,
-          minColumns: 1,
-          gutter: 5,
-          centered: true,
-          resizeToFit: false, // will resize block bigger than the gap
-          resizeToFitOptions: {
-              resizeAny: true // will resize any block to fit the gap
-          },
-          animate: false,
-          animationOptions: {
-              speed: 20,
-              duration: 100,
-              queue: true,
-              complete: function () {} // call back :D works w/ or w/o animate
-          }
-        };
-        var $nContainer = $('#nestContainer').nested(nestOptions);
+    <div class="photonLayer layer-2">
+      <!-- <div class="login">
 
-        ////////////////////////////////////////////////////////////////////
-        // generator for building and testing
-        function makeBoxes() {
-          var boxes = [],
-          count = Math.random()*15;
-          if (count < 5) count = 5;
-          for (var i=0; i < count; i++ ) {
-            var box = document.createElement('div');
-            box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
-            // add box DOM node to array of new elements
-            boxes.push( box );
-          }
-          return boxes;
-        };
-
-        $('#nestPrepend').click(function(){
-          var boxes = makeBoxes();
-          $nContainer.prepend(boxes).nested('prepend',boxes);
-        })
-        $('#nestAppend').click(function(){
-          var boxes = makeBoxes();
-          $nContainer.append(boxes).nested('append',boxes);
-        })
-        $('#nestNuke').click(function(){
-          $nContainer.children().remove();
-        })
-
-      }());
-    </script>
+      </div> -->
+    </div>
 
   </body>
 </html>
