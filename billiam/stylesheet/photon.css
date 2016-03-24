@@ -1,13 +1,15 @@
+body {
+  position: relative; }
+
 .fixnav {
   position: fixed;
-  z-index: 999;
   top: 0;
   width: 100%;
   transition: all 1s ease; }
 
 .navpadding {
   width: 100%;
-  height: 132px; }
+  height: 1px; }
 
 #tags {
   margin: 0;
@@ -16,22 +18,53 @@
   #tags .tag {
     margin: 2px; }
 
-#nestContainer {
-  background: #fff;
-  margin-left: auto;
-  margin-right: auto; }
-  #nestContainer .nestBox {
-    background-color: #69707a;
-    border-radius: 3px;
-    transition: all 300ms cubic-bezier(1, 0, 0, 1);
-    transition-property: left, right, top; }
-    #nestContainer .nestBox.size21, #nestContainer .nestBox.size22, #nestContainer .nestBox.size23, #nestContainer .nestBox.twocols {
-      background: #aeb1b5; }
-    #nestContainer .nestBox.size31, #nestContainer .nestBox.size32, #nestContainer .nestBox.size33, #nestContainer .nestBox.threecols {
-      background: #d3d6db; }
-    #nestContainer .nestBox img {
-      height: 100%;
-      width: auto;
-      transition: all 200ms ease; }
-      #nestContainer .nestBox img:hover {
-        opacity: 0.5; }
+#nestContainer .nestBox {
+  background-color: #69707a;
+  border-radius: 3px;
+  transition: all 300ms cubic-bezier(1, 0, 0, 1);
+  transition-property: left, right, top; }
+  #nestContainer .nestBox.size21, #nestContainer .nestBox.size22, #nestContainer .nestBox.size23, #nestContainer .nestBox.twocols {
+    background: #aeb1b5; }
+  #nestContainer .nestBox.size31, #nestContainer .nestBox.size32, #nestContainer .nestBox.size33, #nestContainer .nestBox.threecols {
+    background: #d3d6db; }
+  #nestContainer .nestBox img {
+    height: 100%;
+    width: auto;
+    transition: all 200ms ease; }
+    #nestContainer .nestBox img:hover {
+      opacity: 0.5; }
+
+.photonLayer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%; }
+
+.layer-neg-3 {
+  z-index: -3; }
+
+.layer-neg-2 {
+  z-index: -2; }
+
+.layer-neg-1 {
+  z-index: -1; }
+
+.layer-background,
+.layer-0 {
+  z-index: 0; }
+
+.layer-1 {
+  z-index: 1; }
+
+.layer-2 {
+  z-index: 2; }
+
+.layer-3 {
+  z-index: 3; }
+
+.is-transparent {
+  opacity: 0.5; }

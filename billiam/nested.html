@@ -1,154 +1,128 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<title>Nested</title>
-<link href="/stylesheet/photon.css" rel="stylesheet">
-<link href="/stylesheet/bulma.css" rel="stylesheet">
-<!-- javascript order is important -->
-<script src="/javascript/jquery-2.2.2.js"></script>
-<script src="/javascript/jquery.nested.js"></script>
-<script src="/javascript/imghelper.js"></script>
-<script src="/javascript/photon.js"></script>
-<!-- end javascript order is important -->
-</head>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Nested</title>
+    <link href="/stylesheet/photon.css" rel="stylesheet">
+    <link href="/stylesheet/bulma.css" rel="stylesheet">
+    <!-- javascript order is important -->
+    <script src="/javascript/jquery-2.2.2.js"></script>
+    <script src="/javascript/jquery.nested.js"></script>
+    <script src="/javascript/imghelper.js"></script>
+    <script src="/javascript/photon.js"></script>
+    <!-- end javascript order is important -->
+  </head>
+  <body>
 
-  <div class="fixnav">
-    <section class="hero is-primary is-bold">
-      <div class="hero-content">
-        <div class="container is-fluid">
-          <div class="columns is-gap-1 is-mobile">
-            <div class="column is-2 is-text-centered">
-              <p class="heading">SAVED</p>
-              <p class="title">456</p>
-            </div>
-            <div class="column is-3">
-              <p class="control is-grouped">
-                <span class="select">
-                  <select>
-                    <option>tags</option>
-                    <option>mood</option>
-                    <option>domain</option>
-                  </select>
-                </span>
-                <input class="input" type="text" placeholder="search, or feeling lucky?">
-                <a class="button">
-                  Search
-                </a>
-              </p>
-            </div>
-            <div class="column">
-              <a class="button" id="nestPrepend">Prepend</a>
-              <a class="button" id="nestAppend">Append</a>
-              <!-- padding -->
-            </div>
-            <div id="tags" class="column is-6 is-text-left">
-              <!-- automatic tags -->
+    <!-- "ghost" behind the fixed navbar to push everything down -->
+    <div class="navpadding layer-1"></div>
+
+    <div class="fixnav layer-3">
+      <section class="hero is-primary is-bold">
+        <div class="hero-content">
+          <div class="container is-fluid">
+            <div class="columns is-gap-1 is-mobile">
+              <div class="column is-2 is-text-centered">
+                <p class="heading">SAVED</p>
+                <p class="title">456</p>
+              </div>
+              <div class="column is-3">
+                <p class="control is-grouped">
+                  <span class="select">
+                    <select>
+                      <option>tags</option>
+                      <option>mood</option>
+                      <option>domain</option>
+                    </select>
+                  </span>
+                  <input class="input" type="text" placeholder="search, or feeling lucky?">
+                  <a class="button">
+                    Search
+                  </a>
+                </p>
+              </div>
+              <div class="column">
+                <a class="button" id="nestPrepend">Prepend</a>
+                <a class="button" id="nestAppend">Append</a>
+                <a class="button" id="nestNuke">Nuke</a>
+                <!-- padding -->
+              </div>
+              <div id="tags" class="column is-6 is-text-left">
+                <!-- automatic tags -->
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- "ghost" behind the fixed navbar to push everything down -->
-  <div class="navpadding"></div>
-
-  <div class="container is-fluid">
-    <div id="nestContainer">
-      <div class="nestBox size11">
-        <img src="http://blueblots.com/wp-content/uploads/2010/11/12-red-sunset.jpg" />
-      </div>
-      <div class="nestBox size21">2</div>
-      <div class="nestBox size32">3</div>
-      <div class="nestBox size11">4</div>
-      <div class="nestBox size21">5</div>
-      <div class="nestBox size12">6</div>
-      <div class="nestBox size21">7</div>
-      <div class="nestBox size11">8</div>
-      <div class="nestBox size31">9</div>
-      <div class="nestBox size22">10</div>
-      <div class="nestBox size11">11</div>
-      <div class="nestBox size21">12</div>
-      <div class="nestBox size12">13</div>
-      <div class="nestBox size21">14</div>
-      <div class="nestBox size23">15</div>
-      <div class="nestBox size22">16</div>
-      <div class="nestBox size11">17</div>
-      <div class="nestBox size21">18</div>
-      <div class="nestBox size12">19</div>
-      <div class="nestBox size21">20</div>
-      <div class="nestBox size22">21</div>
-      <div class="nestBox size23">22</div>
-      <div class="nestBox size11">23</div>
-      <div class="nestBox size21">24</div>
-      <div class="nestBox size12">25</div>
-      <div class="nestBox size21">26</div>
-      <div class="nestBox size22">27</div>
-      <div class="nestBox size22">28</div>
+      </section>
     </div>
-  </div>
 
-<script>
-  var jNested = (function() {
-    var nestOptions = {
-      minWidth: 200,
-      minColumns: 1,
-      gutter: 5,
-      centered: true,
-      resizeToFit: false, // will resize block bigger than the gap
-      resizeToFitOptions: {
-          resizeAny: true // will resize any block to fit the gap
-      },
-      animate: false,
-      animationOptions: {
-          speed: 20,
-          duration: 100,
-          queue: true,
-          complete: function () {} // call back :D works w/ or w/o animate
-      }
-    };
-    var $nContainer = $('#nestContainer').nested(nestOptions);
-    function makeBoxes() {
-      var boxes = [],
-      count = Math.random()*15;
-      if (count < 5) count = 5;
-      for (var i=0; i < count; i++ ) {
-        var box = document.createElement('div');
-        box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
-        // add box DOM node to array of new elements
-        boxes.push( box );
-      }
-      return boxes;
-    };
-    // $(window).on('resize, orientationChange', function(){
-    //   $nContainer.nested({
-    //     minWidth: newSize
-    //   });
-    // });
-    //   $nContainer.nested({
-    //   minWidth: 200,
-    //   gutter: 5
-    // });
-    $('#nestPrepend').click(function(){
-      var boxes = makeBoxes();
-      $nContainer.prepend(boxes).nested('prepend',boxes);
-    })
-    $('#nestAppend').click(function(){
-      var boxes = makeBoxes();
-      $nContainer.append(boxes).nested('append',boxes);
-    })
+    <div class="container is-fluid layer-1">
+      <div id="nestContainer">
+        <!-- <div class="nestBox size11">
+          <img src="http://blueblots.com/wp-content/uploads/2010/11/12-red-sunset.jpg" />
+        </div>
+        <div class="nestBox size21">2</div>
+        <div class="nestBox size22">28</div> -->
+      </div>
+    </div>
 
-    return {
-      container: $nContainer
-    }
+    <div class="photonLayer layer-0 is-transparent">
+      <p><strong>photon</strong>.ai</p>
+    </div>
 
-  }());
-</script>
+    <script>
+     (function() {
+        var nestOptions = {
+          minWidth: 200,
+          minColumns: 1,
+          gutter: 5,
+          centered: true,
+          resizeToFit: false, // will resize block bigger than the gap
+          resizeToFitOptions: {
+              resizeAny: true // will resize any block to fit the gap
+          },
+          animate: false,
+          animationOptions: {
+              speed: 20,
+              duration: 100,
+              queue: true,
+              complete: function () {} // call back :D works w/ or w/o animate
+          }
+        };
+        var $nContainer = $('#nestContainer').nested(nestOptions);
 
-</body>
+        ////////////////////////////////////////////////////////////////////
+        // generator for building and testing
+        function makeBoxes() {
+          var boxes = [],
+          count = Math.random()*15;
+          if (count < 5) count = 5;
+          for (var i=0; i < count; i++ ) {
+            var box = document.createElement('div');
+            box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
+            // add box DOM node to array of new elements
+            boxes.push( box );
+          }
+          return boxes;
+        };
+
+        $('#nestPrepend').click(function(){
+          var boxes = makeBoxes();
+          $nContainer.prepend(boxes).nested('prepend',boxes);
+        })
+        $('#nestAppend').click(function(){
+          var boxes = makeBoxes();
+          $nContainer.append(boxes).nested('append',boxes);
+        })
+        $('#nestNuke').click(function(){
+          $nContainer.children().remove();
+        })
+
+      }());
+    </script>
+
+  </body>
 </html>
