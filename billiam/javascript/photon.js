@@ -78,7 +78,7 @@ $(function(){
     var $fixnav = $('.fixnav');
 
     var nestOptions = {
-      minWidth: 200,
+      minWidth: 180,
       minColumns: 1,
       gutter: 5,
       centered: true,
