@@ -15,3 +15,22 @@
   overflow: scroll; }
   #tags .tag {
     margin: 2px; }
+
+.nestBox {
+  background-color: #ff4499;
+  border-radius: 3px;
+  transition: all 300ms cubic-bezier(1, 0, 0, 1);
+  /* easeInOutExpo */
+  transition-property: left, right, top; }
+  .nestBox img {
+    height: 100%;
+    width: auto; }
+
+#nestContainer {
+  background: #fff; }
+
+.size21, .size22, .size23, .twocols {
+  background: #ccc; }
+
+.size31, .size32, .size33, .threecols {
+  background: #ff9999; }

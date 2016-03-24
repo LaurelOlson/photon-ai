@@ -11,6 +11,8 @@
 // photon main
 var photon = (function() {
 
+  //////////////////////////////////////////////////////////
+  // this section is for construction and testing
   var bulmaColors = ['is-dark', null, 'is-success', 'is-warning', 'is-danger'];
   function randColor (){
     return bulmaColors[Math.floor(Math.random()*bulmaColors.length)];
@@ -25,8 +27,9 @@ var photon = (function() {
       $('#tags').append($('<span>').addClass('tag '+ randColor()).text('tag label'));
     }
   }
-  addDummy();
+  addDummy(); //NOTE: trigger
 
+  //////////////////////////////////////////////////////////
   // überHack to extend JS Hash function
   // so columns can find the shortest one
   Object.prototype.getKeyByValue = function(value) {
@@ -44,6 +47,7 @@ var photon = (function() {
       // column1: 1234 (auto parsed by updateColHeights)
     },
     shortest: function(){
+      updateColHeights();
       var values = [];
       for (var key in this.heights) {
           values.push(this.heights[key]);
@@ -66,13 +70,12 @@ var photon = (function() {
     }
   }
   function addToColumns(URL){
-    updateColHeights();
     var target = columns.shortest();
     console.log(target);
     $('#'+target).append($('<img>').attr('src', URL));
   }
 
-
+  //////////////////////////////////////////////////////////
   // footer fade in
   $(window).on('scroll', function() {
     var amountScrolled = 300;
@@ -83,6 +86,7 @@ var photon = (function() {
     }
   });
 
+  //////////////////////////////////////////////////////////
   // API
   return {
     addDummy: addDummy,
@@ -92,6 +96,12 @@ var photon = (function() {
   };
 
 }());
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
 
 
 ////////////////////////////////////////////////////////////////
