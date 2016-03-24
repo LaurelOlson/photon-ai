@@ -8,6 +8,7 @@ var request = require('request');
 var split = require('split');
 var faker = require('faker');
 var models = require(__dirname + '/../models/index.js');
+var secret_stuff = require('../secret_stuff.js');
 
 // SEED PHOTOS
 
@@ -77,7 +78,7 @@ var visionRequest = {
 //       visionRequest.requests[0].image.content = data;
 //       var request_options = {
 //         url: 'https://vision.googleapis.com/v1/images:annotate',
-//         qs: { key: 'AIzaSyANu3XdMMEHlIV0ehYSS_83r9HYwRNicoM' },
+//         qs: { key: secret_stuff.vision_key },
 //         method: 'POST',
 //         json: visionRequest
 //       };
