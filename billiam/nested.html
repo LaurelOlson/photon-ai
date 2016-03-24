@@ -55,39 +55,42 @@
     </section>
   </div>
 
+  <!-- "ghost" behind the fixed navbar to push everything down -->
   <div class="navpadding"></div>
 
-  <div id="nestContainer">
-    <div class="nestBox size11">
-      <img src="http://blueblots.com/wp-content/uploads/2010/11/12-red-sunset.jpg" />
+  <div class="container is-fluid">
+    <div id="nestContainer">
+      <div class="nestBox size11">
+        <img src="http://blueblots.com/wp-content/uploads/2010/11/12-red-sunset.jpg" />
+      </div>
+      <div class="nestBox size21">2</div>
+      <div class="nestBox size32">3</div>
+      <div class="nestBox size11">4</div>
+      <div class="nestBox size21">5</div>
+      <div class="nestBox size12">6</div>
+      <div class="nestBox size21">7</div>
+      <div class="nestBox size11">8</div>
+      <div class="nestBox size31">9</div>
+      <div class="nestBox size22">10</div>
+      <div class="nestBox size11">11</div>
+      <div class="nestBox size21">12</div>
+      <div class="nestBox size12">13</div>
+      <div class="nestBox size21">14</div>
+      <div class="nestBox size23">15</div>
+      <div class="nestBox size22">16</div>
+      <div class="nestBox size11">17</div>
+      <div class="nestBox size21">18</div>
+      <div class="nestBox size12">19</div>
+      <div class="nestBox size21">20</div>
+      <div class="nestBox size22">21</div>
+      <div class="nestBox size23">22</div>
+      <div class="nestBox size11">23</div>
+      <div class="nestBox size21">24</div>
+      <div class="nestBox size12">25</div>
+      <div class="nestBox size21">26</div>
+      <div class="nestBox size22">27</div>
+      <div class="nestBox size22">28</div>
     </div>
-    <div class="nestBox size21">2</div>
-    <div class="nestBox size32">3</div>
-    <div class="nestBox size11">4</div>
-    <div class="nestBox size21">5</div>
-    <div class="nestBox size12">6</div>
-    <div class="nestBox size21">7</div>
-    <div class="nestBox size11">8</div>
-    <div class="nestBox size31">9</div>
-    <div class="nestBox size22">10</div>
-    <div class="nestBox size11">11</div>
-    <div class="nestBox size21">12</div>
-    <div class="nestBox size12">13</div>
-    <div class="nestBox size21">14</div>
-    <div class="nestBox size23">15</div>
-    <div class="nestBox size22">16</div>
-    <div class="nestBox size11">17</div>
-    <div class="nestBox size21">18</div>
-    <div class="nestBox size12">19</div>
-    <div class="nestBox size21">20</div>
-    <div class="nestBox size22">21</div>
-    <div class="nestBox size23">22</div>
-    <div class="nestBox size11">23</div>
-    <div class="nestBox size21">24</div>
-    <div class="nestBox size12">25</div>
-    <div class="nestBox size21">26</div>
-    <div class="nestBox size22">27</div>
-    <div class="nestBox size22">28</div>
   </div>
 
 <script>
@@ -104,7 +107,10 @@
       }
       return boxes;
     };
-    $('#nestContainer').nested({minWidth: 200});
+    $('#nestContainer').nested({
+      minWidth: 200,
+      gutter: 5
+    });
     $('#nestPrepend').click(function(){
       var boxes = makeBoxes();
       $('#nestContainer').prepend(boxes).nested('prepend',boxes);

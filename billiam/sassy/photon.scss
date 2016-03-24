@@ -12,7 +12,7 @@ $widescreen: 1180px;
 
 .navpadding {
   width: 100%;
-  height: 140px; // height set by jquery || default
+  height: 132px;
 }
 
 #tags {
@@ -24,18 +24,35 @@ $widescreen: 1180px;
   }
 }
 
-.nestBox {
-	background-color:#ff4499;
-	border-radius:3px;
-  transition: all 300ms cubic-bezier(1.000, 0.000, 0.000, 1.000); /* easeInOutExpo */
-  transition-property: left, right, top;
-  img {
-    height: 100%;
-    width: auto;
+.flex-vater {
+  .flex-kind {
   }
 }
 
-#nestContainer { background: #fff;}
-
-.size21, .size22, .size23, .twocols { background: #ccc }
-.size31, .size32, .size33, .threecols { background: #ff9999 }
+#nestContainer {
+  background: #fff;
+  margin-left: auto;
+  margin-right: auto;
+  .nestBox {
+    background-color:#ff4499;
+    border-radius:3px;
+    transition: all 300ms cubic-bezier(1.000, 0.000, 0.000, 1.000); 
+    transition-property: left, right, top;
+    &.size21,
+    &.size22,
+    &.size23,
+    &.twocols {
+      background: #ccc
+    }
+    &.size31,
+    &.size32,
+    &.size33,
+    &.threecols {
+      background: #ff9999
+    }
+    img {
+      height: 100%;
+      width: auto;
+    }
+  }
+}
