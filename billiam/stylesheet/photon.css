@@ -29,6 +29,13 @@ body {
   #tags .tag {
     margin: 2px; }
 
+#nestContainer img {
+  height: 100%;
+  width: auto;
+  transition: all 400ms ease; }
+  #nestContainer img:hover {
+    opacity: 0.9; }
+
 #nestContainer .nestBox {
   background-color: #69707a;
   border-radius: 3px;
@@ -38,14 +45,14 @@ body {
     background: #aeb1b5; }
   #nestContainer .nestBox.size31, #nestContainer .nestBox.size32, #nestContainer .nestBox.size33, #nestContainer .nestBox.threecols {
     background: #d3d6db; }
-  #nestContainer .nestBox img {
-    height: 100%;
-    width: auto;
-    transition: all 200ms ease; }
-    #nestContainer .nestBox img:hover {
-      opacity: 0.5; }
 
-#loginBox .modal-container {
+#loginBox .modal-background {
+  opacity: 0.4; }
+
+#loginBox.box {
+  position: fixed;
+  height: 180px;
+  width: 600px;
   box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6); }
 
 .pLogo {
@@ -99,3 +106,6 @@ body {
 
 .is-transparent {
   opacity: 0.3; }
+
+.has-shadow {
+  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6); }

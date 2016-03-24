@@ -24,6 +24,18 @@ var photon = (function() {
     }
   }
 
+
+  //////////////////////////////////////////////////////////
+  // this section is for construction and testing
+  $('#imglegend').load(function(){
+     var w =    $(this).width();
+     var h =    $(this).height();
+     alert(w); alert(h);
+  }).error(function (){
+     $(this).remove();//remove image if it fails to load// or what ever u want
+  });
+
+
   //////////////////////////////////////////////////////////
   // API
   return {
@@ -68,6 +80,10 @@ $(function(){
     $nContainer.children().remove();
   });
   $('#loginTestBtn').on('click', function(){
+    $('#loginBox').toggleClass('is-active');
+  });
+
+  $('#loginBox').find('.modal-background').on('click', function(){
     $('#loginBox').toggleClass('is-active');
   });
 
@@ -173,7 +189,6 @@ $(function(){
   //////////////////////////////////////////////////////////
   // nestContainer
   var $nContainer = $('#nestContainer').nested(nestOptions);
-
 
 });
 
