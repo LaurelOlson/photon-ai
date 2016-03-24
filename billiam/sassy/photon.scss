@@ -34,25 +34,29 @@ $widescreen: 1180px;
   margin-left: auto;
   margin-right: auto;
   .nestBox {
-    background-color:#ff4499;
+    background-color:#69707a;
     border-radius:3px;
-    transition: all 300ms cubic-bezier(1.000, 0.000, 0.000, 1.000); 
+    transition: all 300ms cubic-bezier(1.000, 0.000, 0.000, 1.000);
     transition-property: left, right, top;
     &.size21,
     &.size22,
     &.size23,
     &.twocols {
-      background: #ccc
+      background: #aeb1b5;
     }
     &.size31,
     &.size32,
     &.size33,
     &.threecols {
-      background: #ff9999
+      background: #d3d6db;
     }
     img {
       height: 100%;
       width: auto;
+      transition: all 200ms ease;
+      &:hover {
+        opacity: 0.5;
+      }
     }
   }
 }

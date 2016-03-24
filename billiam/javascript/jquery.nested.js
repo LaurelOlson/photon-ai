@@ -63,8 +63,8 @@ if (!Object.keys) {
         selector: '.nestBox',
         minWidth: 50,
         minColumns: 1,
-        gutter: 1,
-        centered: false,
+        gutter: 5,
+        centered: true,
         resizeToFit: true, // will resize block bigger than the gap
         resizeToFitOptions: {
             resizeAny: true // will resize any block to fit the gap

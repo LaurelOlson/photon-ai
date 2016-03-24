@@ -94,7 +94,25 @@
   </div>
 
 <script>
-  $(function() {
+  var jNested = (function() {
+    var nestOptions = {
+      minWidth: 200,
+      minColumns: 1,
+      gutter: 5,
+      centered: true,
+      resizeToFit: false, // will resize block bigger than the gap
+      resizeToFitOptions: {
+          resizeAny: true // will resize any block to fit the gap
+      },
+      animate: false,
+      animationOptions: {
+          speed: 20,
+          duration: 100,
+          queue: true,
+          complete: function () {} // call back :D works w/ or w/o animate
+      }
+    };
+    var $nContainer = $('#nestContainer').nested(nestOptions);
     function makeBoxes() {
       var boxes = [],
       count = Math.random()*15;
@@ -107,19 +125,29 @@
       }
       return boxes;
     };
-    $('#nestContainer').nested({
-      minWidth: 200,
-      gutter: 5
-    });
+    // $(window).on('resize, orientationChange', function(){
+    //   $nContainer.nested({
+    //     minWidth: newSize
+    //   });
+    // });
+    //   $nContainer.nested({
+    //   minWidth: 200,
+    //   gutter: 5
+    // });
     $('#nestPrepend').click(function(){
       var boxes = makeBoxes();
-      $('#nestContainer').prepend(boxes).nested('prepend',boxes);
+      $nContainer.prepend(boxes).nested('prepend',boxes);
     })
     $('#nestAppend').click(function(){
       var boxes = makeBoxes();
-      $('#nestContainer').append(boxes).nested('append',boxes);
+      $nContainer.append(boxes).nested('append',boxes);
     })
-  });
+
+    return {
+      container: $nContainer
+    }
+
+  }());
 </script>
 
 </body>
