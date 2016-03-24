@@ -8,10 +8,12 @@
 <title>Nested</title>
 <link href="/stylesheet/photon.css" rel="stylesheet">
 <link href="/stylesheet/bulma.css" rel="stylesheet">
+<!-- javascript order is important -->
 <script src="/javascript/jquery-2.2.2.js"></script>
-<!-- <script src="/javascript/imghelper.js"></script> -->
 <script src="/javascript/jquery.nested.js"></script>
-<!-- NOTE: apparently this screws up Nested -->
+<script src="/javascript/imghelper.js"></script>
+<script src="/javascript/photon.js"></script>
+<!-- end javascript order is important -->
 </head>
 <body>
 
@@ -88,31 +90,6 @@
     <div class="nestBox size22">28</div>
   </div>
 
-  <section class="section">
-    <div class="container is-fluid">
-      <div class="columns is-gap-1">
-        <div id="column1" class="column">
-          <p class="button is-fullwidth is-success">#column1</p>
-          <img src="/images/1.jpg" alt="">
-          <img src="/images/2.jpg" alt="">
-          <img src="/images/3.jpg" alt="">
-        </div>
-        <div id="column2" class="column">
-          <p class="button is-fullwidth is-success">#column2</p>
-          <img src="/images/4.jpg" alt="">
-          <img src="/images/5.jpg" alt="">
-          <img src="/images/6.jpg" alt="">
-        </div>
-        <div id="column3" class="column">
-          <p class="button is-fullwidth is-success">#column3</p>
-          <img src="/images/7.jpg" alt="">
-          <img src="/images/8.jpg" alt="">
-          <img src="/images/9.jpg" alt="">
-        </div>
-      </div>
-    </div>
-  </section>
-
 <script>
   $(function() {
     function makeBoxes() {
@@ -139,6 +116,5 @@
   });
 </script>
 
-<script src="/javascript/photon.js"></script>
 </body>
 </html>
