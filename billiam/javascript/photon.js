@@ -41,6 +41,37 @@ var photon = (function() {
 $(function(){
 
   //////////////////////////////////////////////////////////
+  // helpers while building
+
+  function makeBoxes() {
+    var boxes = [],
+    count = Math.random()*15;
+    if (count < 5) count = 5;
+    for (var i=0; i < count; i++ ) {
+      var box = document.createElement('div');
+      box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
+      // add box DOM node to array of new elements
+      boxes.push( box );
+    }
+    return boxes;
+  }
+
+  $('#nestPrepend').click(function(){
+    var boxes = makeBoxes();
+    $nContainer.prepend(boxes).nested('prepend',boxes);
+  });
+  $('#nestAppend').click(function(){
+    var boxes = makeBoxes();
+    $nContainer.append(boxes).nested('append',boxes);
+  });
+  $('#nestNuke').click(function(){
+    $nContainer.children().remove();
+  });
+  $('#loginTestBtn').on('click', function(){
+    $('#loginBox').toggleClass('is-active');
+  });
+
+  //////////////////////////////////////////////////////////
   // all the $vars for UI manipulation
     var defaultPadding = 5;
     var scrollPoint = 300;
@@ -80,7 +111,7 @@ $(function(){
 
   //////////////////////////////////////////////////////////
   // logo
-
+  // forked from http://codepen.io/winkerVSbecks/pen/EVJGVj by Varun Vachhar
     buildWave(90, 60);
     function buildWave(w, h) {
       var pLogo = document.querySelector('#wave');
@@ -139,39 +170,9 @@ $(function(){
       pLogo.setAttribute('d', pathData);
     }
 
-
   //////////////////////////////////////////////////////////
   // nestContainer
   var $nContainer = $('#nestContainer').nested(nestOptions);
-
-  ////////////////////////////////////////////////////////////////////
-  // generator for building and testing
-  function makeBoxes() {
-    var boxes = [],
-    count = Math.random()*15;
-    if (count < 5) count = 5;
-    for (var i=0; i < count; i++ ) {
-      var box = document.createElement('div');
-      box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
-      // add box DOM node to array of new elements
-      boxes.push( box );
-    }
-    return boxes;
-  }
-
-  $('#nestPrepend').click(function(){
-    var boxes = makeBoxes();
-    $nContainer.prepend(boxes).nested('prepend',boxes);
-  });
-  $('#nestAppend').click(function(){
-    var boxes = makeBoxes();
-    $nContainer.append(boxes).nested('append',boxes);
-  });
-  $('#nestNuke').click(function(){
-    $nContainer.children().remove();
-  });
-
-
 
 
 });

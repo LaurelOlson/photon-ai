@@ -25,6 +25,7 @@ $yellow:	#fce473;
 $primary:	$turquoise;
 
 $borderRadius: 3px;
+$boxShadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6);
 
 
 ////////////////////////////////////////////////////////////////
@@ -113,10 +114,10 @@ body {
   }
 }
 
-.login {
-  height: 30vh;
-  width: 40vw;
-  background: $white;
+#loginBox {
+  .modal-container {
+    box-shadow: $boxShadow;
+  }
 }
 
 .pLogo {

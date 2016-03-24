@@ -45,10 +45,8 @@ body {
     #nestContainer .nestBox img:hover {
       opacity: 0.5; }
 
-.login {
-  height: 30vh;
-  width: 40vw;
-  background: #fff; }
+#loginBox .modal-container {
+  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6); }
 
 .pLogo {
   border: 3px solid #1fc8db;

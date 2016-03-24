@@ -8,6 +8,7 @@
     <title>Nested</title>
     <link href="/stylesheet/photon.css" rel="stylesheet">
     <link href="/stylesheet/bulma.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- javascript order is important -->
     <script src="/javascript/jquery-2.2.2.js"></script>
     <script src="/javascript/jquery.nested.js"></script>
@@ -48,6 +49,7 @@
                 <p id="nestPrepend">Prepend</p>
                 <p id="nestAppend">Append</p>
                 <p id="nestNuke">Nuke</p>
+                <p id="loginTestBtn">Login</p>
                 <!-- padding -->
               </div>
               <div id="tags" class="column is-6 is-text-left">
@@ -84,9 +86,31 @@
     </div>
 
     <div class="photonLayer layer-2">
-      <!-- <div class="login">
-
-      </div> -->
+        <div id="loginBox" class="modal">
+          <div class="modal-container">
+            <div class="modal-content">
+              <div class="box">
+                <p class="is-pulled-right"><strong>photon</strong>.ai</p>
+                <div>
+                  &nbsp;<!-- clearfix -->
+                </div>
+                <p class="control has-icon">
+                  <input class="input" type="email" placeholder="Email">
+                  <i class="fa fa-envelope"></i>
+                </p>
+                <p class="control has-icon">
+                  <input class="input" type="password" placeholder="Password">
+                  <i class="fa fa-lock"></i>
+                </p>
+                <p class="control">
+                  <button class="button is-success">Login</button>
+                  <button class="button">Register</button>
+                  <button class="button is-info is-pulled-right">login with Facebook</button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
 
   </body>
