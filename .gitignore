@@ -2,3 +2,7 @@ node_modules
 npm-debug.log
 
 secret_stuff.js
+
+seeders/temp
+
+.DS_Store
