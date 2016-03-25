@@ -3,7 +3,7 @@
 var fs = require('fs');
 var request = require('request');
 var models = require(__dirname + '/../models/index.js');
-var secret_stuff = require('../secret_stuff.js');
+var secret_stuff = require('../secret_stuff/secret_stuff.js');
 
 // GET PHOTO TAGS & SEED TAGS/PHOTO_TAGS
 
