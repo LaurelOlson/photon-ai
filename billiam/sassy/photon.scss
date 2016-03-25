@@ -95,30 +95,25 @@ body {
 }
 
 #nestContainer {
-  img {
-    height: 100%;
-    width: auto;
-    transition: all 400ms ease;
-    &:hover {
-      opacity: 0.9;
-    }
-  }
+  // TODO: image not yet centered, custom grid and cropping gets it close, but
+  // the best case is to also center, so that crop is even
   .nestBox {
+    // display: flex !important; // NOTE: overriding nestedJS, these 3 lines might help center
+    // justify-content: center;
+    // align-items: center;
+    overflow: hidden;
     background-color:#69707a;
     border-radius:3px;
     transition: all 300ms cubic-bezier(1.000, 0.000, 0.000, 1.000);
     transition-property: left, right, top;
-    &.size21,
-    &.size22,
-    &.size23,
-    &.twocols {
-      background: #aeb1b5;
-    }
-    &.size31,
-    &.size32,
-    &.size33,
-    &.threecols {
-      background: #d3d6db;
+    img {
+      max-width: none; // NOTE: overrides Bulma's 100%
+      height: 100%; // auto-set by photon
+      width: auto; // auto-set by photon
+      transition: all 400ms ease;
+      &:hover {
+        opacity: 0.9;
+      }
     }
   }
 }

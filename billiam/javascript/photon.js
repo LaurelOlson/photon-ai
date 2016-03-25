@@ -8,38 +8,18 @@
   // touch.js emits a swipe event and swipe html target ('leftSwipe', <p>oeu</p>)
 
 
-// photon main
+// photon main IIFE with API
+// async should go to the jQuery wrapper below, on doc ready
 var photon = (function() {
 
   //////////////////////////////////////////////////////////
-  // this section is for construction and testing
-  var bulmaColors = ['is-dark', null, 'is-success', 'is-warning', 'is-danger'];
-  function randColor (){
-    return bulmaColors[Math.floor(Math.random()*bulmaColors.length)];
-  }
-
-  function addDummy(){
-    for (var n = 0; n < 20; n++){
-      $('#tags').append($('<span>').addClass('tag '+ randColor()).text('tag label'));
-    }
-  }
-
-
-  //////////////////////////////////////////////////////////
-  // this section is for construction and testing
-  var testURL = "https://drscdn.500px.org/photo/145937969/m%3D1080_k%3D1_a%3D1/4bf683311a2660bc80d03cb5e30a3c0e";
-  function preLoadImg(url){
-    var myImgObj = new Image();
-    myImgObj.src = url;
-    return myImgObj;
-  }
-
+  // fitting images to nestedJS grid, loading them to page
   var gridDict = {
     // example
     // 0.66: ['23'],
     // 0.5: ['12', '24']
   };
-  function genGrid (cols, rows){
+  (function genGrid (cols, rows){
     for (var i = 1; i < (cols+1); i++){
       for (var j = 1; j < (rows+1); j++){
         var ratio = (i / j).toString();
@@ -50,7 +30,7 @@ var photon = (function() {
       }
     }
     return true;
-  }
+  }(5,5)); // IIFE also makes it anon.
 
   function gridFitter(width, height){
     var bestFit = {
@@ -60,22 +40,24 @@ var photon = (function() {
     var myAspRatio = width / height; // float, ex. 0.73, 1.25..
     for(var key in gridDict){
       var gridVal = gridDict[key];
-      newErr = Math.abs(myAspRatio - Number(key));
+      newErr = Math.abs(myAspRatio - Number(key)); // TODO: can add trim w/h to this
       if (newErr < bestFit.startErr) {
         bestFit.ratios = gridVal;
         bestFit.startErr = newErr;
       }
     }
     var randSample = bestFit.ratios[Math.floor(Math.random()*bestFit.ratios.length)];
-    return randSample; // ex. [3,2]
+    if (myAspRatio > randSample[0]/randSample[1]){
+      randSample.push('height: 100%; width: auto;');
+    } else {
+      randSample.push('width: 100%, height: auto;');
+    } // doesn't need one for 1:1, because no trim, ergo agnostic
+    return randSample; // ex. [3,2, (css)]
   }
 
   //////////////////////////////////////////////////////////
   // API
   return {
-    addDummy: addDummy,
-    preLoadImg: preLoadImg,
-    genGrid: genGrid,
     gridFitter: gridFitter
   };
 }());
@@ -86,7 +68,8 @@ var photon = (function() {
 ////////////////////////////////////////////////////////////////
 // UI //////////////////////////////////////////////////////////
 
-
+// photon jQuery wrapper for doc ready
+// no API here (yet?)
 $(function(){
 
   //////////////////////////////////////////////////////////
@@ -124,108 +107,133 @@ $(function(){
     $('#loginBox').toggleClass('is-active');
   });
 
+  // add tags to header
+  var bulmaColors = ['is-dark', null, 'is-success', 'is-warning', 'is-danger'];
+  function randColor (){
+    return bulmaColors[Math.floor(Math.random()*bulmaColors.length)];
+  }
+
+  (function addDummy(qty){
+    for (var n = 0; n < 20; n++){
+      $('#tags').append($('<span>').addClass('tag '+ randColor()).text('tag label'));
+    }
+  }(21));
+
   //////////////////////////////////////////////////////////
   // all the $vars for UI manipulation
-    var defaultPadding = 5;
-    var scrollPoint = 300;
-    var $fixnav = $('.fixnav');
+  var defaultPadding = 5;
+  var scrollPoint = 300;
+  var $fixnav = $('.fixnav');
+  var pLogo = document.querySelector('#wave');
+  var $nContainer = $('#nestContainer');
+  var $navPadding = $('.navpadding');
+  var $window = $(window);
 
-    var nestOptions = {
-      minWidth: 177,
-      minColumns: 1,
-      gutter: 5,
-      centered: true,
-      resizeToFit: false, // will resize block bigger than the gap
-      resizeToFitOptions: {
-        resizeAny: true // will resize any block to fit the gap
-      },
-      animate: false,
-      animationOptions: {
-        speed: 20,
-        duration: 100,
-        queue: true,
-        complete: function () {} // call back :D works w/ or w/o animate
-      }
-    };
+  var nestOptions = {
+    minWidth: 177,
+    minColumns: 1,
+    gutter: 5,
+    centered: true,
+    resizeToFit: false, // will resize block bigger than the gap
+    resizeToFitOptions: {
+      resizeAny: true // will resize any block to fit the gap
+    },
+    animate: false,
+    animationOptions: {
+      speed: 20,
+      duration: 100,
+      queue: true,
+      complete: function () {} // call back :D works w/ or w/o animate
+    }
+  };
+
+  //////////////////////////////////////////////////////////
+  // nestContainer
+  function addImgToNest (imgObj){
+    var imgElement = $('<img>').addClass('nestBox');
+    var width = imgObj.width;
+    var height = imgObj.height;
+    var url = imgObj.originalURL;
+  }
+
+
+  //////////////////////////////////////////////////////////
+  // nestContainer
+  $nContainer.nested(nestOptions);
 
   //////////////////////////////////////////////////////////
   // footer fade in
-    $(window).on('scroll', function() {
-      if ( $(window).scrollTop() > scrollPoint ) {
-        $fixnav.css('opacity', 0.8);
-      } else {
-        $fixnav.css('opacity', 1);
-      }
-    });
+  $window.on('scroll', function() {
+    if ( $(window).scrollTop() > scrollPoint ) {
+      $fixnav.css('opacity', 0.8);
+    } else {
+      $fixnav.css('opacity', 1);
+    }
+  });
 
   //////////////////////////////////////////////////////////
   // navpadding
-    $('.navpadding').css('height', $fixnav.height() + defaultPadding);
+  $navPadding.css('height', $fixnav.height() + defaultPadding);
 
   //////////////////////////////////////////////////////////
   // logo
   // forked from http://codepen.io/winkerVSbecks/pen/EVJGVj by Varun Vachhar
-    buildWave(90, 60);
-    function buildWave(w, h) {
-      var pLogo = document.querySelector('#wave');
-      var logoSmoothness = 0.5;
-      var a = h / 4;
-      var y = h / 2;
-      var pathData = [
-        'M', w * 0, y + a / 2,
-        'c',
-          a * logoSmoothness, 0,
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-        's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-        's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-        's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-        's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-        's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-        's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-        's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-        's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-        's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-        's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-        's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-        's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-        's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-        's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a
-      ].join(' ');
-      pLogo.setAttribute('d', pathData);
-    }
-
-  //////////////////////////////////////////////////////////
-  // nestContainer
-  var $nContainer = $('#nestContainer').nested(nestOptions);
+  buildWave(90, 60);
+  function buildWave(w, h) {
+    var logoSmoothness = 0.5;
+    var a = h / 4;
+    var y = h / 2;
+    var pathData = [
+      'M', w * 0, y + a / 2,
+      'c',
+        a * logoSmoothness, 0,
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+      's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+      's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+      's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+      's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+      's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+      's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+      's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+      's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+      's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+      's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+      's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+      's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+      's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+      's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a
+    ].join(' ');
+    pLogo.setAttribute('d', pathData);
+  }
 
 });
 
