@@ -30,22 +30,26 @@ body {
     margin: 2px; }
 
 #nestContainer .nestBox {
+  overflow: hidden;
   background-color: #69707a;
   border-radius: 3px;
   transition: all 300ms cubic-bezier(1, 0, 0, 1);
   transition-property: left, right, top; }
-  #nestContainer .nestBox.size21, #nestContainer .nestBox.size22, #nestContainer .nestBox.size23, #nestContainer .nestBox.twocols {
-    background: #aeb1b5; }
-  #nestContainer .nestBox.size31, #nestContainer .nestBox.size32, #nestContainer .nestBox.size33, #nestContainer .nestBox.threecols {
-    background: #d3d6db; }
   #nestContainer .nestBox img {
+    max-width: none;
     height: 100%;
     width: auto;
-    transition: all 200ms ease; }
+    transition: all 400ms ease; }
     #nestContainer .nestBox img:hover {
-      opacity: 0.5; }
+      opacity: 0.9; }
 
-#loginBox .modal-container {
+#loginBox .modal-background {
+  opacity: 0.4; }
+
+#loginBox.box {
+  position: fixed;
+  height: 180px;
+  width: 600px;
   box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6); }
 
 .pLogo {
@@ -99,3 +103,6 @@ body {
 
 .is-transparent {
   opacity: 0.3; }
+
+.has-shadow {
+  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6); }

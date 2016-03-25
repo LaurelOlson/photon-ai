@@ -57,6 +57,7 @@ body {
   height: 1px; // auto set by photon
 }
 
+// .photonModal,
 .photonLayer {
   display: flex;
   flex-direction: column;
@@ -69,6 +70,14 @@ body {
   width: 100%;
 }
 
+// NOTE: probably not needed anymore
+// .photonModal {
+//   display: none;
+//   z-index: 4;
+//   &.is-active{
+//     display: flex;
+//   }
+// }
 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
@@ -87,35 +96,33 @@ body {
 
 #nestContainer {
   .nestBox {
-    background-color:#69707a;
+    // background:url() no-repeat center center; // set by JS
+    // background-size: auto 100%; // width height; set by JS
+    overflow: hidden;
+    background-color:#69707a; // TODO: add a img broken logo perhaps? Ideally taken care of by JS
     border-radius:3px;
     transition: all 300ms cubic-bezier(1.000, 0.000, 0.000, 1.000);
     transition-property: left, right, top;
-    &.size21,
-    &.size22,
-    &.size23,
-    &.twocols {
-      background: #aeb1b5;
-    }
-    &.size31,
-    &.size32,
-    &.size33,
-    &.threecols {
-      background: #d3d6db;
-    }
     img {
-      height: 100%;
-      width: auto;
-      transition: all 200ms ease;
+      max-width: none; // NOTE: overrides Bulma's 100%
+      height: 100%; // auto-set by photon
+      width: auto; // auto-set by photon
+      transition: all 400ms ease;
       &:hover {
-        opacity: 0.5;
+        opacity: 0.9;
       }
     }
   }
 }
 
 #loginBox {
-  .modal-container {
+  .modal-background {
+    opacity: 0.4;
+  }
+  &.box {
+    position: fixed;
+    height: 180px;
+    width: 600px;
     box-shadow: $boxShadow;
   }
 }
@@ -183,4 +190,7 @@ body {
 }
 .is-transparent {
   opacity: 0.3;
+}
+.has-shadow {
+  box-shadow: $boxShadow;
 }
