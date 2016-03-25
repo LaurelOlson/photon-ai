@@ -27,19 +27,56 @@ var photon = (function() {
 
   //////////////////////////////////////////////////////////
   // this section is for construction and testing
-  $('#imglegend').load(function(){
-     var w =    $(this).width();
-     var h =    $(this).height();
-     alert(w); alert(h);
-  }).error(function (){
-     $(this).remove();//remove image if it fails to load// or what ever u want
-  });
+  var testURL = "https://drscdn.500px.org/photo/145937969/m%3D1080_k%3D1_a%3D1/4bf683311a2660bc80d03cb5e30a3c0e";
+  function preLoadImg(url){
+    var myImgObj = new Image();
+    myImgObj.src = url;
+    return myImgObj;
+  }
 
+  var gridDict = {
+    // example
+    // 0.66: ['23'],
+    // 0.5: ['12', '24']
+  };
+  function genGrid (cols, rows){
+    for (var i = 1; i < (cols+1); i++){
+      for (var j = 1; j < (rows+1); j++){
+        var ratio = (i / j).toString();
+        if (!gridDict.hasOwnProperty(ratio)){
+          gridDict[ratio] = [];
+        }
+        gridDict[ratio].push([i, j]);
+      }
+    }
+    return true;
+  }
+
+  function gridFitter(width, height){
+    var bestFit = {
+      ratios: [],
+      startErr: Infinity
+    };
+    var myAspRatio = width / height; // float, ex. 0.73, 1.25..
+    for(var key in gridDict){
+      var gridVal = gridDict[key];
+      newErr = Math.abs(myAspRatio - Number(key));
+      if (newErr < bestFit.startErr) {
+        bestFit.ratios = gridVal;
+        bestFit.startErr = newErr;
+      }
+    }
+    var randSample = bestFit.ratios[Math.floor(Math.random()*bestFit.ratios.length)];
+    return randSample; // ex. [3,2]
+  }
 
   //////////////////////////////////////////////////////////
   // API
   return {
     addDummy: addDummy,
+    preLoadImg: preLoadImg,
+    genGrid: genGrid,
+    gridFitter: gridFitter
   };
 }());
 
@@ -94,7 +131,7 @@ $(function(){
     var $fixnav = $('.fixnav');
 
     var nestOptions = {
-      minWidth: 180,
+      minWidth: 177,
       minColumns: 1,
       gutter: 5,
       centered: true,
@@ -200,29 +237,106 @@ $(function(){
 
 
 var samplePhotoObj = {
-  id: Math.floor(Math.random() * (120 - 22 + 1)) + 120,
-  originalURL: imgHelper.genLongEdgeURL(2000, 2000),
-  smallURL: imgHelper.genLongEdgeURL(500, 500),
-  largeURL: imgHelper.genLongEdgeURL(1500, 1500),
-  tags: ['people', 'water', 'city', 'portrait', 'abstract', 'gallery', 'camera', 'lecia', 'canon', 'hipster'],
-  faceAnnotations: {
-    joyLikelihood: "VERY_LIKELY",
-    sorrowLikelihood: "VERY_UNLIKELY",
-    angerLikelihood: "VERY_UNLIKELY",
-    surpriseLikelihood: "VERY_UNLIKELY",
-    underExposedLikelihood: "VERY_UNLIKELY",
-    blurredLikelihood: "VERY_UNLIKELY",
-    headwearLikelihood: "VERY_UNLIKELY"
-  },
-  landmarkAnnotations: {
-    description: "Tour Eiffel",
-    latitude: 48.858461,
-    longitude: 2.294351
-  },
-  safeSearchAnnotation: {
-    adult: "VERY_LIKELY",
-    spoof: "VERY_UNLIKELY",
-    medical: "VERY_UNLIKELY",
-    violence: "UNLIKELY"
-  }
+  photos: [
+    {
+      originalURL: 'images/22.jpg',
+      width: 1080,
+      height: 1080,
+    },
+    {
+      originalURL: 'images/26.jpg',
+      width: 1080,
+      height: 717,
+    },
+    {
+      originalURL: 'images/20.jpg',
+      width: 1080,
+      height: 1080,
+    },
+    {
+      originalURL: 'images/36.jpg',
+      width: 720,
+      height: 1080,
+    },
+    {
+      originalURL: 'images/39.jpg',
+      width: 1080,
+      height: 720,
+    },
+    {
+      originalURL: 'images/18.jpg',
+      width: 1080,
+      height: 720,
+    },
+    {
+      originalURL: 'images/9.jpg',
+      width: 1080,
+      height: 720,
+    },
+    {
+      originalURL: 'images/35.jpg',
+      width: 1080,
+      height: 1080,
+    },
+    {
+      originalURL: 'images/33.jpg',
+      width: 950,
+      height: 650,
+    },
+    {
+      originalURL: 'images/31.jpg',
+      width: 280,
+      height: 280,
+    },
+    {
+      originalURL: 'images/24.jpg',
+      width: 1080,
+      height: 654,
+    },
+    {
+      originalURL: 'images/2.jpg',
+      width: 1080,
+      height: 391,
+    },
+    {
+      originalURL: 'images/21.jpg',
+      width: 1080,
+      height: 608,
+    },
+    {
+      originalURL: 'images/4.jpg',
+      width: 1080,
+      height: 720,
+    },
+    {
+      originalURL: 'images/17.jpg',
+      width: 1080,
+      height: 720,
+    },
+    {
+      originalURL: 'images/12.jpg',
+      width: 1080,
+      height: 720,
+    },
+    {
+      originalURL: 'images/19.jpg',
+      width: 1080,
+      height: 719,
+    },
+    {
+      originalURL: 'images/15.jpg',
+      width: 1080,
+      height: 683,
+    },
+    {
+      originalURL: 'images/32.jpg',
+      width: 1080,
+      height: 721,
+    },
+    {
+      originalURL: 'images/28.jpg',
+      width: 1080,
+      height: 705,
+    }
+  ]
 };
