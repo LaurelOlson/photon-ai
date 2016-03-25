@@ -40,6 +40,7 @@ router.get('/users/:id/photos', function(req, res, next) {
             user_photos[i].tags.push(tag_hash);
           });
           console.log(user_photos);
+          res.json(user_photos);
         });
 
       }); // end photos.forEach
