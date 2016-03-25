@@ -6,7 +6,7 @@
 
 var app = require('../app');
 var debug = require('debug')('photon-ai:server');
-var http = require('http');
+var https = require('https');
 var models = require('../models');
 var fs = require('fs');
 
@@ -21,13 +21,13 @@ app.set('port', port);
  * Create HTTP server.
  */
  var options = {
-  key: fs.readFileSync('../server.key'),
-  cert: fes.readFileSync('../server.crt'),
+  key: fs.readFileSync('./server.key'),
+  cert: fs.readFileSync('./server.crt'),
   requestCert: false,
   rejectUnauthorized: false
  };
 
-var server = http.createServer(options, app);
+var server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
