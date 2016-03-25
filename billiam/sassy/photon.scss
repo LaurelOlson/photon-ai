@@ -95,14 +95,11 @@ body {
 }
 
 #nestContainer {
-  // TODO: image not yet centered, custom grid and cropping gets it close, but
-  // the best case is to also center, so that crop is even
   .nestBox {
-    // display: flex !important; // NOTE: overriding nestedJS, these 3 lines might help center
-    // justify-content: center;
-    // align-items: center;
+    // background:url() no-repeat center center; // set by JS
+    // background-size: auto 100%; // width height; set by JS
     overflow: hidden;
-    background-color:#69707a;
+    background-color:#69707a; // TODO: add a img broken logo perhaps? Ideally taken care of by JS
     border-radius:3px;
     transition: all 300ms cubic-bezier(1.000, 0.000, 0.000, 1.000);
     transition-property: left, right, top;
