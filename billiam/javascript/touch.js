@@ -1,20 +1,23 @@
 // listens for touch events and emit an eventName and touch target to an event bus
 // config UX(sensitivity) and pubsub
-// currently handles swipe + direction
-// TODO build a tap handler to trigger tap feedback animation
+// currently handles swipe + direction and tap
+// NOTE: arrow keys simulate swipe can be enabled, comment it back in
 
 (function(){
 
   // config: minimum swipe distance over a given time
   // i.e.: must swipe at least (x || y) pixels under (dur) milliseconds
-  var sensitivityX = 50; // pixels
-  var sensitivityY = 50; // pixels
-  var maxDuration = 500; // milliseconds
+  var sensitivityX = 30; // pixels
+  var sensitivityY = 30; // pixels
+  var maxDuration = 1000; // milliseconds, set timeout, can't swipe forever..
+  var minDuration = 80;  // milliseconds, below this, it's a tap event
+  var safetyDuration = 20; // milliseconds, prevent unintentional touches
   var pubsub = eventBus; // your global listener variable
 
   document.addEventListener('touchstart', handleTouchStart, false);
   document.addEventListener('touchmove', handleTouchMove, false);
   document.addEventListener('touchend', handleTouchEnd, false);
+  // document.addEventListener('keyup', handleArrowKeys, false);
 
   var xDown;
   var yDown;
@@ -34,7 +37,11 @@
 
   function handleTouchEnd(evt){
     var duration = evt.timeStamp - timeStart;
-    if (duration > maxDuration){
+    if (duration > maxDuration || duration < safetyDuration){
+      // timeout
+      return;
+    } else if (duration < minDuration && duration > safetyDuration){
+      pubsub.emit('tap', target);
       return;
     }
 
@@ -55,6 +62,7 @@
   }
 
   function handleTouchMove(evt){
+    // evt.preventDefault(); // on mobile it prevents window scrolling
     if (!newTouchFlag){
       return;
     }
@@ -86,5 +94,24 @@
       }
     }
   }
+
+  // NOTE: enable this for arrow-key testing of touch on desktop
+  // function handleArrowKeys(evt){
+  //   var msg = 'arrow triggered, no target';
+  //   switch(evt.keyCode){
+  //     case 37:
+  //       pubsub.emit('leftSwipe', msg);
+  //       break;
+  //     case 39:
+  //       pubsub.emit('rightSwipe', msg);
+  //       break;
+  //     case 38:
+  //       pubsub.emit('upSwipe', msg);
+  //       break;
+  //     case 40:
+  //       pubsub.emit('downSwipe', msg);
+  //       break;
+  //   }
+  // }
 
 }());
