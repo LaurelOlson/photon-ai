@@ -21,8 +21,8 @@ app.set('port', port);
  * Create HTTP server.
  */
  var options = {
-  key: fs.readFileSync('./server.key'),
-  cert: fs.readFileSync('./server.crt'),
+  key: fs.readFileSync('./secret_stuff/server.key'),
+  cert: fs.readFileSync('./secret_stuff/server.crt'),
   requestCert: false,
   rejectUnauthorized: false
  };
