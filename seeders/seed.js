@@ -15,11 +15,11 @@ const NUM_PHOTOS = 600;
 
 // SEED PHOTOS
 
-var readStream = fs.createReadStream('seeders/imglinks.csv');
-var lineStream = readStream.pipe(split());
-lineStream.on('data', function(data) {
-  models.photo.create({ url: data });
-});
+// var readStream = fs.createReadStream('seeders/imglinks.csv');
+// var lineStream = readStream.pipe(split());
+// lineStream.on('data', function(data) {
+//   models.photo.create({ url: data });
+// });
 
 // GET PHOTO TAGS & SEED TAGS/PHOTO_TAGS
 
@@ -53,83 +53,83 @@ var visionRequest = {
   ]
 };
 
-// models.photo.findAll( { limit: 50 }).then(function(promises) {
-//   promises.forEach(function(photo) {
-//     seedTag(photo);
-//   });
-// });
+models.photo.findAll( { where: { id: { between: [350, 450] } } }).then(function(promises) {
+  promises.forEach(function(photo) {
+    seedTag(photo);
+  });
+});
 
-// var download = function(uri, filename, callback) {
-//   request.head(uri, function(err, res, body) {
-//     if (err) { 
-//       return console.error(err);
-//     }
-//     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-//   });
-// };
+var download = function(uri, filename, callback) {
+  request.head(uri, function(err, res, body) {
+    if (err) { 
+      return console.error(err);
+    }
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  });
+};
 
-// function seedTag(photo) {
-//   var file = 'seeders/temp/photo-' + photo.id + '.jpg'
-//   download(photo.url, file, convertToBase64);
+function seedTag(photo) {
+  var file = 'seeders/temp/photo-' + photo.id + '.jpg';
+  download(photo.url, file, convertToBase64);
 
-//   function convertToBase64(err, data) {
-//     if (err) {
-//       return console.error(err);
-//     }
-//     fs.readFile(file, 'base64', sendToGoogleVision);
-//   }
+  function convertToBase64(err, data) {
+    if (err) {
+      return console.error(err);
+    }
+    fs.readFile(file, 'base64', sendToGoogleVision);
+  }
 
-//   function sendToGoogleVision(err, data) {
-//     if (err) {
-//       return console.error(err);
-//     }
-//     visionRequest.requests[0].image.content = data;
-//     var request_options = {
-//       url: 'https://vision.googleapis.com/v1/images:annotate',
-//       qs: { key: secret_stuff.vision_key },
-//       method: 'POST',
-//       json: visionRequest
-//     };
-//     request(request_options, parseResponse);
-//   }
+  function sendToGoogleVision(err, data) {
+    if (err) {
+      return console.error(err);
+    }
+    visionRequest.requests[0].image.content = data;
+    var request_options = {
+      url: 'https://vision.googleapis.com/v1/images:annotate',
+      qs: { key: secret_stuff.vision_key },
+      method: 'POST',
+      json: visionRequest
+    };
+    request(request_options, parseResponse);
+  }
 
-//   function parseResponse(error, response, body) {
-//     if (error) {
-//       return console.error(error);
-//     }
-//     var tags = [];
-//     var landmarks = body.responses[0].landmarkAnnotations;
-//     var labels = body.responses[0].labelAnnotations;
-//     var safesearch = body.respones[0].safeSearchAnnotation;
-//     if (labels) {
-//       labels.forEach(function(label) {
-//         if (label.score >= MIN_LABEL_SCORE) {
-//           tags.push({ name: label.description, type: 'label' });
-//         }
-//       });
-//     }
-//     if (landmarks) {
-//       landmarks.forEach(function(landmark) {
-//         tags.push({ name: landmark.description, type: 'landmark' });
-//       });
-//     }
-//     tags.forEach(addTagToDB);
-//   }
+  function parseResponse(error, response, body) {
+    if (error) {
+      return console.error(error);
+    }
+    var tags = [];
+    var landmarks = body.responses[0].landmarkAnnotations;
+    var labels = body.responses[0].labelAnnotations;
+    if (labels) {
+      labels.forEach(function(label) {
+        if (label.score >= MIN_LABEL_SCORE) {
+          tags.push({ name: label.description, type: 'label' });
+        }
+      });
+    }
+    if (landmarks) {
+      landmarks.forEach(function(landmark) {
+        tags.push({ name: landmark.description, type: 'landmark' });
+      });
+    }
+    tags.forEach(addTagToDB);
+  }
 
-//   function addTagToDB(vision_tag) {
-//     models.tag.findOrCreate({ where: { name: vision_tag.name, type: vision_tag.type } }).then(function(promise) {
-//       var tag = promise[0];
-//       photo.addTag(tag).then(function() {
-//         photo.hasTag(tag).then(console.log);
-//         tag.hasPhoto(photo).then(console.log);
-//       });
-//     });
-//   }
-// }
+  function addTagToDB(vision_tag) {
+    models.tag.findOrCreate({ where: { name: vision_tag.name, type: vision_tag.type } }).then(function(promise) {
+      var tag = promise[0];
+      photo.addTag(tag).then(function() {
+        photo.hasTag(tag).then(console.log);
+        tag.hasPhoto(photo).then(console.log);
+      });
+    });
+  }
+}
 
 // SEED USERS, LIKED_PHOTOS, ADDED_PHOTOS
 
-// const NUM < 5) { // Create 5 users
+// var i = 0;
+// while (i < 25) { // Create 25 users
 //   models.user.create({
 //     firstname: faker.name.firstName(),
 //     lastname: faker.name.lastName(),
@@ -137,9 +137,9 @@ var visionRequest = {
 //     password: 'password' 
 //   }).then(function(user) {
 //     var x = 0;
-//     while (x < 3) { // Randomly assign 3 photos to each user as like or add
+//     while (x < 25) { // Randomly assign 25 photos to each user as like or add
 //       var id = Math.floor((Math.random() * NUM_PHOTOS) + 1);
-//       if ( id % 2 === 0 ) { // add user as liker
+//       if ( id % 3 === 0 ) { // add user as liker
 //         models.photo.findById(id).then(function(photo) {
 //           photo.addLiker(user).then(function() {
 //             photo.hasLiker(user).then(console.log); // should return true
