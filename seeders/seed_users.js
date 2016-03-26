@@ -9,10 +9,10 @@ const NUM_PHOTOS = 300;
 var i = 0;
 while (i < 25) { // Create 25 users
   models.user.create({
-    firstname: faker.name.firstName(),
-    lastname: faker.name.lastName(),
+    name: faker.name.firstName(),
     email: faker.internet.email(),
-    password: 'password' 
+    fbook_id: '1237895',
+    fbook_token: '1278959'
   }).then(assignPhotos);
   i++;
 } 
@@ -35,10 +35,11 @@ function assignPhotos(user) {
         photo.addLiker(user).then(function() {
           photo.hasLiker(user).then(console.log); // should return true
           user.hasLike(photo).then(console.log); // should return true
-        });
-        photo.addAdder(user).then(function() {
-          photo.hasAdder(user).then(console.log); // should return true
-          user.hasAdd(photo).then(console.log); // should return true
+        }).then(function() {
+          photo.addAdder(user).then(function() {
+            photo.hasAdder(user).then(console.log); // should return true
+            user.hasAdd(photo).then(console.log); // should return true
+          });
         });
       });  
     }
