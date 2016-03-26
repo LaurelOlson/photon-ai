@@ -32,7 +32,10 @@ var photon = (function() {
     return true;
   }(5,5)); // IIFE also makes it anon.
 
-  function gridFitter(width, height){
+  // returns image spec object, can also pass it to a callback
+  // in case of async issues on batch img processing
+  // NOTE: conventionally a promise is used instead of return
+  function gridFitter(width, height, callback){
     var bestFit = {
       ratios: [],
       startErr: Infinity
@@ -47,18 +50,46 @@ var photon = (function() {
       }
     }
     var randSample = bestFit.ratios[Math.floor(Math.random()*bestFit.ratios.length)];
+    var output = {
+      col: randSample[0],
+      row: randSample[1],
+      css: ''
+    };
     if (myAspRatio > randSample[0]/randSample[1]){
-      randSample.push('height: 100%; width: auto;');
+      output.css = 'background-size: auto 100%;'; // width & height for CSS
     } else {
-      randSample.push('width: 100%, height: auto;');
+      output.css = 'background-size: 100% auto;';
     } // doesn't need one for 1:1, because no trim, ergo agnostic
-    return randSample; // ex. [3,2, (css)]
+
+    if (callback) {callback(output);}
+    return output;
+  }
+
+  //////////////////////////////////////////////////////////
+  // image loading to DOM's nest container
+  // gridFitter also takes an optional callback in case of async issues
+  function convertImgToNest (imgObj){
+    var gridSpec = photon.gridFitter(imgObj.width, imgObj.height);
+    var styleStr = 'background:url(' + imgObj.url + ') no-repeat center center;' + gridSpec.css;
+    var nestClass = 'size' + gridSpec.col + gridSpec.row;
+    var $imgElement = $('<div>').addClass('nestBox').addClass(nestClass);
+    $imgElement.attr('style', styleStr);
+    return $imgElement;
+  }
+  function renderNestImages(imagesObj){
+    var imgArr = [];
+    imagesObj.photos.forEach(function(ele, i, arr){
+      imgArr.push(convertImgToNest(ele));
+    });
+    $('#nestContainer').append(imgArr).nested('append', imgArr);
   }
 
   //////////////////////////////////////////////////////////
   // API
   return {
-    gridFitter: gridFitter
+    gridFitter: gridFitter,
+    renderNestImages: renderNestImages,
+    convertImgToNest: convertImgToNest
   };
 }());
 
@@ -147,14 +178,6 @@ $(function(){
     }
   };
 
-  //////////////////////////////////////////////////////////
-  // nestContainer
-  function addImgToNest (imgObj){
-    var imgElement = $('<img>').addClass('nestBox');
-    var width = imgObj.width;
-    var height = imgObj.height;
-    var url = imgObj.originalURL;
-  }
 
 
   //////////////////////////////////////////////////////////
@@ -242,107 +265,113 @@ $(function(){
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
-
-
 var samplePhotoObj = {
+  id: 0,
+  url: 'images/24.jpg',
+  width: 1080,
+  height: 654,
+};
+
+var samplePhotosObj = {
   photos: [
     {
-      originalURL: 'images/22.jpg',
+      id: 0,
+      url: 'images/22.jpg',
       width: 1080,
       height: 1080,
     },
     {
-      originalURL: 'images/26.jpg',
+      url: 'images/26.jpg',
       width: 1080,
       height: 717,
     },
     {
-      originalURL: 'images/20.jpg',
+      url: 'images/20.jpg',
       width: 1080,
       height: 1080,
     },
     {
-      originalURL: 'images/36.jpg',
+      url: 'images/36.jpg',
       width: 720,
       height: 1080,
     },
     {
-      originalURL: 'images/39.jpg',
+      url: 'images/39.jpg',
       width: 1080,
       height: 720,
     },
     {
-      originalURL: 'images/18.jpg',
+      url: 'images/18.jpg',
       width: 1080,
       height: 720,
     },
     {
-      originalURL: 'images/9.jpg',
+      url: 'images/9.jpg',
       width: 1080,
       height: 720,
     },
     {
-      originalURL: 'images/35.jpg',
+      url: 'images/35.jpg',
       width: 1080,
       height: 1080,
     },
     {
-      originalURL: 'images/33.jpg',
+      url: 'images/33.jpg',
       width: 950,
       height: 650,
     },
     {
-      originalURL: 'images/31.jpg',
+      url: 'images/31.jpg',
       width: 280,
       height: 280,
     },
     {
-      originalURL: 'images/24.jpg',
+      url: 'images/24.jpg',
       width: 1080,
       height: 654,
     },
     {
-      originalURL: 'images/2.jpg',
+      url: 'images/2.jpg',
       width: 1080,
       height: 391,
     },
     {
-      originalURL: 'images/21.jpg',
+      url: 'images/21.jpg',
       width: 1080,
       height: 608,
     },
     {
-      originalURL: 'images/4.jpg',
+      url: 'images/4.jpg',
       width: 1080,
       height: 720,
     },
     {
-      originalURL: 'images/17.jpg',
+      url: 'images/17.jpg',
       width: 1080,
       height: 720,
     },
     {
-      originalURL: 'images/12.jpg',
+      url: 'images/12.jpg',
       width: 1080,
       height: 720,
     },
     {
-      originalURL: 'images/19.jpg',
+      url: 'images/19.jpg',
       width: 1080,
       height: 719,
     },
     {
-      originalURL: 'images/15.jpg',
+      url: 'images/15.jpg',
       width: 1080,
       height: 683,
     },
     {
-      originalURL: 'images/32.jpg',
+      url: 'images/32.jpg',
       width: 1080,
       height: 721,
     },
     {
-      originalURL: 'images/28.jpg',
+      url: 'images/28.jpg',
       width: 1080,
       height: 705,
     }
