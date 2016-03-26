@@ -37,7 +37,7 @@ var visionRequest = {
   ]
 };
 
-models.photo.findAll({ limit: 100 }).then(function(promises) {
+models.photo.findAll().then(function(promises) {
   promises.forEach(function(photo) {
     seedTag(photo);
   });
@@ -60,6 +60,7 @@ function seedTag(photo) {
     if (err) {
       return console.error(err);
     }
+    // update photos table to add height and width of photo
     fs.readFile(file, 'base64', sendToGoogleVision);
   }
 
