@@ -93,6 +93,16 @@ var photon = (function() {
   }
 
   //////////////////////////////////////////////////////////
+  // for popupBox modal tags
+  function renderTagsTo(dataStr, $target){
+    var dataArray = dataStr.split(',');
+    dataArray.forEach(function(ele, i, arr){
+      $target.append($('<span>').addClass('tag').text(ele));
+    });
+  }
+
+
+  //////////////////////////////////////////////////////////
   // search
   function fuzzysearch (needle, haystack) {
     var hlen = haystack.length;
@@ -121,6 +131,7 @@ var photon = (function() {
   return {
     renderNestImages: renderNestImages,
     gridFitter: gridFitter,
+    renderTagsTo: renderTagsTo,
     // below is during construction, can be removed
     fuzzysearch: fuzzysearch
   };
@@ -218,16 +229,19 @@ $(function(){
   });
 
   //////////////////////////////////////////////////////////
-  // nestModal
+  // nestBox pictures Modal
   $nContainer.on('click', '.nestBox', function(){
     var url = $(this).data('large-url');
     var tags = $(this).data('tags');
+    var $tagField = $popupBox.find('div.image-custom');
+    $tagField.children().remove();
+    photon.renderTagsTo(tags, $tagField);
     $popupBox.find('img').attr('src', url);
     $popupBox.addClass('is-active');
   });
   $popupBox.on('click', function(){
     $(this).removeClass('is-active');
-  })
+  });
 
   //////////////////////////////////////////////////////////
   // logo
@@ -300,6 +314,7 @@ var samplePhotoObj = {
   url: 'images/24.jpg',
   width: 1080,
   height: 654,
+  tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
 };
 
 var samplePhotosObj = {

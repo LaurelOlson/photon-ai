@@ -1,6 +1,9 @@
 body {
   position: relative; }
 
+.tag {
+  margin: 2px; }
+
 .fixnav {
   position: fixed;
   top: 0;
@@ -21,13 +24,6 @@ body {
   left: 0;
   height: 100%;
   width: 100%; }
-
-#tags {
-  height: 73px;
-  margin: 0;
-  overflow: scroll; }
-  #tags .tag {
-    margin: 2px; }
 
 #nestContainer .nestBox {
   overflow: hidden;
