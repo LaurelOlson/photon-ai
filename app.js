@@ -26,9 +26,10 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+app.use(cookieParser());
+// app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // passport stuff
@@ -44,11 +45,13 @@ app.use(flash());
 app.use('/', routes);
 app.use('/users', users);
 
+// serialize user for the session
 passport.serializeUser(function(user, done) {
   console.log('\n user serialized \n');
   done(null, user.id);
 });
 
+// deserialize the user
 passport.deserializeUser(function(id, done) {
   models.user.findById(id).then(function(err, user) {
     console.log('\n user deserialized \n');
@@ -56,33 +59,35 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-passport.use(new FacebookStrategy({
-  clientID: configAuth.facebookAuth.clientID,
-  clientSecret: configAuth.facebookAuth.clientSecret,
-  callbackURL: configAuth.facebookAuth.callbackURL
-},
+passport.use('facebook', new FacebookStrategy({
+    clientID: configAuth.facebookAuth.clientID,
+    clientSecret: configAuth.facebookAuth.clientSecret,
+    callbackURL: configAuth.facebookAuth.callbackURL
+  },
 
-function(token, refreshToken, profile, done) {
-  process.nextTick(function() {
-    // console.log(profile);
-    models.user.findOne({ where: { fbook_id: profile.id } }).then(function(err, user) {
-      if (err)
-        return done(err);
+  function(token, refreshToken, profile, done) {
+    process.nextTick(function() {
+      // console.log(profile);
+      models.user.findOne({ where: { fbook_id: profile.id } }).then(function(err, user) {
+        if (err)
+          return done(err);
 
-      if (user) {
-        return done(null, user);
-      } else {
-        models.user.create({
-          fbook_id: profile.id
-          // fbook_token: token,
-          // fbook_name: profile.displayName
-        }).then(function(err, newUser) {
-          return done(null, newUser);
-        });
-      }
+        if (user) {
+          console.log(user);
+          return done(null, user);
+        } else {
+          models.user.create({
+            name: profile.displayName,
+            fbook_id: profile.id,
+            fbook_token: token
+          }).then(function(err, newUser) {
+            return done(null, newUser);
+          });
+        }
+      });
     });
-  });
-}));
+  }
+));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

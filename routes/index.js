@@ -3,9 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var models = require('../models/index.js');
-var configAuth = require('../config/auth.js');
 var passport = require('passport');
-var FacebookStrategy = require('passport-facebook').Strategy;
 var flash = require('connect-flash');
 var sequelize = require('sequelize');
 var Promise = sequelize.Promise;
@@ -19,24 +17,42 @@ router.get('/', function(req, res) {
 router.get('/login', function(req, res) {
   res.render('login.ejs', { message: req.flash('loginMessage') });
 });
-// router.get('/login', function(req, res) {
-//   res.render('login.ejs', { message: req.flash('loginMessage') });
-// });
 
+// local login
 // router.post('/login', function() {} );
 
 router.get('/signup', function(req, res) {
   res.render('signup', { message: req.flash('sign up msg') });
 });
 
+// local signup
 // router.post('/signup', function() {});
 
 router.get('/profile', isLoggedIn, function(req, res) {
+  console.log('got /profile');
   res.render('profile', {
     user: req.user // get user from session and pass to template
   });
 });
 
+router.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+});
+
+// FACEBOOK LOGIN
+
+// route for facebook authentication and login
+router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+
+// handle the callback after facebook has authenticated the user
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+// route for logging out
 router.get('/logout', function(req, res) {
   req.logout();
   res.redirect('/');
@@ -125,20 +141,6 @@ router.post('/user/:id/addedphotos', function(req, res) {
     res.json(photo);
   });
 });
-
-// /* GET login */
-// // send to facebook for authentication
-// router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
-// // get facebook response and redirect
-// router.get('/auth/facebook/callback', 
-//   passport.authenticate('facebook', {
-//     successRedirect: '/',
-//     failureRedirect: '/' 
-//   }));
-// router.get('/logout', function(req, res) {
-//   req.logout();
-//   res.redirect('/');
-// });
 
 function isLoggedIn(req, res, next) {
   // if authenticated, carry on
