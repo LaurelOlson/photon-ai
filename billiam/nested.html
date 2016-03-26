@@ -20,41 +20,43 @@
 
     <!-- "ghost" behind the fixed navbar to push everything down -->
     <div class="navpadding layer-1"></div>
-
-    <div class="fixnav layer-3">
-      <section class="hero is-primary is-bold">
-        <div class="hero-content">
-          <div class="container is-fluid">
-            <div class="columns is-mobile">
-              <div class="column is-2 is-text-centered">
-                <p class="heading">SAVED</p>
-                <p class="title">456</p>
-              </div>
-              <div class="column is-2">
-                <p class="control is-grouped">
-                  <input class="input" type="text" placeholder="search, or feeling lucky?">
-                  <a class="button">
-                    <i class="fa fa-search"></i>
-                  </a>
-                </p>
-              </div>
-              <div class="column">
-                <!-- <p id="nestPrepend">Prepend dummy</p> -->
-                <p id="nestAppend">Append dummy</p>
-                <!-- <p id="testPrepend">Prepend real</p> -->
-                <p id="testAppend">Append real</p>
-                <p id="nestNuke">Nuke</p>
-                <p id="loginTestBtn">Login</p>
-                <!-- padding -->
-              </div>
-              <div id="tags" class="column is-text-left">
-                <!-- automatic tags -->
-              </div>
+    <section class="fixnav layer-3 hero is-primary is-bold has-shadow">
+      <div class="hero-content">
+        <div class="container is-fluid">
+          <div class="columns is-mobile">
+            <div class="column is-2 is-text-centered">
+              <p class="heading">SAVED</p>
+              <p class="title">456</p>
             </div>
+            <div class="column is-2">
+              <p class="control is-grouped">
+                <input class="input" type="text" placeholder="search, or feeling lucky?">
+                <a class="button">
+                  <i class="fa fa-search"></i>
+                </a>
+              </p>
+            </div>
+            <div class="column">
+              <p class="button is-success" id="nestPrepend">Prepend dummy</p>
+              <!-- <p id="nestAppend">Append dummy</p> -->
+              <!-- <p id="testAppend">Append real</p> -->
+              <!-- <p id="loginTestBtn">Login</p> -->
+              <!-- padding -->
+            </div>
+            <div class="column">
+              <p class="button is-success" id="testPrepend">Prepend real</p>
+
+            </div>
+            <div class="column">
+              <p class="button is-danger" id="nestNuke">Nuke</p>
+
+            </div>
+            <!-- <div id="tags" class="column is-text-left">
+            </div> -->
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
 
     <div class="container is-fluid layer-1">
       <div id="nestContainer">

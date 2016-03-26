@@ -4,12 +4,12 @@ body {
 .fixnav {
   position: fixed;
   top: 0;
-  width: 100%;
-  transition: all 1s ease; }
+  width: 100%; }
+  .fixnav .hero-content {
+    padding: 20px; }
 
 .navpadding {
-  width: 100%;
-  height: 1px; }
+  width: 100%; }
 
 .photonLayer {
   display: flex;
@@ -31,12 +31,22 @@ body {
 
 #nestContainer .nestBox {
   overflow: hidden;
-  background-color: #69707a;
+  background-color: #aeb1b5;
   border-radius: 3px;
   transition: all 300ms cubic-bezier(1, 0, 0, 1);
   transition-property: left, right, top; }
   #nestContainer .nestBox:hover {
     opacity: 0.9; }
+
+#nestContainer .size21,
+#nestContainer .size22,
+#nestContainer .size23 {
+  background: #69707a; }
+
+#nestContainer .size31,
+#nestContainer .size32,
+#nestContainer .size33 {
+  background: #d3d6db; }
 
 #loginBox .modal-background {
   opacity: 0.4; }
@@ -45,7 +55,7 @@ body {
   position: fixed;
   height: 180px;
   width: 600px;
-  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6); }
+  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.4); }
 
 .pLogo {
   border: 3px solid #1fc8db;
@@ -100,4 +110,4 @@ body {
   opacity: 0.3; }
 
 .has-shadow {
-  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6); }
+  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.4); }

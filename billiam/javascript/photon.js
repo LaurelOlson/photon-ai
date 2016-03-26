@@ -149,17 +149,16 @@ $(function(){
     $('#loginBox').toggleClass('is-active');
   });
 
-  // add tags to header
-  var bulmaColors = ['is-dark', null, 'is-success', 'is-warning', 'is-danger'];
-  function randColor (){
-    return bulmaColors[Math.floor(Math.random()*bulmaColors.length)];
-  }
-
-  (function addDummy(qty){
-    for (var n = 0; n < 20; n++){
-      $('#tags').append($('<span>').addClass('tag '+ randColor()).text('tag label'));
-    }
-  }(21));
+  // // add tags to header
+  // var bulmaColors = ['is-dark', null, 'is-success', 'is-warning', 'is-danger'];
+  // function randColor (){
+  //   return bulmaColors[Math.floor(Math.random()*bulmaColors.length)];
+  // }
+  // (function addDummyTags(qty){
+  //   for (var n = 0; n < 20; n++){
+  //     $('#tags').append($('<span>').addClass('tag '+ randColor()).text('tag label'));
+  //   }
+  // }(21));
 
   //////////////////////////////////////////////////////////
   // all the $vars for UI manipulation
@@ -172,7 +171,7 @@ $(function(){
   var $window = $(window);
 
   var nestOptions = {
-    minWidth: 177,
+    minWidth: 95,
     minColumns: 1,
     gutter: 5,
     centered: true,
@@ -189,21 +188,19 @@ $(function(){
     }
   };
 
-
-
   //////////////////////////////////////////////////////////
   // nestContainer
   $nContainer.nested(nestOptions);
 
   //////////////////////////////////////////////////////////
   // footer fade in
-  $window.on('scroll', function() {
-    if ( $(window).scrollTop() > scrollPoint ) {
-      $fixnav.css('opacity', 0.8);
-    } else {
-      $fixnav.css('opacity', 1);
-    }
-  });
+  // $window.on('scroll', function() {
+  //   if ( $(window).scrollTop() > scrollPoint ) {
+  //     $fixnav.css('opacity', 0.9);
+  //   } else {
+  //     $fixnav.css('opacity', 1);
+  //   }
+  // });
 
   //////////////////////////////////////////////////////////
   // navpadding

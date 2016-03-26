@@ -25,7 +25,7 @@ $yellow:	#fce473;
 $primary:	$turquoise;
 
 $borderRadius: 3px;
-$boxShadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6);
+$boxShadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.4);
 
 
 ////////////////////////////////////////////////////////////////
@@ -49,12 +49,14 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
-  transition: all 1s ease;
+  .hero-content {
+    padding: 20px;
+  }
 }
 
 .navpadding {
   width: 100%;
-  height: 1px; // auto set by photon
+  // height: 1px; // auto set by photon
 }
 
 // .photonModal,
@@ -99,13 +101,23 @@ body {
     // background:url() no-repeat center center; // set by JS
     // background-size: auto 100%; // width height; set by JS
     overflow: hidden;
-    background-color:#69707a; // TODO: add a img broken logo perhaps? Ideally taken care of by JS
+    background-color: $grey; // TODO: add a img broken logo perhaps? Ideally taken care of by JS
     border-radius:3px;
     transition: all 300ms cubic-bezier(1.000, 0.000, 0.000, 1.000);
     transition-property: left, right, top;
       &:hover {
         opacity: 0.9;
       }
+  }
+  .size21,
+  .size22,
+  .size23 {
+    background: $grey-dark;
+  }
+  .size31,
+  .size32,
+  .size33 {
+    background: $grey-light;
   }
 }
 
