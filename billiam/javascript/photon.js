@@ -1,14 +1,21 @@
 
 // Global vars:
   // $: jquery
-// $.Nested
-  // some .prototype 'APIs'
-  // .append(nestBoxes);
-  // .prepend(nestBoxes);
-  // .resize(nestBoxes);
-  // .refresh(options);
-  // .destroy();
-  // example: $nestContainer.nested('refresh', {options object});
+  // eventBus
+    // subscribe: eventBus.on('eventName', callback);
+    // emit: eventBus.emit('eventName', data);
+    // helper: if there are no listeners to that event, it will console.log
+  // (touch.js) IIFE
+    // emits: ('tap', target), ('upSwipe', target) <- all directions
+    // on desktop direction keys ard bound to swipe dirs, but no target data
+  // $.Nested
+    // some .prototype 'APIs'
+    // .append(nestBoxes);
+    // .prepend(nestBoxes);
+    // .resize(nestBoxes);
+    // .refresh(options);
+    // .destroy();
+    // example: $nestContainer.nested('refresh', {options object});
 
 // photon main IIFE with API
 // async should go to the jQuery wrapper below, on doc ready
@@ -220,18 +227,23 @@ $(function(){
 
   //////////////////////////////////////////////////////////
   // toggle entire page menu slide
-  $menuToggleBtn.on('click', function(evt){
-    evt.stopPropagation();
+  var menuUnhide = function(){
     $mainContent.toggleClass('is-inactive');
     $menuBar.toggleClass('is-active');
     $menuToggle.toggleClass('is-active');
-
-  });
-  $menuToggle.on('click', function(){
+  };
+  var menuHide = function(){
     $mainContent.removeClass('is-inactive');
     $menuBar.removeClass('is-active');
     $menuToggle.removeClass('is-active');
-  });
+  };
+
+  $menuToggleBtn.on('click', menuUnhide);
+  $menuToggle.on('click', menuHide);
+  eventBus.on('rightSwipe', menuUnhide);
+  eventBus.on('leftSwipe', menuHide);
+
+
 
   //////////////////////////////////////////////////////////
   // NOTE: can be deprecated as nav no longer has dynamic height b/c tags

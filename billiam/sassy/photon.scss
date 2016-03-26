@@ -52,6 +52,7 @@ body {
 
 main {
   position: relative;
+  overflow-x: hidden;
   transition: $defaultTransition;
   &.is-inactive {
     transform: translateX(300px);
@@ -114,6 +115,9 @@ menu.pMenu {
   width: 100%;
   .hero-content {
     padding: 20px;
+  }
+  &.is-bottom{
+    bottom: 0;
   }
 }
 
@@ -203,20 +207,6 @@ menu.pMenu {
   }
 }
 
-#settingsMenu {
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  width: 100%;
-  top: 0px;
-  transition: all 1s ease;
-  &.is-active {
-    top: 100px;
-  }
-  .box{
-    width: 50vw;
-  }
-}
 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////

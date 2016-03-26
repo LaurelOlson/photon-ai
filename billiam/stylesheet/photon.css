@@ -3,6 +3,7 @@
 
 main {
   position: relative;
+  overflow-x: hidden;
   transition: all 600ms ease; }
   main.is-inactive {
     transform: translateX(300px); }
@@ -51,6 +52,8 @@ menu.pMenu {
   width: 100%; }
   .fixnav .hero-content {
     padding: 20px; }
+  .fixnav.is-bottom {
+    bottom: 0; }
 
 .navpadding {
   width: 100%; }
@@ -116,18 +119,6 @@ menu.pMenu {
     justify-content: center; }
     #popupBox .modal-content .image-custom img {
       max-height: 85vh; }
-
-#settingsMenu {
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  width: 100%;
-  top: 0px;
-  transition: all 1s ease; }
-  #settingsMenu.is-active {
-    top: 100px; }
-  #settingsMenu .box {
-    width: 50vw; }
 
 .layer-neg-3 {
   z-index: -3; }
