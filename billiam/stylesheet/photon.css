@@ -35,13 +35,8 @@ body {
   border-radius: 3px;
   transition: all 300ms cubic-bezier(1, 0, 0, 1);
   transition-property: left, right, top; }
-  #nestContainer .nestBox img {
-    max-width: none;
-    height: 100%;
-    width: auto;
-    transition: all 400ms ease; }
-    #nestContainer .nestBox img:hover {
-      opacity: 0.9; }
+  #nestContainer .nestBox:hover {
+    opacity: 0.9; }
 
 #loginBox .modal-background {
   opacity: 0.4; }
