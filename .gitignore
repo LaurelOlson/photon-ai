@@ -1,18 +1,12 @@
 node_modules
 npm-debug.log
 
-secret_stuff.js
+secret_stuff/
 
 seeders/temp
 
 .DS_Store
 
 notes
-
-README.md
-
-server.crt
-server.csr
-server.key
 
 billiam/images/
