@@ -166,6 +166,8 @@ $(function(){
     for (var i=0; i < count; i++ ) {
       var box = document.createElement('div');
       box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
+      box.setAttribute('data-large-url', 'http://placehold.it/1200x800');
+      box.setAttribute('data-tags', 'tag1,tag2,tag3,tag4,tag5,tag6');
       // add box DOM node to array of new elements
       boxes.push( box );
     }
@@ -208,7 +210,7 @@ $(function(){
       $menuToggle = $('.pMenuToggle'),
       $menuToggleBtn = $('#menuToggleBtn');
   var nestOptions = {
-    minWidth: 95,
+    minWidth: calcNestColWidth(),
     minColumns: 1,
     gutter: 5,
     centered: true,
@@ -224,6 +226,9 @@ $(function(){
       complete: function(){} // call back :D works w/ or w/o animate
     }
   };
+  function calcNestColWidth(){
+    
+  }
 
   //////////////////////////////////////////////////////////
   // toggle entire page menu slide
