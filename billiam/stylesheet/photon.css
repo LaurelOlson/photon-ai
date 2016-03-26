@@ -1,18 +1,27 @@
-body {
-  position: relative; }
-
 .tag {
   margin: 2px; }
 
-.fixnav {
-  position: fixed;
-  top: 0;
-  width: 100%; }
-  .fixnav .hero-content {
-    padding: 20px; }
+main {
+  position: relative;
+  transition: all 600ms ease; }
+  main.is-inactive {
+    transform: translateX(300px); }
 
-.navpadding {
-  width: 100%; }
+menu.pMenu {
+  background: #69707a url("/textures/10.png");
+  position: fixed;
+  width: 300px;
+  height: 100%;
+  top: 0px;
+  left: -300px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  transition: all 600ms ease;
+  box-shadow: inset -10px 0px 20px 0px rgba(50, 50, 50, 0.4);
+  padding: 20px; }
+  menu.pMenu.is-active {
+    transform: translateX(300px); }
 
 .photonLayer {
   display: flex;
@@ -23,6 +32,16 @@ body {
   top: 0;
   left: 0;
   height: 100%;
+  width: 100%; }
+
+.fixnav {
+  position: fixed;
+  top: 0;
+  width: 100%; }
+  .fixnav .hero-content {
+    padding: 20px; }
+
+.navpadding {
   width: 100%; }
 
 #nestContainer .nestBox {
@@ -86,6 +105,18 @@ body {
     justify-content: center; }
     #popupBox .modal-content .image-custom img {
       max-height: 85vh; }
+
+#settingsMenu {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  transition: all 1s ease; }
+  #settingsMenu.is-active {
+    top: 100px; }
+  #settingsMenu .box {
+    width: 50vw; }
 
 .layer-neg-3 {
   z-index: -3; }

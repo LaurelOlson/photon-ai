@@ -26,6 +26,7 @@ $primary:	$turquoise;
 
 $borderRadius: 3px;
 $boxShadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.4);
+$defaultTransition: all 600ms ease;
 
 
 ////////////////////////////////////////////////////////////////
@@ -33,10 +34,6 @@ $boxShadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.4);
 ////////////////////////////////////////////////////////////////
 // BASE ////////////////////////////////////////////////////////
 
-
-body {
-  position: relative;
-}
 
 .tag {
   margin: 2px;
@@ -49,18 +46,34 @@ body {
 // LAYOUT //////////////////////////////////////////////////////
 
 
-.fixnav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  .hero-content {
-    padding: 20px;
+body {
+  // position: relative;
+}
+
+main {
+  position: relative;
+  transition: $defaultTransition;
+  &.is-inactive {
+    transform: translateX(300px);
   }
 }
 
-.navpadding {
-  width: 100%;
-  // height: 1px; // auto set by photon
+menu.pMenu {
+  background: $grey-dark url('/textures/10.png');
+  position: fixed;
+  width: 300px;
+  height: 100%;
+  top: 0px;
+  left: -300px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  transition: $defaultTransition;
+  box-shadow: inset -10px 0px 20px 0px rgba(50, 50, 50, 0.4);
+  padding: 20px;
+  &.is-active{
+    transform: translateX(300px);
+  }
 }
 
 .photonLayer {
@@ -81,6 +94,20 @@ body {
 ////////////////////////////////////////////////////////////////
 // MODULES /////////////////////////////////////////////////////
 
+
+.fixnav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  .hero-content {
+    padding: 20px;
+  }
+}
+
+.navpadding {
+  width: 100%;
+  // height: 1px; // auto set by photon
+}
 
 #nestContainer {
   .nestBox {
@@ -163,6 +190,20 @@ body {
   }
 }
 
+#settingsMenu {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  transition: all 1s ease;
+  &.is-active {
+    top: 100px;
+  }
+  .box{
+    width: 50vw;
+  }
+}
 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////

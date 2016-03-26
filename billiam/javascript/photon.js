@@ -1,7 +1,14 @@
 
 // Global vars:
   // $: jquery
-
+// $.Nested
+  // some .prototype 'APIs'
+  // .append(nestBoxes);
+  // .prepend(nestBoxes);
+  // .resize(nestBoxes);
+  // .refresh(options);
+  // .destroy();
+  // example: $nestContainer.nested('refresh', {options object});
 
 // photon main IIFE with API
 // async should go to the jQuery wrapper below, on doc ready
@@ -167,6 +174,7 @@ $(function(){
   });
   $('#nestNuke').click(function(){
     $nContainer.children().remove();
+    $nContainer.nested('refresh', nestOptions);
   });
   $('#testPrepend').on('click', function(){
     photon.renderNestImages(samplePhotosObj, 'prepend');
@@ -187,7 +195,10 @@ $(function(){
       $loginBox = $('#loginBox'),
       $loginBtn = $('#loginBtn'),
       $popupBox = $('#popupBox'),
-      $modalBackgrounds = $('.modal-background');
+      $modalBackgrounds = $('.modal-background'),
+      $mainContent = $('main'),
+      $menuBar = $('menu'),
+      $menuToggleBtn = $('#menuToggleBtn');
   var nestOptions = {
     minWidth: 95,
     minColumns: 1,
@@ -207,6 +218,21 @@ $(function(){
   };
 
   //////////////////////////////////////////////////////////
+  // toggle entire page menu slide
+  $menuToggleBtn.on('click', function(evt){
+    evt.stopPropagation();
+    $mainContent.toggleClass('is-inactive');
+    $menuBar.toggleClass('is-active');
+  });
+  $mainContent.on('click', function(){
+    if ($mainContent.attr('class') === 'is-inactive'){
+      $mainContent.removeClass('is-inactive');
+      $menuBar.removeClass('is-active');
+    }
+  });
+
+  //////////////////////////////////////////////////////////
+  // NOTE: can be deprecated as nav no longer has dynamic height b/c tags
   // navpadding
   $navPadding.css('height', $fixnav.height() + defaultPadding);
 
