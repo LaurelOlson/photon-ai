@@ -29,6 +29,7 @@ var photon = (function() {
         gridDict[ratio].push([i, j]);
       }
     }
+    gridDict['1'].pop(); // removes 5x5 blocks from ratios of 1, they are too big
     return true;
   }(5,5)); // IIFE also makes it anon.
 
@@ -76,12 +77,16 @@ var photon = (function() {
     $imgElement.attr('style', styleStr);
     return $imgElement;
   }
-  function renderNestImages(imagesObj){
+  function renderNestImages(imagesObj, direction){
     var imgArr = [];
     imagesObj.photos.forEach(function(ele, i, arr){
       imgArr.push(convertImgToNest(ele));
     });
-    $('#nestContainer').append(imgArr).nested('append', imgArr);
+    if (direction == 'prepend') {
+      $('#nestContainer').prepend(imgArr).nested('prepend', imgArr);
+    } else {
+      $('#nestContainer').append(imgArr).nested('append', imgArr);
+    }
   }
 
   //////////////////////////////////////////////////////////
@@ -133,6 +138,12 @@ $(function(){
   $('#loginTestBtn').on('click', function(){
     $('#loginBox').toggleClass('is-active');
   });
+  $('#testPrepend').on('click', function(){
+    photon.renderNestImages(samplePhotosObj, 'prepend');
+  });
+  $('#testAppend').on('click', function(){
+    photon.renderNestImages(samplePhotosObj);
+  });
 
   $('#loginBox').find('.modal-background').on('click', function(){
     $('#loginBox').toggleClass('is-active');
@@ -165,9 +176,9 @@ $(function(){
     minColumns: 1,
     gutter: 5,
     centered: true,
-    resizeToFit: false, // will resize block bigger than the gap
+    resizeToFit: false, // NOTE: do NOT make true, nested lib has a bug
     resizeToFitOptions: {
-      resizeAny: true // will resize any block to fit the gap
+      resizeAny: true
     },
     animate: false,
     animationOptions: {
