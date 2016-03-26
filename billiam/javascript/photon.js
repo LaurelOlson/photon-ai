@@ -198,6 +198,7 @@ $(function(){
       $modalBackgrounds = $('.modal-background'),
       $mainContent = $('main'),
       $menuBar = $('menu'),
+      $menuToggle = $('.pMenuToggle'),
       $menuToggleBtn = $('#menuToggleBtn');
   var nestOptions = {
     minWidth: 95,
@@ -223,12 +224,13 @@ $(function(){
     evt.stopPropagation();
     $mainContent.toggleClass('is-inactive');
     $menuBar.toggleClass('is-active');
+    $menuToggle.toggleClass('is-active');
+
   });
-  $mainContent.on('click', function(){
-    if ($mainContent.attr('class') === 'is-inactive'){
-      $mainContent.removeClass('is-inactive');
-      $menuBar.removeClass('is-active');
-    }
+  $menuToggle.on('click', function(){
+    $mainContent.removeClass('is-inactive');
+    $menuBar.removeClass('is-active');
+    $menuToggle.removeClass('is-active');
   });
 
   //////////////////////////////////////////////////////////
