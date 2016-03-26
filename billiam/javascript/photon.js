@@ -136,13 +136,33 @@ var photon = (function() {
 
 
   //////////////////////////////////////////////////////////
+  // User Data
+  sessionStorage.setItem('photonSession', {
+    init: function(){
+      console.log('photonSession is present');
+      return true;
+    }
+  });
+  var userData = sessionStorage.getItem('photonSession');
+  function getImageData(userID){
+    var url = 'localhost:3000/';
+    $.getJSON(url, null, saveToMemory);
+  }
+
+  function saveToMemory(data, status, xhr){
+
+  }
+
+
+  //////////////////////////////////////////////////////////
   // API
   return {
     renderNestImages: renderNestImages,
     gridFitter: gridFitter,
     renderTagsTo: renderTagsTo,
     // below is during construction, can be removed
-    fuzzysearch: fuzzysearch
+    fuzzysearch: fuzzysearch,
+    userData: userData
   };
 }());
 
@@ -227,7 +247,15 @@ $(function(){
     }
   };
   function calcNestColWidth(){
-    
+    var windowWidth = $window.width();
+    if (windowWidth > 960) {
+      console.log(windowWidth / 10);
+      return windowWidth / 10;
+    } else if (windowWidth < 768) {
+      return windowWidth / 4;
+    } else {
+      return windowWidth / 9;
+    }
   }
 
   //////////////////////////////////////////////////////////
