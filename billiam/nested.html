@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Nested</title>
+    <title>Photon.ai</title>
     <link href="/stylesheet/photon.css" rel="stylesheet">
     <link href="/stylesheet/bulma.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -17,6 +17,7 @@
     <!-- end javascript order is important -->
   </head>
   <body>
+
 
     <!-- "ghost" behind the fixed navbar to push everything down -->
     <div class="navpadding layer-1"></div>
@@ -40,16 +41,14 @@
               <p class="button is-success" id="nestPrepend">Prepend dummy</p>
               <!-- <p id="nestAppend">Append dummy</p> -->
               <!-- <p id="testAppend">Append real</p> -->
-              <!-- <p id="loginTestBtn">Login</p> -->
+              <p id="loginBtn">Login</p>
               <!-- padding -->
             </div>
             <div class="column">
               <p class="button is-success" id="testPrepend">Prepend real</p>
-
             </div>
             <div class="column">
               <p class="button is-danger" id="nestNuke">Nuke</p>
-
             </div>
             <!-- <div id="tags" class="column is-text-left">
             </div> -->
@@ -58,12 +57,14 @@
       </div>
     </section>
 
+
     <div class="container is-fluid layer-1">
       <div id="nestContainer">
         <!-- photon will inject nest images here
         example: <div class="nestBox size53" style="background:url(images/24.jpg) no-repeat center center;background-size: 100% auto;"></div> -->
       </div>
     </div>
+
 
     <div class="photonLayer layer-0 is-transparent">
         <div class="pLogo">
@@ -75,30 +76,48 @@
         <p><strong>photon</strong>.ai</p>
     </div>
 
-        <div id="loginBox" class="modal">
-          <div class="modal-background"></div>
-          <div class="modal-container">
-            <div class="modal-content">
-              <div class="box">
-                <p class="is-pulled-right"><strong>photon</strong>.ai</p>
-                <div>&nbsp;<!-- clearfix --><div>
-                <p class="control has-icon">
-                  <input class="input" type="email" placeholder="Email">
-                  <i class="fa fa-envelope"></i>
-                </p>
-                <p class="control has-icon">
-                  <input class="input" type="password" placeholder="Password">
-                  <i class="fa fa-lock"></i>
-                </p>
-                <p class="control">
-                  <button class="button is-success">Login</button>
-                  <button class="button">Register</button>
-                  <button class="button is-info is-pulled-right">login with Facebook</button>
-                </p>
-              </div>
-            </div>
+
+    <div id="loginBox" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-container">
+        <div class="modal-content">
+          <div class="box">
+            <p class="is-pulled-right"><strong>photon</strong>.ai</p>
+            <div>&nbsp;</div>
+            <p class="control has-icon">
+              <input class="input" type="email" placeholder="Email">
+              <i class="fa fa-envelope"></i>
+            </p>
+            <p class="control has-icon">
+              <input class="input" type="password" placeholder="Password">
+              <i class="fa fa-lock"></i>
+            </p>
+            <p class="control">
+              <button class="button is-success">Login</button>
+              <button class="button">Register</button>
+              <button class="button is-info is-pulled-right">login with Facebook</button>
+            </p>
           </div>
         </div>
+      </div>
+    </div>
+
+
+    <div id="popupBox" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-container">
+        <div class="modal-content">
+          <p class="image-custom">
+            <img src="http://placehold.it/1280x960">
+          </p>
+          <div>&nbsp;</div>
+          <div class="image-custom">
+            tags to go here
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   </body>
 </html>

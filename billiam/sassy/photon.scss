@@ -59,7 +59,6 @@ body {
   // height: 1px; // auto set by photon
 }
 
-// .photonModal,
 .photonLayer {
   display: flex;
   flex-direction: column;
@@ -72,14 +71,6 @@ body {
   width: 100%;
 }
 
-// NOTE: probably not needed anymore
-// .photonModal {
-//   display: none;
-//   z-index: 4;
-//   &.is-active{
-//     display: flex;
-//   }
-// }
 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
@@ -145,7 +136,7 @@ body {
     overflow: hidden;
   }
   #wave {
-    animation: moveTheWave 4s linear infinite;
+    animation: moveTheWave 50s linear infinite;
     fill: none;
     stroke-dasharray: 0 16 101 16;
     stroke-width: 3;
@@ -160,6 +151,19 @@ body {
     100% {
       stroke-dashoffset: -133;
       transform: translate3d(-90px, 0, 0);
+    }
+  }
+}
+
+#popupBox {
+  .modal-content {
+    width: 95vw;
+    .image-custom {
+      display: flex;
+      justify-content: center;
+      img {
+        max-height: 85vh;
+      }
     }
   }
 }

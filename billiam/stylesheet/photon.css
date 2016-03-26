@@ -68,7 +68,7 @@ body {
     margin: 0 auto;
     overflow: hidden; }
   .pLogo #wave {
-    animation: moveTheWave 4s linear infinite;
+    animation: moveTheWave 50s linear infinite;
     fill: none;
     stroke-dasharray: 0 16 101 16;
     stroke-width: 3;
@@ -82,6 +82,14 @@ body {
   100% {
     stroke-dashoffset: -133;
     transform: translate3d(-90px, 0, 0); } }
+
+#popupBox .modal-content {
+  width: 95vw; }
+  #popupBox .modal-content .image-custom {
+    display: flex;
+    justify-content: center; }
+    #popupBox .modal-content .image-custom img {
+      max-height: 85vh; }
 
 .layer-neg-3 {
   z-index: -3; }
