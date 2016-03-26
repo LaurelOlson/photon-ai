@@ -22,6 +22,12 @@
 var photon = (function() {
 
   //////////////////////////////////////////////////////////
+  // config important variables
+  var serverURL = 'https://localhost:3000/';
+
+
+
+  //////////////////////////////////////////////////////////
   // fitting images to nestedJS grid, loading them to page
   var gridDict = {
     // example
@@ -101,6 +107,7 @@ var photon = (function() {
     }
   }
 
+
   //////////////////////////////////////////////////////////
   // for popupBox modal tags
   function renderTagsTo(dataStr, $target){
@@ -137,20 +144,45 @@ var photon = (function() {
 
   //////////////////////////////////////////////////////////
   // User Data
-  sessionStorage.setItem('photonSession', {
-    init: function(){
-      console.log('photonSession is present');
-      return true;
-    }
-  });
-  var userData = sessionStorage.getItem('photonSession');
+  function PhotonUser(id){
+    console.log('initialising PhotonUser', id);
+    this.userID = id;
+    this.userPhotos = [];
+    this.saveToUser = function(data, response, xhr){
+      console.log('reached saveToUser');
+    };
+    this.read = function(){};
+    this.write = function(){};
+  }
+  PhotonUser.prototype.whois = function(){
+    return this.userID;
+  };
+  PhotonUser.prototype.fetch = function(){
+    var url = 'https://localhost:3000/users/' + this.userID + '/photos';
+    var targetArr = this.userPhotos;
+    $.getJSON(url, null, function(data, response, xhr){
+      console.log(response);
+      if (response == 'success'){
+          // console.log(data[0]);
+        data.forEach(function(ele, i, arr){
+        targetArr.push(ele);
+        });
+        return true;
+      } else {
+        console.log('something failed:', response);
+        return false;
+      }
+    });
+  };
+  var jason = new PhotonUser(15);
+
   function getImageData(userID){
-    var url = 'localhost:3000/';
-    $.getJSON(url, null, saveToMemory);
+    var url = serverURL + 'users/' + userID + '/photos';
   }
 
   function saveToMemory(data, status, xhr){
-
+    console.log(status);
+    sessionStorage.setItem('photonSession', JSON.stringify(data));
   }
 
 
@@ -162,7 +194,8 @@ var photon = (function() {
     renderTagsTo: renderTagsTo,
     // below is during construction, can be removed
     fuzzysearch: fuzzysearch,
-    userData: userData
+    getImageData: getImageData,
+    jason: jason
   };
 }());
 
@@ -249,7 +282,6 @@ $(function(){
   function calcNestColWidth(){
     var windowWidth = $window.width();
     if (windowWidth > 960) {
-      console.log(windowWidth / 10);
       return windowWidth / 10;
     } else if (windowWidth < 768) {
       return windowWidth / 4;
@@ -261,6 +293,9 @@ $(function(){
   //////////////////////////////////////////////////////////
   // toggle entire page menu slide
   var menuUnhide = function(){
+    if ($loginBox.hasClass('is-active') || $popupBox.hasClass('is-active')){
+      return;
+    }
     $mainContent.toggleClass('is-inactive');
     $menuBar.toggleClass('is-active');
     $menuToggle.toggleClass('is-active');
