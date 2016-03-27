@@ -2,8 +2,10 @@
 // config UX(sensitivity) and pubsub
 // currently handles swipe + direction and tap
 // NOTE: arrow keys simulate swipe can be enabled, comment it back in
-
-(function(){
+if (!window.Photon) {
+  window.Photon = {};
+}
+Photon.touchEngine = (function(){
 
   // config: minimum swipe distance over a given time
   // i.e.: must swipe at least (x || y) pixels under (dur) milliseconds
@@ -12,7 +14,7 @@
   var maxDuration = 1000; // milliseconds, set timeout, can't swipe forever..
   var minDuration = 80;  // milliseconds, below this, it's a tap event
   var safetyDuration = 20; // milliseconds, prevent unintentional touches
-  var pubsub = eventBus; // your global listener variable
+  var pubsub = window.Photon.eventBus; // your global listener variable
 
   document.addEventListener('touchstart', handleTouchStart, false);
   document.addEventListener('touchmove', handleTouchMove, false);

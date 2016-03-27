@@ -28,7 +28,7 @@
 // photon main IIFE with API
 // async should go to the jQuery wrapper below, on doc ready
 // NOTE: to be executed after modules have loaded
-var photon = (function() {
+Photon.Controller = (function() {
 
   //////////////////////////////////////////////////////////
   // config important variables
@@ -152,6 +152,12 @@ var photon = (function() {
 
 
   //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+  /// BELOW ARE BEING PORTED TO MODULES ////////////////////
+
+  //////////////////////////////////////////////////////////
   // User Data
   function PhotonUser(id){
     var photos = [];
@@ -244,208 +250,208 @@ var photon = (function() {
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 // UI //////////////////////////////////////////////////////////
-
-
-// photon jQuery wrapper for doc ready
-// no API here (yet?)
-$(function(){
-
-  //////////////////////////////////////////////////////////
-  // helpers while building
-  function makeBoxes() {
-    var boxes = [],
-    count = Math.random()*15;
-    if (count < 5) count = 5;
-    for (var i=0; i < count; i++ ) {
-      var box = document.createElement('div');
-      box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
-      box.setAttribute('data-large-url', 'http://placehold.it/1200x800');
-      box.setAttribute('data-tags', 'tag1,tag2,tag3,tag4,tag5,tag6');
-      // add box DOM node to array of new elements
-      boxes.push( box );
-    }
-    return boxes;
-  }
-  $('#nestPrepend').click(function(){
-    var boxes = makeBoxes();
-    $nContainer.prepend(boxes).nested('prepend',boxes);
-  });
-  $('#nestAppend').click(function(){
-    var boxes = makeBoxes();
-    $nContainer.append(boxes).nested('append',boxes);
-  });
-  $('#nestNuke').click(function(){
-    $nContainer.children().remove();
-    $nContainer.nested('refresh', nestOptions);
-  });
-  $('#testPrepend').on('click', function(){
-    photon.renderNestImages(samplePhotosObj, 'prepend');
-  });
-  $('#testAppend').on('click', function(){
-    photon.renderNestImages(samplePhotosObj);
-  });
-
-  //////////////////////////////////////////////////////////
-  // all the vars for UI manipulation
-  var defaultPadding = 5,
-      scrollPoint = 300,
-      $fixnav = $('.fixnav'),
-      pLogo = document.querySelector('#wave'),
-      $nContainer = $('#nestContainer'),
-      $navPadding = $('.navpadding'),
-      $window = $(window),
-      $loginBox = $('#loginBox'),
-      $loginBtn = $('#loginBtn'),
-      $popupBox = $('#popupBox'),
-      $modalBackgrounds = $('.modal-background'),
-      $mainContent = $('main'),
-      $menuBar = $('menu'),
-      $menuToggle = $('.pMenuToggle'),
-      $menuToggleBtn = $('#menuToggleBtn');
-  var nestOptions = {
-    minWidth: calcNestColWidth(),
-    minColumns: 1,
-    gutter: 5,
-    centered: true,
-    resizeToFit: false, // NOTE: do NOT make true, nested lib has a bug
-    resizeToFitOptions: {
-      resizeAny: true
-    },
-    animate: false,
-    animationOptions: {
-      speed: 20,
-      duration: 100,
-      queue: true,
-      complete: function(){} // call back :D works w/ or w/o animate
-    }
-  };
-  function calcNestColWidth(){
-    var windowWidth = $window.width();
-    if (windowWidth > 960) {
-      return windowWidth / 10;
-    } else if (windowWidth < 768) {
-      return windowWidth / 4;
-    } else {
-      return windowWidth / 9;
-    }
-  }
-
-  //////////////////////////////////////////////////////////
-  // toggle entire page menu slide
-  var menuUnhide = function(){
-    if ($loginBox.hasClass('is-active') || $popupBox.hasClass('is-active')){
-      return;
-    }
-    $mainContent.toggleClass('is-inactive');
-    $menuBar.toggleClass('is-active');
-    $menuToggle.toggleClass('is-active');
-  };
-  var menuHide = function(){
-    $mainContent.removeClass('is-inactive');
-    $menuBar.removeClass('is-active');
-    $menuToggle.removeClass('is-active');
-  };
-
-  $menuToggleBtn.on('click', menuUnhide);
-  $menuToggle.on('click', menuHide);
-  Photon.eventBus.on('rightSwipe', menuUnhide);
-  Photon.eventBus.on('leftSwipe', menuHide);
-
-
-
-  //////////////////////////////////////////////////////////
-  // NOTE: can be deprecated as nav no longer has dynamic height b/c tags
-  // navpadding
-  $navPadding.css('height', $fixnav.height() + defaultPadding);
-
-  //////////////////////////////////////////////////////////
-  // nestContainer
-  $nContainer.nested(nestOptions);
-
-  //////////////////////////////////////////////////////////
-  // login pop up
-  $modalBackgrounds.on('click', function(){ // reusable for all modal-backgrounds
-    $('.modal').removeClass('is-active');
-  });
-  $loginBtn.on('click', function(){
-    $loginBox.addClass('is-active');
-  });
-
-  //////////////////////////////////////////////////////////
-  // nestBox pictures Modal
-  $nContainer.on('click', '.nestBox', function(){
-    var url = $(this).data('large-url');
-    var tags = $(this).data('tags');
-    var $tagField = $popupBox.find('div.image-custom');
-    $tagField.children().remove();
-    photon.renderTagsTo(tags, $tagField);
-    $popupBox.find('img').attr('src', url);
-    $popupBox.addClass('is-active');
-  });
-  $popupBox.on('click', function(){
-    $(this).removeClass('is-active');
-  });
-
-  //////////////////////////////////////////////////////////
-  // logo
-  // forked from http://codepen.io/winkerVSbecks/pen/EVJGVj by Varun Vachhar
-  (function buildWave(w, h) {
-    var logoSmoothness = 0.5;
-    var a = h / 4;
-    var y = h / 2;
-    var pathData = [
-      'M', w * 0, y + a / 2,
-      'c',
-        a * logoSmoothness, 0,
-        -(1 - a) * logoSmoothness, -a,
-        a, -a,
-      's',
-        -(1 - a) * logoSmoothness, a,
-        a, a,
-      's',
-        -(1 - a) * logoSmoothness, -a,
-        a, -a,
-      's',
-        -(1 - a) * logoSmoothness, a,
-        a, a,
-      's',
-        -(1 - a) * logoSmoothness, -a,
-        a, -a,
-      's',
-        -(1 - a) * logoSmoothness, a,
-        a, a,
-      's',
-        -(1 - a) * logoSmoothness, -a,
-        a, -a,
-      's',
-        -(1 - a) * logoSmoothness, a,
-        a, a,
-      's',
-        -(1 - a) * logoSmoothness, -a,
-        a, -a,
-      's',
-        -(1 - a) * logoSmoothness, a,
-        a, a,
-      's',
-        -(1 - a) * logoSmoothness, -a,
-        a, -a,
-      's',
-        -(1 - a) * logoSmoothness, a,
-        a, a,
-      's',
-        -(1 - a) * logoSmoothness, -a,
-        a, -a,
-      's',
-        -(1 - a) * logoSmoothness, a,
-        a, a,
-      's',
-        -(1 - a) * logoSmoothness, -a,
-        a, -a
-    ].join(' ');
-    pLogo.setAttribute('d', pathData);
-  }(90, 60));
-
-});
+//
+//
+// // photon jQuery wrapper for doc ready
+// // no API here (yet?)
+// $(function(){
+//
+//   //////////////////////////////////////////////////////////
+//   // helpers while building
+//   function makeBoxes() {
+//     var boxes = [],
+//     count = Math.random()*15;
+//     if (count < 5) count = 5;
+//     for (var i=0; i < count; i++ ) {
+//       var box = document.createElement('div');
+//       box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
+//       box.setAttribute('data-large-url', 'http://placehold.it/1200x800');
+//       box.setAttribute('data-tags', 'tag1,tag2,tag3,tag4,tag5,tag6');
+//       // add box DOM node to array of new elements
+//       boxes.push( box );
+//     }
+//     return boxes;
+//   }
+//   $('#nestPrepend').click(function(){
+//     var boxes = makeBoxes();
+//     $nContainer.prepend(boxes).nested('prepend',boxes);
+//   });
+//   $('#nestAppend').click(function(){
+//     var boxes = makeBoxes();
+//     $nContainer.append(boxes).nested('append',boxes);
+//   });
+//   $('#nestNuke').click(function(){
+//     $nContainer.children().remove();
+//     $nContainer.nested('refresh', nestOptions);
+//   });
+//   $('#testPrepend').on('click', function(){
+//     photon.renderNestImages(samplePhotosObj, 'prepend');
+//   });
+//   $('#testAppend').on('click', function(){
+//     photon.renderNestImages(samplePhotosObj);
+//   });
+//
+//   //////////////////////////////////////////////////////////
+//   // all the vars for UI manipulation
+//   var defaultPadding = 5,
+//       scrollPoint = 300,
+//       $fixnav = $('.fixnav'),
+//       pLogo = document.querySelector('#wave'),
+//       $nContainer = $('#nestContainer'),
+//       $navPadding = $('.navpadding'),
+//       $window = $(window),
+//       $loginBox = $('#loginBox'),
+//       $loginBtn = $('#loginBtn'),
+//       $popupBox = $('#popupBox'),
+//       $modalBackgrounds = $('.modal-background'),
+//       $mainContent = $('main'),
+//       $menuBar = $('menu'),
+//       $menuToggle = $('.pMenuToggle'),
+//       $menuToggleBtn = $('#menuToggleBtn');
+//   var nestOptions = {
+//     minWidth: calcNestColWidth(),
+//     minColumns: 1,
+//     gutter: 5,
+//     centered: true,
+//     resizeToFit: false, // NOTE: do NOT make true, nested lib has a bug
+//     resizeToFitOptions: {
+//       resizeAny: true
+//     },
+//     animate: false,
+//     animationOptions: {
+//       speed: 20,
+//       duration: 100,
+//       queue: true,
+//       complete: function(){} // call back :D works w/ or w/o animate
+//     }
+//   };
+//   function calcNestColWidth(){
+//     var windowWidth = $window.width();
+//     if (windowWidth > 960) {
+//       return windowWidth / 10;
+//     } else if (windowWidth < 768) {
+//       return windowWidth / 4;
+//     } else {
+//       return windowWidth / 9;
+//     }
+//   }
+//
+//   //////////////////////////////////////////////////////////
+//   // toggle entire page menu slide
+//   var menuUnhide = function(){
+//     if ($loginBox.hasClass('is-active') || $popupBox.hasClass('is-active')){
+//       return;
+//     }
+//     $mainContent.toggleClass('is-inactive');
+//     $menuBar.toggleClass('is-active');
+//     $menuToggle.toggleClass('is-active');
+//   };
+//   var menuHide = function(){
+//     $mainContent.removeClass('is-inactive');
+//     $menuBar.removeClass('is-active');
+//     $menuToggle.removeClass('is-active');
+//   };
+//
+//   $menuToggleBtn.on('click', menuUnhide);
+//   $menuToggle.on('click', menuHide);
+//   Photon.eventBus.on('rightSwipe', menuUnhide);
+//   Photon.eventBus.on('leftSwipe', menuHide);
+//
+//
+//
+//   //////////////////////////////////////////////////////////
+//   // NOTE: can be deprecated as nav no longer has dynamic height b/c tags
+//   // navpadding
+//   $navPadding.css('height', $fixnav.height() + defaultPadding);
+//
+//   //////////////////////////////////////////////////////////
+//   // nestContainer
+//   $nContainer.nested(nestOptions);
+//
+//   //////////////////////////////////////////////////////////
+//   // login pop up
+//   $modalBackgrounds.on('click', function(){ // reusable for all modal-backgrounds
+//     $('.modal').removeClass('is-active');
+//   });
+//   $loginBtn.on('click', function(){
+//     $loginBox.addClass('is-active');
+//   });
+//
+//   //////////////////////////////////////////////////////////
+//   // nestBox pictures Modal
+//   $nContainer.on('click', '.nestBox', function(){
+//     var url = $(this).data('large-url');
+//     var tags = $(this).data('tags');
+//     var $tagField = $popupBox.find('div.image-custom');
+//     $tagField.children().remove();
+//     photon.renderTagsTo(tags, $tagField);
+//     $popupBox.find('img').attr('src', url);
+//     $popupBox.addClass('is-active');
+//   });
+//   $popupBox.on('click', function(){
+//     $(this).removeClass('is-active');
+//   });
+//
+//   //////////////////////////////////////////////////////////
+//   // logo
+//   // forked from http://codepen.io/winkerVSbecks/pen/EVJGVj by Varun Vachhar
+//   (function buildWave(w, h) {
+//     var logoSmoothness = 0.5;
+//     var a = h / 4;
+//     var y = h / 2;
+//     var pathData = [
+//       'M', w * 0, y + a / 2,
+//       'c',
+//         a * logoSmoothness, 0,
+//         -(1 - a) * logoSmoothness, -a,
+//         a, -a,
+//       's',
+//         -(1 - a) * logoSmoothness, a,
+//         a, a,
+//       's',
+//         -(1 - a) * logoSmoothness, -a,
+//         a, -a,
+//       's',
+//         -(1 - a) * logoSmoothness, a,
+//         a, a,
+//       's',
+//         -(1 - a) * logoSmoothness, -a,
+//         a, -a,
+//       's',
+//         -(1 - a) * logoSmoothness, a,
+//         a, a,
+//       's',
+//         -(1 - a) * logoSmoothness, -a,
+//         a, -a,
+//       's',
+//         -(1 - a) * logoSmoothness, a,
+//         a, a,
+//       's',
+//         -(1 - a) * logoSmoothness, -a,
+//         a, -a,
+//       's',
+//         -(1 - a) * logoSmoothness, a,
+//         a, a,
+//       's',
+//         -(1 - a) * logoSmoothness, -a,
+//         a, -a,
+//       's',
+//         -(1 - a) * logoSmoothness, a,
+//         a, a,
+//       's',
+//         -(1 - a) * logoSmoothness, -a,
+//         a, -a,
+//       's',
+//         -(1 - a) * logoSmoothness, a,
+//         a, a,
+//       's',
+//         -(1 - a) * logoSmoothness, -a,
+//         a, -a
+//     ].join(' ');
+//     pLogo.setAttribute('d', pathData);
+//   }(90, 60));
+//
+// });
 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////

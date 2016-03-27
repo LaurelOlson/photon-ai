@@ -2,8 +2,10 @@
 // subscribe: eventBus.on('eventName', callback);
 // emit: eventBus.emit('eventName', data);
 // helper: if there are no listeners to that event, it will console.log
-
-var eventBus = (function(){
+if (!window.Photon) {
+  window.Photon = {};
+}
+Photon.eventBus = (function(){
   var bus = {};
 
   function emit(eventName, data){
