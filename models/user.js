@@ -11,6 +11,16 @@ module.exports = function(sequelize, DataTypes) {
         User.belongsToMany(models.photo, { as: { singular: 'like', plural: 'likes' }, through: 'liked_photos' });
         User.belongsToMany(models.photo, { as: { singular: 'add', plural: 'adds' }, through: 'added_photos' });
       }
+    },
+    getterMethods: {
+      someValue: function() {
+        return this.someValue;
+      }
+    },
+    setterMethods: {
+      someValue: function(value) {
+        return this.someValue = value;
+      }
     }
   });
   return User;

@@ -1,76 +1,127 @@
 'use strict';
 
-var express = require('express');
-var router = express.Router();
-var models = require('../models/index.js');
-var passport = require('passport');
-var flash = require('connect-flash');
-var sequelize = require('sequelize');
-var Promise = sequelize.Promise;
+var configDB = require('../config/database.js');
+var Sequelize = require('sequelize');
+var sequelize = new Sequelize(configDB.url);
+var models = require('../models/index');
+var Promise = Sequelize.Promise;
 
-/* GET home page. */
-router.get('/', function(req, res) {
-  res.render('index.ejs');
-});
+module.exports = function(app, passport) {
 
-// LOGIN / SIGNUP / LOGOUT
-router.get('/login', function(req, res) {
-  res.render('login.ejs', { message: req.flash('loginMessage') });
-});
-
-// local login
-// router.post('/login', function() {} );
-
-router.get('/signup', function(req, res) {
-  res.render('signup', { message: req.flash('sign up msg') });
-});
-
-// local signup
-// router.post('/signup', function() {});
-
-router.get('/profile', isLoggedIn, function(req, res) {
-  console.log('got /profile');
-  res.render('profile', {
-    user: req.user // get user from session and pass to template
+  app.get('/', function(req, res) {
+    res.render('index.ejs');
   });
-});
 
-router.get('/logout', function(req, res) {
-  req.logout();
-  res.redirect('/');
-});
+  /* GET user photos */
+  app.get('/users/:id/photos', isLoggedIn, function(req, res, next) {
+    var id = req.params.id;
+    models.user.findById(id)
+      .then(function(user) {
+        user.getLikes()
+          .then(addPhotos)
+            .then(function(user_photos) { 
+              console.log(user_photos); 
+              res.json(user_photos); 
+            });
+      });
+  });
 
-// FACEBOOK LOGIN
+  /* GET a photo */
+  app.get('/photos/:id', function(req, res, next) {
+    var id = req.params.id;
+    models.photo.findById(id).then(function(photo) {
+      res.json(photo);
+    });
+  });
 
-// route for facebook authentication and login
-router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+  /* POST new photo */
+  app.post('/user/:id/addedphotos', function(req, res) {
+    models.photo.create({
+      url: req.body.url,
+      height: req.body.height,
+      width: req.body.width
+    }).then(function(photo) {
+      models.user.findById(req.params.id).then(function(user) {
+        user.addLike(photo);
+        user.addAdd(photo);
+      });
+      res.json(photo);
+    });
+  });
 
-// handle the callback after facebook has authenticated the user
-router.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/' }),
-  function(req, res) {
+
+  // LOGIN STUFF //
+
+  app.get('/profile', isLoggedIn, function(req, res) {
+    res.redirect('/users/' + req.user.id + '/photos');
+    // res.render('profile.ejs', {
+    //   user: req.user
+    // });
+  });
+
+  app.get('/logout', function(req, res) {
+    req.logout();
     res.redirect('/');
   });
 
-// route for logging out
-router.get('/logout', function(req, res) {
-  req.logout();
-  res.redirect('/');
-});
+  // AUTHENTICATE (FIRST LOGIN)
 
-/* GET user photos */
-router.get('/users/:id/photos', function(req, res, next) {
-  var id = req.params.id;
-  models.user.findById(id)
-    .then(function(user) {
-      user.getLikes()
-        .then(addPhotos)
-          .then(function(user_photos) { 
-            console.log(user_photos); 
-            res.json(user_photos); 
-          });
-    });
-});
+  // show login form
+  app.get('/login', function(req, res) {
+    res.render('login.ejs', { message: req.flash('loginMessage') });
+  });
+
+  // SIGNUP
+
+  // show signup form
+  app.get('/signup', function(req, res) {
+    res.render('signup.ejs', { message: req.flash('loginMessage') });
+  });
+
+  // facebook
+
+  // send to facebook for authentication
+  app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+
+  // handle callback after facebook has authenticated
+  app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+    successRedirect: '/profile',
+    failureRedirect: '/'
+  }));
+
+  // AUTHORIZE (ALREADY LOGGED IN)
+
+  // facebook
+
+  // send to facebook for authorization
+  app.get('/connect/facebook', passport.authorize('facebook', { scope: 'email' }));
+
+  // handle callback after facebook has authorized
+  app.get('/connect/facebook/callback', passport.authorize('facebook', {
+    successRedirect: '/profile',
+    failureRedirect: '/'
+  }));
+
+  // UNLINK ACCOUNTS
+
+  // facebook
+
+  app.get('/unlink/facebook', function(req, res) {
+    var user = req.user;
+    user.fbook_token = null;
+    user.save()
+      .then(function() { res.redirect('/profile'); })
+      .catch(function() { res.redirect('/profile'); });
+  });
+
+}
+
+function isLoggedIn(req, res, next) {
+  // if authenticated, carry on
+  if (req.isAuthenticated()) { return next(); }
+  // otherwise, redirect
+  res.redirect('/');
+}
 
 function addPhotos(photos) {
   // Make addPhotos return a promise. 
@@ -118,35 +169,3 @@ function addPhotos(photos) {
     }).then(function() { resolve_photos(user_photos); }); // end photos.forEach
   }); // end promise returned by addPhotos
 } // end addPhotos
-
-/* GET a photo */
-router.get('/photos/:id', function(req, res, next) {
-  var id = req.params.id;
-  models.photo.findById(id).then(function(photo) {
-    res.json(photo);
-  });
-});
-
-/* POST new photo */
-router.post('/user/:id/addedphotos', function(req, res) {
-  models.photo.create({
-    url: req.body.url,
-    height: req.body.height,
-    width: req.body.width
-  }).then(function(photo) {
-    models.user.findById(req.params.id).then(function(user) {
-      user.addLike(photo);
-      user.addAdd(photo);
-    });
-    res.json(photo);
-  });
-});
-
-function isLoggedIn(req, res, next) {
-  // if authenticated, carry on
-  if (req.isAuthenticated()) { return next(); }
-  // otherwise, redirect
-  res.redirect('/');
-}
-
-module.exports = router;
