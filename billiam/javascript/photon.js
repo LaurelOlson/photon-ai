@@ -24,16 +24,16 @@ var photon = (function() {
   //////////////////////////////////////////////////////////
   // config important variables
   var serverURL = 'https://localhost:3000/';
-
-
-
-  //////////////////////////////////////////////////////////
-  // fitting images to nestedJS grid, loading them to page
+  var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x8000/'; // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
   var gridDict = {
     // example
     // 0.66: ['23'],
     // 0.5: ['12', '24']
   };
+
+
+  //////////////////////////////////////////////////////////
+  // fitting images to nestedJS grid, loading them to page
   (function genGrid (cols, rows){
     for (var i = 1; i < (cols+1); i++){
       for (var j = 1; j < (rows+1); j++){
@@ -50,7 +50,7 @@ var photon = (function() {
 
   // returns image spec object, can also pass it to a callback
   // in case of async issues on batch img processing
-  // NOTE: conventionally a promise is used instead of return
+  // NOTE: conventionally a promise is used instead of callback
   function gridFitter(width, height, callback){
     var bestFit = {
       ratios: [],
@@ -76,7 +76,6 @@ var photon = (function() {
     } else {
       output.css = 'background-size: 100% auto;';
     } // doesn't need one for 1:1, because no trim, ergo agnostic
-
     if (callback) {callback(output);}
     return output;
   }
@@ -95,6 +94,7 @@ var photon = (function() {
     $imgElement.attr('data-large-url', imgObj.url);
     return $imgElement;
   }
+
   function renderNestImages(imagesObj, direction){
     var imgArr = [];
     imagesObj.photos.forEach(function(ele, i, arr){
@@ -145,47 +145,77 @@ var photon = (function() {
   //////////////////////////////////////////////////////////
   // User Data
   function PhotonUser(id){
-    console.log('initialising PhotonUser', id);
+    var photos = [];
     this.userID = id;
-    this.userPhotos = [];
-    this.saveToUser = function(data, response, xhr){
-      console.log('reached saveToUser');
+    this.getPhotos = function(){
+      return photos;
     };
-    this.read = function(){};
-    this.write = function(){};
+    this.writePhotos = function(photo){
+      photos.push(photo);
+    };
   }
-  PhotonUser.prototype.whois = function(){
-    return this.userID;
-  };
   PhotonUser.prototype.fetch = function(){
-    var url = 'https://localhost:3000/users/' + this.userID + '/photos';
-    var targetArr = this.userPhotos;
-    $.getJSON(url, null, function(data, response, xhr){
-      console.log(response);
-      if (response == 'success'){
-          // console.log(data[0]);
-        data.forEach(function(ele, i, arr){
-        targetArr.push(ele);
-        });
-        return true;
-      } else {
-        console.log('something failed:', response);
-        return false;
-      }
+    var url = serverURL + 'users/' + this.userID + '/photos';
+    var writer = this.writePhotos;
+    $.getJSON(url, null).done(function(data, response, xhr){
+      data.forEach(function(ele, i, arr){
+        writer(ele);
+      });
+    }).fail(function(xhr, status, error){
+      console.log(error);
     });
   };
+
+
+  //////////////////////////////////////////////////////////
+  // Photo Data
+  function PhotonPhoto(imgObj){
+    this.id = imgObj.id;
+    this.smallURL = null;
+    this.url = imgObj.url;
+    this.tags = imgObj.tags;
+    this.height = imgObj.height || null;
+    this.width = imgObj.width || null;
+    this.people = [];
+    this.landmark = [];
+    this.safeSearch = {};
+  }
+  PhotonPhoto.prototype.resize = function(){
+    if (!this.smallURL) {
+      this.smallURL = monicasResizer + this.url.replace(/^http[s]*:[/]*/g, '');
+    }
+  };
+  PhotonPhoto.prototype.findWidthHeight = function(){
+    var photoObj = this;
+    if (!this.width || !this.height) {
+      var $tempImg = $('<img>').attr({
+        src: this.url,
+        id: 'photonImgFindSize'
+      }).css({
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        visibility: 'hidden',
+        'z-index': -100
+      });
+      $('body').append($tempImg);
+      $('#photonImgFindSize').on('load', function(){
+        var $zeImg = $(this);
+        photoObj.width = $zeImg.width();
+        photoObj.height = $zeImg.height();
+        console.log('img loaded');
+        $zeImg.remove();
+      });
+    }
+  };
+
+
+  var vanGogh = new PhotonPhoto({
+    "id": 6,
+    "url": "https://images.unsplash.com/photo-1432383079404-c66efb4828a3",
+    "tags": [{"name":"sea","type":"label"},{"name":"coast","type":"label"},{"name":"water","type":"label"},{"name":"ocean","type":"label"},{"name":"shore","type":"label"},{"name":"reflection","type":"label"},{"name":"stack","type":"label"}]
+  });
   var jason = new PhotonUser(15);
-
-  function getImageData(userID){
-    var url = serverURL + 'users/' + userID + '/photos';
-  }
-
-  function saveToMemory(data, status, xhr){
-    console.log(status);
-    sessionStorage.setItem('photonSession', JSON.stringify(data));
-  }
-
-
   //////////////////////////////////////////////////////////
   // API
   return {
@@ -194,8 +224,8 @@ var photon = (function() {
     renderTagsTo: renderTagsTo,
     // below is during construction, can be removed
     fuzzysearch: fuzzysearch,
-    getImageData: getImageData,
-    jason: jason
+    jason: jason,
+    vanGogh: vanGogh
   };
 }());
 
@@ -415,7 +445,13 @@ $(function(){
 
 //////////////////////////////////////////////////////////
 // sample data objects for testing, can delete when deploy
-var samplePhotoObj = {
+var samplePhotoObj1 = {
+  "id": 6,
+  "url": "https://images.unsplash.com/photo-1432383079404-c66efb4828a3",
+  "tags": [{"name":"sea","type":"label"},{"name":"coast","type":"label"},{"name":"water","type":"label"},{"name":"ocean","type":"label"},{"name":"shore","type":"label"},{"name":"reflection","type":"label"},{"name":"stack","type":"label"}]
+};
+
+var samplePhotoObj2 = {
   id: 0,
   url: 'images/24.jpg',
   width: 1080,
