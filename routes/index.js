@@ -13,26 +13,25 @@ module.exports = function(app, passport) {
   });
 
   /* GET user photos */
-  app.get('/users/:id/photos', isLoggedIn, function(req, res, next) {
-    var id = req.params.id;
+  app.get('/photos', isLoggedIn, function(req, res, next) {
+    var id = req.user.id;
     models.user.findById(id)
       .then(function(user) {
         user.getLikes()
           .then(addPhotos)
             .then(function(user_photos) { 
-              console.log(user_photos); 
               res.json(user_photos); 
             });
       });
   });
 
   /* GET a photo */
-  app.get('/photos/:id', function(req, res, next) {
-    var id = req.params.id;
-    models.photo.findById(id).then(function(photo) {
-      res.json(photo);
-    });
-  });
+  // app.get('/photos/:id', function(req, res, next) {
+  //   var id = req.params.id;
+  //   models.photo.findById(id).then(function(photo) {
+  //     res.json(photo);
+  //   });
+  // });
 
   /* POST new photo */
   app.post('/user/:id/addedphotos', function(req, res) {
@@ -53,7 +52,7 @@ module.exports = function(app, passport) {
   // LOGIN STUFF //
 
   app.get('/profile', isLoggedIn, function(req, res) {
-    res.redirect('/users/' + req.user.id + '/photos');
+    res.redirect('/photos');
     // res.render('profile.ejs', {
     //   user: req.user
     // });
