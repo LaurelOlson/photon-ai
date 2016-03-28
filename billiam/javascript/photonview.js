@@ -74,11 +74,14 @@ Photon.view = (function(pubsub){
 
   function convertImgToNest (imgObj){
     var gridSpec = gridFitter(imgObj.width, imgObj.height);
-    var styleStr = 'background:url(' + imgObj.url + ') no-repeat center center;' + gridSpec.css;
+    var smallerLink = imgObj.smallURL || imgObj.url;
+    var styleStr = 'background:url(' + smallerLink + ') no-repeat center center;' + gridSpec.css;
     var tagStr = imgObj.tags;
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
     var $imgElement = $('<div>').addClass('nestBox').addClass(nestClass);
     $imgElement.attr('style', styleStr);
+    // $imgElement.attr('data-url', imgObj.url);
+    // $imgElement.attr('data-gridspec', gridSpec.css);
     $imgElement.attr('data-tags', tagStr);
     $imgElement.attr('data-large-url', imgObj.url);
     return $imgElement;
@@ -251,14 +254,12 @@ Photon.view = (function(pubsub){
     // NOTE: this is work in progress and doesn't work!!! NOTE!
     // $nestContainer.one("DOMNodeInserted", '.nestBox', function() {
     //   var $box = $(this);
-    //   console.log($box);
     //   $box.addClass('is-loading');
-    //   $box.load(function(){
-    //     console.log('loaded');
-    //   }).each(function(){
-    //     if ($box.prop('complete')){
-    //       $box.removeClass('is-loading');
-    //     }
+    //   var $tempImg = $('<img/>').addClass('is-temp-img').attr('id', 'pTempPreloader');
+    //   $tempImg.attr('src', $box.data('large-url')).load(function() {
+    //     $box.attr('style', 'background:url(' + $box.data('large-url') + ') no-repeat center center;' + $box.data('gridSpec'));
+    //     $box.removeClass('is-loading');
+    //     $('#pTempPreloader').remove();
     //   });
     // });
 

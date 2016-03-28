@@ -269,3 +269,11 @@ menu.pMenu {
     position: absolute;
   }
 }
+
+.is-temp-img {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -100;
+  visibility: hidden;
+}

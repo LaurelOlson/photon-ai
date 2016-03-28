@@ -56,6 +56,7 @@ var samplePhotoObj2 = {
 var samplePhotoObjExt = {
   id: 456,
   url: 'https://images.unsplash.com/photo-1449177009399-be6867ef0505',
+  smallURL: 'http://104.131.96.71/unsafe/fit-in/800x4000/images.unsplash.com/photo-1449177009399-be6867ef0505',
   width: 5616,
   height: 3744,
   tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
