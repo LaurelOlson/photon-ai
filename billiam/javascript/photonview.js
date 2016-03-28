@@ -114,38 +114,13 @@ Photon.view = (function(pubsub){
   }
 
   $(function(){
-    $('#nestPrepend').click(function(){
-      var boxes = makeBoxes();
-      $nContainer.prepend(boxes).nested('prepend',boxes);
-    });
-    $('#nestAppend').click(function(){
-      var boxes = makeBoxes();
-      $nContainer.append(boxes).nested('append',boxes);
-    });
-    $('#nestNuke').click(function(){
-      $nContainer.children().remove();
-      $nContainer.nested('refresh', nestOptions);
-    });
-    $('#testPrepend').on('click', function(){
-      renderNestImages(samplePhotosObj, $nContainer, 'prepend');
-    });
-    $('#testAppend').on('click', function(){
-      renderNestImages(samplePhotosObj, $nContainer);
-    });
-    $('#imgPrepend').on('click', function(){
-      pubsub.emit('imageRequested', 'prepend');
-    });
-    $('#imgAppend').on('click', function(){
-      pubsub.emit('imageRequested', 'append');
-    });
-
     //////////////////////////////////////////////////////////
     // all the vars for UI manipulation
     var defaultPadding = 5,
     scrollPoint = 300,
     $fixnav = $('.fixnav'),
     $pLogo = $('#wave'),
-    $nContainer = $('#nestContainer'),
+    $nestContainer = $('#nestContainer'),
     $navPadding = $('.navpadding'),
     $window = $(window),
     $loginBox = $('#loginBox'),
@@ -185,6 +160,38 @@ Photon.view = (function(pubsub){
     }
 
     //////////////////////////////////////////////////////////
+    // nestContainer
+    $nestContainer.nested(nestOptions);
+
+    //////////////////////////////////////////////////////////
+    // buttons during development
+    $('#nestPrepend').click(function(){
+      var boxes = makeBoxes();
+      $nestContainer.prepend(boxes).nested('prepend',boxes);
+    });
+    $('#nestAppend').click(function(){
+      var boxes = makeBoxes();
+      $nestContainer.append(boxes).nested('append',boxes);
+    });
+    $('#nestNuke').click(function(){
+      $nestContainer.children().remove();
+      $nestContainer.nested('refresh', nestOptions);
+    });
+    $('#testPrepend').on('click', function(){
+      renderNestImages(samplePhotosObj, $nestContainer, 'prepend');
+    });
+    $('#testAppend').on('click', function(){
+      renderNestImages(samplePhotosObj, $nestContainer);
+    });
+    $('#imgPrepend').on('click', function(){
+      pubsub.emit('imagesRequested', 'prepend');
+    });
+    $('#imgAppend').on('click', function(){
+      pubsub.emit('imagesRequested', 'append');
+    });
+
+
+    //////////////////////////////////////////////////////////
     // toggle entire page menu slide
     var menuUnhide = function(){
       if ($loginBox.hasClass('is-active') || $popupBox.hasClass('is-active')){
@@ -206,7 +213,6 @@ Photon.view = (function(pubsub){
     pubsub.on('leftSwipe', menuHide);
 
 
-
     //////////////////////////////////////////////////////////
     // NOTE: can be deprecated as nav no longer has dynamic height b/c tags
     // navpadding
@@ -214,7 +220,7 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // nestContainer
-    $nContainer.nested(nestOptions);
+    $nestContainer.nested(nestOptions);
 
     //////////////////////////////////////////////////////////
     // login pop up
@@ -227,7 +233,7 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // nestBox pictures Modal
-    $nContainer.on('click', '.nestBox', function(){
+    $nestContainer.on('click', '.nestBox', function(){
       var url = $(this).data('large-url');
       var tags = $(this).data('tags');
       var $tagField = $popupBox.find('div.image-custom');
@@ -299,6 +305,8 @@ Photon.view = (function(pubsub){
       $pLogo.attr('d', pathData);
     }(90, 60));
   });
+
+
   // API
   return {
     POST: 'status: view is loaded',

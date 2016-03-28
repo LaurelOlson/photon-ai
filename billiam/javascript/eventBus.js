@@ -3,6 +3,12 @@
 // emit: eventBus.emit('eventName', data);
 // helper: if there are no listeners to that event, it will console.log
 // NOTE: load this one first in html
+
+// current emitters (manually keeping track, may not be accurate)
+  // 'leftSwipe' + variants
+  // 'imagesRequested', 'append' or 'prepend'
+  // 'tap'
+
 if (!window.Photon) {
   window.Photon = {};
 }
@@ -26,14 +32,14 @@ Photon.eventBus = (function(){
   }
 
   // helper for debugging
-  function listEvents(){
+  function listSubscribers(){
     console.log(bus);
   }
 
   // API
   return {
     POST: 'status: eventBus is loaded',
-    listEvents: listEvents,
+    listSubscribers: listSubscribers,
     emit: emit,
     on: on
   };

@@ -4,21 +4,27 @@ if (!window.Photon) {
 }
 
 Photon.Photo = function(imgObj){
-  this.id = imgObj.id;
-  this.smallURL = null;
-  this.url = imgObj.url;
-  this.tags = imgObj.tags;
-  this.height = imgObj.height || null;
-  this.width = imgObj.width || null;
-  this.people = [];
-  this.landmark = [];
-  this.safeSearch = {};
-};
+  // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
+  var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x8000/';
 
-Photon.Photo.prototype.resize = function(){
-  if (!this.smallURL) {
-    this.smallURL = monicasResizer + this.url.replace(/^http[s]*:[/]*/g, '');
-  }
+  var imgID = imgObj.id;
+  var imgURL = imgObj.url;
+  var imgSmallURL = imgObj.smallurl || null;
+  var imgTags = imgObj.tags;
+  var imgWidth = imgObj.width || null;
+  var imgHeight = imgObj.height || null;
+  // below is exporting of private vars
+  this.id = imgID;
+  this.url = imgURL;
+  this.smallURL = (function(){
+    if(imgSmallURL){
+      return imgSmallURL;
+    }
+    return monicasResizer + imgURL.replace(/^http[s]*:[/]*/g, '');
+  }());
+  this.tags = imgTags;
+  this.height = imgHeight;
+  this.width = imgWidth;
 };
 
 Photon.Photo.prototype.findWidthHeight = function(){
