@@ -15,9 +15,9 @@ module.exports = function(app, passport) {
   // PHOTO STUFF
 
   /* GET random photos */
-  app.get('/photos', isLoggedOut, function(req, res, next) {
+  // app.get('/photos', isLoggedOut, function(req, res, next) {
 
-  })
+  // })
 
   /* GET user photos */
   app.get('/photos', isLoggedIn, function(req, res, next) {
