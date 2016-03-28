@@ -9,18 +9,21 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        allowNull: false,
         type: Sequelize.STRING
       },
-      email: {
+      localemail: {
+        type: Sequelize.STRING
+      },
+      localpassword: {
+        type: Sequelize.STRING
+      },
+      fbook_email: {
         type: Sequelize.STRING
       },
       fbook_id: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       fbook_token: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {
