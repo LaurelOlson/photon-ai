@@ -55,6 +55,10 @@ Photon.Photo = function(imgObj){
     imgSafesearch = allSafeSearch;
   }(imgObj.tags));
 
+  this.tags = imgTags;
+  this.landmarks = imgLandmarks;
+  this.people = imgPeople;
+  this.safesearch = imgSafesearch;
 };
 
 // NOTE: this is not needed for production
