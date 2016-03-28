@@ -21,6 +21,29 @@ Photon.View = (function(){
     return boxes;
   }
 
+  var gridDict = {
+    // example
+    // 0.66: ['23'],
+    // 0.5: ['12', '24']
+  };
+
+
+  //////////////////////////////////////////////////////////
+  // fitting images to nestedJS grid, loading them to page
+  (function genGrid (cols, rows){
+    for (var i = 1; i < (cols+1); i++){
+      for (var j = 1; j < (rows+1); j++){
+        var ratio = (i / j).toString();
+        if (!gridDict.hasOwnProperty(ratio)){
+          gridDict[ratio] = [];
+        }
+        gridDict[ratio].push([i, j]);
+      }
+    }
+    gridDict['1'].pop(); // removes 5x5 blocks from ratios of 1, they are too big
+    return true;
+  }(5,5)); // IIFE also makes it anon.
+  
   function gridFitter(width, height, callback){
     var bestFit = {
       ratios: [],
@@ -80,7 +103,7 @@ Photon.View = (function(){
       $target.append($('<span>').addClass('tag').text(ele));
     });
   }
-
+$(function(){
   $('#nestPrepend').click(function(){
     var boxes = makeBoxes();
     $nContainer.prepend(boxes).nested('prepend',boxes);
@@ -204,7 +227,6 @@ Photon.View = (function(){
   //////////////////////////////////////////////////////////
   // logo
   // forked from http://codepen.io/winkerVSbecks/pen/EVJGVj by Varun Vachhar
-  document.addEventListener("DOMContentLoaded", function(event) {
     (function buildWave(w, h) {
       var logoSmoothness = 0.5;
       var a = h / 4;
@@ -260,8 +282,7 @@ Photon.View = (function(){
       ].join(' ');
       $pLogo.attr('d', pathData);
     }(90, 60));
-  });
-
+});
   // API
   return {
     testing: 'ja you can has API'
