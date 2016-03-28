@@ -88,7 +88,22 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   // PHOTO CONTROLLER //////////////////////////////////////
 
   //////////////////////////////////////////////////////////
-  //
+  // loading callback TODO: found this on StackOverflow
+  function preloadImage(imgObj, callback){
+    var objImagePreloader = new Image();
+    objImagePreloader.src = imgObj.url;
+    if (objImagePreloader.complete){
+      callback();
+      objImagePreloader.onload=function(){};
+    }
+    else{
+      objImagePreloader.onload = function() {
+        callback();
+        //    clear onLoad, IE behaves irratically with animated gifs otherwise
+        objImagePreloader.onload=function(){};
+      };
+    }
+  }
 
 
   // STORAGE CONTROLLER ////////////////////////////////////

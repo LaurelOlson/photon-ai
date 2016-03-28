@@ -13,7 +13,7 @@ Photon.view = (function(pubsub){
     if (count < 5) count = 5;
     for (var i=0; i < count; i++ ) {
       var box = document.createElement('div');
-      box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
+      box.className = 'nestBox is-loading size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
       box.setAttribute('data-large-url', 'http://placehold.it/1200x800');
       box.setAttribute('data-tags', 'tag1,tag2,tag3,tag4,tag5,tag6');
       // add box DOM node to array of new elements
@@ -121,6 +121,7 @@ Photon.view = (function(pubsub){
     $fixnav = $('.fixnav'),
     $pLogo = $('#wave'),
     $nestContainer = $('#nestContainer'),
+    $nestBoxes = $('.nestBox'),
     $navPadding = $('.navpadding'),
     $window = $(window),
     $loginBox = $('#loginBox'),
@@ -245,6 +246,21 @@ Photon.view = (function(pubsub){
     $popupBox.on('click', function(){
       $(this).removeClass('is-active');
     });
+
+    //////////////////////////////////////////////////////////
+    // NOTE: this is work in progress and doesn't work!!! NOTE!
+    // $nestContainer.one("DOMNodeInserted", '.nestBox', function() {
+    //   var $box = $(this);
+    //   console.log($box);
+    //   $box.addClass('is-loading');
+    //   $box.load(function(){
+    //     console.log('loaded');
+    //   }).each(function(){
+    //     if ($box.prop('complete')){
+    //       $box.removeClass('is-loading');
+    //     }
+    //   });
+    // });
 
     //////////////////////////////////////////////////////////
     // logo
