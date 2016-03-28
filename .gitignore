@@ -5,8 +5,12 @@ secret_stuff/
 
 seeders/temp
 
-.DS_Store
-
 notes
 
+.DS_Store
+
 billiam/images/
+
+config/auth.js
+config/database.js
+config/config.json
