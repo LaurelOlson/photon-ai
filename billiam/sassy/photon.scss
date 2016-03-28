@@ -240,3 +240,34 @@ menu.pMenu {
 .has-shadow {
   box-shadow: $boxShadow;
 }
+
+@keyframes spinaround {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.is-loading {
+  color: transparent;
+  // pointer-events: none;
+  &:after{
+    animation: spinaround 500ms linear infinite;
+    border: 2px solid $grey;
+    border-radius: 290486px;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    content: "";
+    display: block;
+    height: 16px;
+    position: relative;
+    width: 16px;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+  }
+}

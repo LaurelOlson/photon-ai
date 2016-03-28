@@ -5,7 +5,7 @@ if (!window.Photon) {
 
 Photon.Photo = function(imgObj){
   // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
-  var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x8000/';
+  var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x4000/';
 
   var imgID = imgObj.id;
   var imgURL = imgObj.url;
@@ -45,7 +45,7 @@ Photon.Photo.prototype.findWidthHeight = function(){
       var $zeImg = $(this);
       photoObj.width = $zeImg.width();
       photoObj.height = $zeImg.height();
-      console.log('img loaded');
+      console.log('img dimensions found');
       $zeImg.remove();
     });
   }
