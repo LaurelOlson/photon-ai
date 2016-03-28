@@ -9,7 +9,7 @@ var Promise = Sequelize.Promise;
 module.exports = function(app, passport) {
 
   app.get('/', function(req, res) {
-    res.render('index.ejs');
+    res.render('index.ejs', { message: req.flash('loginMessage')});
   });
 
   // PHOTO STUFF
@@ -26,8 +26,8 @@ module.exports = function(app, passport) {
       .then(function(user) {
         user.getLikes()
           .then(addPhotos)
-            .then(function(user_photos) { 
-              res.json(user_photos); 
+            .then(function(user_photos) {
+              res.json(user_photos);
             });
       });
   });
@@ -80,7 +80,7 @@ module.exports = function(app, passport) {
 
   // AUTHENTICATE (FIRST LOGIN)
 
-  // locally 
+  // locally
 
   // show login form
   app.get('/login', isLoggedOut, function(req, res) {
@@ -168,12 +168,12 @@ function isLoggedIn(req, res, next) {
 }
 
 function addPhotos(photos) {
-  // Make addPhotos return a promise. 
+  // Make addPhotos return a promise.
   // This means when we call .then(addPhotos) on line 16, add photos won't return until the promise is resolved.
   // Once the promise is resolved, .then(function(user_photos) { .. }) will run, taking in the argument of resolve_photos(), user_photos.
   // return console.log(photos);
   return new Promise(function(resolve_photos, reject_photos) {
-    
+
     var user_photos = [];
 
     // Iterate over photos as promises.
@@ -209,7 +209,7 @@ function addPhotos(photos) {
           // });
         });
         // .then(resolve_photo); // once we've iterated over each tag, move onto the next photo
-      }); // promise 
+      }); // promise
 
     }).then(function() { resolve_photos(user_photos); }); // end photos.forEach
   }); // end promise returned by addPhotos

@@ -64,6 +64,10 @@
         </div>
       </section>
 
+      <% if (message.length > 0) { %>
+        <div id="loginMessage" class="notification is-warning"><%= message %></div>
+      <% } %>
+
       <div class="container is-fluid layer-1">
         <div id="nestContainer">
           <!-- photon will inject nest images here

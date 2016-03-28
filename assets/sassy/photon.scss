@@ -160,6 +160,11 @@ menu.pMenu {
   }
 }
 
+#loginMessage {
+  z-index: 1;
+  text-align: center;
+}
+
 .pLogo {
   border: $borderRadius solid $primary;
   border-radius: 10%;
