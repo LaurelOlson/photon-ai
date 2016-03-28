@@ -10,7 +10,10 @@ Photon.Photo = function(imgObj){
   var imgID = imgObj.id;
   var imgURL = imgObj.url;
   var imgSmallURL = imgObj.smallurl || null;
-  var imgTags = imgObj.tags;
+  var imgTags = null;
+  var imgLandmarks = null;
+  var imgPeople = null;
+  var imgSafesearch = null;
   var imgWidth = imgObj.width || null;
   var imgHeight = imgObj.height || null;
   // below is exporting of private vars
@@ -22,11 +25,40 @@ Photon.Photo = function(imgObj){
     }
     return monicasResizer + imgURL.replace(/^http[s]*:[/]*/g, '');
   }());
-  this.tags = imgTags;
   this.height = imgHeight;
   this.width = imgWidth;
+
+  (function parseTags(tagsArr){
+    var allTags = [];
+    var allLandmarks = [];
+    var allPeople = [];
+    var allSafeSearch = [];
+    tagsArr.forEach(function(ele, i, arr){
+      switch(ele.type){
+        case 'label':
+          allTags.push(ele.name);
+          break;
+        case 'landmark':
+          // do stuff
+          break;
+        case 'people':
+          // do stuff
+          break;
+        case 'safesearch':
+          // do stuff
+          break;
+      }
+    });
+    imgTags = allTags;
+    imgLandmarks = allLandmarks;
+    imgPeople = allPeople;
+    imgSafesearch = allSafeSearch;
+  }(imgObj.tags));
+
 };
 
+// NOTE: this is not needed for production
+// exists because seed data lacks dimensions
 Photon.Photo.prototype.findWidthHeight = function(){
   var photoObj = this;
   if (!this.width || !this.height) {

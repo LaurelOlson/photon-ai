@@ -13,7 +13,7 @@ Photon.view = (function(pubsub){
     if (count < 5) count = 5;
     for (var i=0; i < count; i++ ) {
       var box = document.createElement('div');
-      box.className = 'nestBox is-loading size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
+      box.className = 'nestBox has-shadow is-loading size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
       box.setAttribute('data-large-url', 'http://placehold.it/1200x800');
       box.setAttribute('data-tags', 'tag1,tag2,tag3,tag4,tag5,tag6');
       // add box DOM node to array of new elements
@@ -45,6 +45,10 @@ Photon.view = (function(pubsub){
   }(5,5)); // IIFE also makes it anon.
 
   function gridFitter(width, height){
+    if (!width || !height){
+      console.log('gridFitter: missing width or height');
+      return null;
+    }
     var bestFit = {
       ratios: [],
       startErr: Infinity
@@ -74,11 +78,14 @@ Photon.view = (function(pubsub){
 
   function convertImgToNest (imgObj){
     var gridSpec = gridFitter(imgObj.width, imgObj.height);
+    if (!gridSpec) {
+      return null;
+    }
     var smallerLink = imgObj.smallURL || imgObj.url;
     var styleStr = 'background:url(' + smallerLink + ') no-repeat center center;' + gridSpec.css;
     var tagStr = imgObj.tags;
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
-    var $imgElement = $('<div>').addClass('nestBox').addClass(nestClass);
+    var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
     $imgElement.attr('style', styleStr);
     // $imgElement.attr('data-url', imgObj.url);
     // $imgElement.attr('data-gridspec', gridSpec.css);
