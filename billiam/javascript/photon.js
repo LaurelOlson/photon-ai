@@ -1,19 +1,48 @@
 
 // Global vars:
   // $: jquery
+  // eventBus
+    // subscribe: eventBus.on('eventName', callback);
+    // emit: eventBus.emit('eventName', data);
+    // helper: if there are no listeners to that event, it will console.log
+  // (touch.js) IIFE
+    // emits: ('tap', target), ('upSwipe', target) <- all directions
+    // on desktop direction keys ard bound to swipe dirs, but no target data
+  // $.Nested
+    // some .prototype 'APIs'
+    // .append(nestBoxes);
+    // .prepend(nestBoxes);
+    // .resize(nestBoxes);
+    // .refresh(options);
+    // .destroy();
+    // example: $nestContainer.nested('refresh', {options object});
+// PhotonUser constructor
+// PhotonPhoto constructor
+// PhotonView constructor
+// document.cookie 4KB
+// sessionStorage (scoped to current window tab) 5MB
+// localStorage (scoped domain, persistent)
+  // setItem('key', 'value'), getItem('key'), removeItem('key') // also localStorage.key
 
 
 // photon main IIFE with API
 // async should go to the jQuery wrapper below, on doc ready
+// NOTE: to be executed after modules have loaded
 var photon = (function() {
 
   //////////////////////////////////////////////////////////
-  // fitting images to nestedJS grid, loading them to page
+  // config important variables
+  var serverURL = 'https://localhost:3000/';
+  var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x8000/'; // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
   var gridDict = {
     // example
     // 0.66: ['23'],
     // 0.5: ['12', '24']
   };
+
+
+  //////////////////////////////////////////////////////////
+  // fitting images to nestedJS grid, loading them to page
   (function genGrid (cols, rows){
     for (var i = 1; i < (cols+1); i++){
       for (var j = 1; j < (rows+1); j++){
@@ -30,7 +59,7 @@ var photon = (function() {
 
   // returns image spec object, can also pass it to a callback
   // in case of async issues on batch img processing
-  // NOTE: conventionally a promise is used instead of return
+  // NOTE: conventionally a promise is used instead of callback
   function gridFitter(width, height, callback){
     var bestFit = {
       ratios: [],
@@ -56,7 +85,6 @@ var photon = (function() {
     } else {
       output.css = 'background-size: 100% auto;';
     } // doesn't need one for 1:1, because no trim, ergo agnostic
-
     if (callback) {callback(output);}
     return output;
   }
@@ -75,6 +103,7 @@ var photon = (function() {
     $imgElement.attr('data-large-url', imgObj.url);
     return $imgElement;
   }
+
   function renderNestImages(imagesObj, direction){
     var imgArr = [];
     imagesObj.photos.forEach(function(ele, i, arr){
@@ -86,6 +115,7 @@ var photon = (function() {
       $('#nestContainer').append(imgArr).nested('append', imgArr);
     }
   }
+
 
   //////////////////////////////////////////////////////////
   // for popupBox modal tags
@@ -122,13 +152,90 @@ var photon = (function() {
 
 
   //////////////////////////////////////////////////////////
+  // User Data
+  function PhotonUser(id){
+    var photos = [];
+    this.userID = id;
+    this.getPhotos = function(){
+      return photos;
+    };
+    this.writePhotos = function(photo){
+      photos.push(photo);
+    };
+  }
+  PhotonUser.prototype.fetch = function(){
+    var url = serverURL + 'users/' + this.userID + '/photos';
+    var writer = this.writePhotos;
+    $.getJSON(url, null).done(function(data, response, xhr){
+      data.forEach(function(ele, i, arr){
+        writer(ele);
+      });
+    }).fail(function(xhr, status, error){
+      console.log(error);
+    });
+  };
+
+
+  //////////////////////////////////////////////////////////
+  // Photo Data
+  function PhotonPhoto(imgObj){
+    this.id = imgObj.id;
+    this.smallURL = null;
+    this.url = imgObj.url;
+    this.tags = imgObj.tags;
+    this.height = imgObj.height || null;
+    this.width = imgObj.width || null;
+    this.people = [];
+    this.landmark = [];
+    this.safeSearch = {};
+  }
+  PhotonPhoto.prototype.resize = function(){
+    if (!this.smallURL) {
+      this.smallURL = monicasResizer + this.url.replace(/^http[s]*:[/]*/g, '');
+    }
+  };
+  PhotonPhoto.prototype.findWidthHeight = function(callback){
+    var photoObj = this;
+    if (!this.width || !this.height) {
+      var $tempImg = $('<img>').attr({
+        src: this.url,
+        id: 'photonImgFindSize'
+      }).css({
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        visibility: 'hidden',
+        'z-index': -100
+      });
+      $('body').append($tempImg);
+      $('#photonImgFindSize').on('load', function(){
+        var $zeImg = $(this);
+        photoObj.width = $zeImg.width();
+        photoObj.height = $zeImg.height();
+        console.log('img loaded');
+        $zeImg.remove();
+        if (callback){callback();}
+      });
+    }
+  };
+
+
+  var vanGogh = new PhotonPhoto({
+    "id": 6,
+    "url": "https://images.unsplash.com/photo-1432383079404-c66efb4828a3",
+    "tags": [{"name":"sea","type":"label"},{"name":"coast","type":"label"},{"name":"water","type":"label"},{"name":"ocean","type":"label"},{"name":"shore","type":"label"},{"name":"reflection","type":"label"},{"name":"stack","type":"label"}]
+  });
+  var jason = new PhotonUser(15);
+  //////////////////////////////////////////////////////////
   // API
   return {
     renderNestImages: renderNestImages,
     gridFitter: gridFitter,
     renderTagsTo: renderTagsTo,
     // below is during construction, can be removed
-    fuzzysearch: fuzzysearch
+    fuzzysearch: fuzzysearch,
+    jason: jason,
+    vanGogh: vanGogh
   };
 }());
 
@@ -152,6 +259,8 @@ $(function(){
     for (var i=0; i < count; i++ ) {
       var box = document.createElement('div');
       box.className = 'nestBox size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
+      box.setAttribute('data-large-url', 'http://placehold.it/1200x800');
+      box.setAttribute('data-tags', 'tag1,tag2,tag3,tag4,tag5,tag6');
       // add box DOM node to array of new elements
       boxes.push( box );
     }
@@ -167,6 +276,7 @@ $(function(){
   });
   $('#nestNuke').click(function(){
     $nContainer.children().remove();
+    $nContainer.nested('refresh', nestOptions);
   });
   $('#testPrepend').on('click', function(){
     photon.renderNestImages(samplePhotosObj, 'prepend');
@@ -187,9 +297,13 @@ $(function(){
       $loginBox = $('#loginBox'),
       $loginBtn = $('#loginBtn'),
       $popupBox = $('#popupBox'),
-      $modalBackgrounds = $('.modal-background');
+      $modalBackgrounds = $('.modal-background'),
+      $mainContent = $('main'),
+      $menuBar = $('menu'),
+      $menuToggle = $('.pMenuToggle'),
+      $menuToggleBtn = $('#menuToggleBtn');
   var nestOptions = {
-    minWidth: 95,
+    minWidth: calcNestColWidth(),
     minColumns: 1,
     gutter: 5,
     centered: true,
@@ -205,8 +319,42 @@ $(function(){
       complete: function(){} // call back :D works w/ or w/o animate
     }
   };
+  function calcNestColWidth(){
+    var windowWidth = $window.width();
+    if (windowWidth > 960) {
+      return windowWidth / 10;
+    } else if (windowWidth < 768) {
+      return windowWidth / 4;
+    } else {
+      return windowWidth / 9;
+    }
+  }
 
   //////////////////////////////////////////////////////////
+  // toggle entire page menu slide
+  var menuUnhide = function(){
+    if ($loginBox.hasClass('is-active') || $popupBox.hasClass('is-active')){
+      return;
+    }
+    $mainContent.toggleClass('is-inactive');
+    $menuBar.toggleClass('is-active');
+    $menuToggle.toggleClass('is-active');
+  };
+  var menuHide = function(){
+    $mainContent.removeClass('is-inactive');
+    $menuBar.removeClass('is-active');
+    $menuToggle.removeClass('is-active');
+  };
+
+  $menuToggleBtn.on('click', menuUnhide);
+  $menuToggle.on('click', menuHide);
+  Photon.eventBus.on('rightSwipe', menuUnhide);
+  Photon.eventBus.on('leftSwipe', menuHide);
+
+
+
+  //////////////////////////////////////////////////////////
+  // NOTE: can be deprecated as nav no longer has dynamic height b/c tags
   // navpadding
   $navPadding.css('height', $fixnav.height() + defaultPadding);
 
@@ -307,7 +455,13 @@ $(function(){
 
 //////////////////////////////////////////////////////////
 // sample data objects for testing, can delete when deploy
-var samplePhotoObj = {
+var samplePhotoObj1 = {
+  "id": 6,
+  "url": "https://images.unsplash.com/photo-1432383079404-c66efb4828a3",
+  "tags": [{"name":"sea","type":"label"},{"name":"coast","type":"label"},{"name":"water","type":"label"},{"name":"ocean","type":"label"},{"name":"shore","type":"label"},{"name":"reflection","type":"label"},{"name":"stack","type":"label"}]
+};
+
+var samplePhotoObj2 = {
   id: 0,
   url: 'images/24.jpg',
   width: 1080,
