@@ -16,6 +16,7 @@ Photon.User.prototype.getPhotos = function(){
   return this.photos;
 };
 Photon.User.prototype.setPhotos = function(photoArray){
+  console.log('fetching photos for user', this.id);
   console.log('photos was qty:', this.photos.length);
   this.photos = photoArray;
   console.log('photos now has qty:', this.photos.length);

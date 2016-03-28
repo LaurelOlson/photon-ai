@@ -6,31 +6,87 @@ var sampleUserObj = {
   id: 9,
   name: 'Jason',
   photos: [
+    {
+      id: 22,
+      url: 'images/22.jpg',
+      width: 1080,
+      height: 1080,
+      tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
+    },
+    {
+      id: 26,
+      url: 'images/26.jpg',
+      width: 1080,
+      height: 717,
+      tags: ['tag1', 'tag2', 'tag4', 'tag6']
+    },
+    {
+      id: 20,
+      url: 'images/20.jpg',
+      width: 1080,
+      height: 1080,
+      tags: ['tag1', 'tag3', 'tag4', 'tag6']
+    },
+    {
+      id: 36,
+      url: 'images/36.jpg',
+      width: 720,
+      height: 1080,
+      tags: ['tag2', 'tag4', 'tag5']
+    },
+    {
+      id: 39,
+      url: 'images/39.jpg',
+      width: 1080,
+      height: 720,
+      tags: ['tag1', 'tag5', 'tag6']
+    },
+    {
+      id: 18,
+      url: 'images/18.jpg',
+      width: 1080,
+      height: 720,
+      tags: ['tag5', 'tag6']
+    },
+    {
+      id: 9,
+      url: 'images/9.jpg',
+      width: 1080,
+      height: 720,
+      tags: ['tag1', 'tag2', 'tag5', 'tag6']
+    },
+    {
+      id: 35,
+      url: 'images/35.jpg',
+      width: 1080,
+      height: 1080,
+      tags: ['tag1', 'tag2']
+    },
+    {
+      id: 33,
+      url: 'images/33.jpg',
+      width: 950,
+      height: 650,
+      tags: ['tag1', 'tag2', 'tag6']
+    },
   {
-    id: 0,
+    id: 24,
     url: 'images/24.jpg',
     width: 1080,
     height: 654,
-    tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
-  },
-  {
-    id: 1,
-    url: 'images/26.jpg',
-    width: 1080,
-    height: 717,
     tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
   }
   ],
   recommendedPhotos: [
   {
-    id: 3,
+    id: 36,
     url: 'images/36.jpg',
     width: 720,
     height: 1080,
     tags: ['tag2', 'tag4', 'tag5']
   },
   {
-    id: 5,
+    id: 39,
     url: 'images/39.jpg',
     width: 1080,
     height: 720,

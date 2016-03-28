@@ -79,31 +79,50 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // load user photos from user
-  function loadPhotosFrom(userObj, qty){
+  function getPhotosFrom(userObj, qty){
+    var outputQty = qty;
     var photoArray = [];
-
+    console.log('geting photos from user', userObj.id);
+    console.log('user has total photo qty:', userObj.photos.length);
+    for (var i = 0; i < outputQty; i++){
+      var aPhoto = userObj.photos[i];
+      if (aPhoto === undefined){
+        console.log('getPhotosFrom: no more user photos to load');
+        // TODO: maybe emit an event for frontend
+        outputQty = 0;
+      } else if (isPhotoAlreadyLoaded(aPhoto)){
+        outputQty++;
+      } else {
+        photoArray.push(aPhoto);
+        registerPhotoState(aPhoto);
+      }
+    }
+    console.log('loaded qty:', photoArray.length);
     return photoArray;
   }
 
   // PHOTO CONTROLLER //////////////////////////////////////
 
   //////////////////////////////////////////////////////////
+  //
+
+  //////////////////////////////////////////////////////////
   // loading callback TODO: found this on StackOverflow
-  function preloadImage(imgObj, callback){
-    var objImagePreloader = new Image();
-    objImagePreloader.src = imgObj.url;
-    if (objImagePreloader.complete){
-      callback();
-      objImagePreloader.onload=function(){};
-    }
-    else{
-      objImagePreloader.onload = function() {
-        callback();
-        //    clear onLoad, IE behaves irratically with animated gifs otherwise
-        objImagePreloader.onload=function(){};
-      };
-    }
-  }
+  // function preloadImage(imgObj, callback){
+  //   var objImagePreloader = new Image();
+  //   objImagePreloader.src = imgObj.url;
+  //   if (objImagePreloader.complete){
+  //     callback();
+  //     objImagePreloader.onload=function(){};
+  //   }
+  //   else{
+  //     objImagePreloader.onload = function() {
+  //       callback();
+  //       //    clear onLoad, IE behaves irratically with animated gifs otherwise
+  //       objImagePreloader.onload=function(){};
+  //     };
+  //   }
+  // }
 
 
   // STORAGE CONTROLLER ////////////////////////////////////
@@ -115,7 +134,24 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   // STATE MACHINE /////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
-  //
+  // what's already loaded
+  var photoStates = {};
+  function isPhotoAlreadyLoaded(photoObj){
+    return photoStates[photoObj.id];
+    // if it's the string 'loaded', it's inherently truthy
+  }
+  function registerPhotoState(photoObj){
+    if (photoStates[photoObj.id]){
+      console.log('registerPhotoState: duplicated detected, photo:', photoObj.id);
+      return true;
+    }
+    photoStates[photoObj.id] = 'loaded';
+    return true;
+  }
+  // photoStatesCount is more for debugging
+  function photoStatesCount (){
+    return Object.keys(photoStates).length;
+  }
 
 
   // SEARCH ////////////////////////////////////////////////
@@ -155,8 +191,11 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // API
   return {
-    user: jason,
-    photo: vanGogh,
+    jason: jason,
+    vanGogh: vanGogh,
     fetchPhotosFor: fetchPhotosFor,
+    getPhotosFrom: getPhotosFrom,
+    photoStates: photoStates,
+    photoStatesCount: photoStatesCount
   };
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));
