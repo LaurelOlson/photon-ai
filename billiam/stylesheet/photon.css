@@ -1,15 +1,18 @@
 body {
   position: relative; }
 
+.tag {
+  margin: 2px; }
+
 .fixnav {
   position: fixed;
   top: 0;
-  width: 100%;
-  transition: all 1s ease; }
+  width: 100%; }
+  .fixnav .hero-content {
+    padding: 20px; }
 
 .navpadding {
-  width: 100%;
-  height: 1px; }
+  width: 100%; }
 
 .photonLayer {
   display: flex;
@@ -22,26 +25,24 @@ body {
   height: 100%;
   width: 100%; }
 
-#tags {
-  height: 73px;
-  margin: 0;
-  overflow: scroll; }
-  #tags .tag {
-    margin: 2px; }
-
 #nestContainer .nestBox {
   overflow: hidden;
-  background-color: #69707a;
+  background-color: #aeb1b5;
   border-radius: 3px;
   transition: all 300ms cubic-bezier(1, 0, 0, 1);
   transition-property: left, right, top; }
-  #nestContainer .nestBox img {
-    max-width: none;
-    height: 100%;
-    width: auto;
-    transition: all 400ms ease; }
-    #nestContainer .nestBox img:hover {
-      opacity: 0.9; }
+  #nestContainer .nestBox:hover {
+    opacity: 0.9; }
+
+#nestContainer .size21,
+#nestContainer .size22,
+#nestContainer .size23 {
+  background: #69707a; }
+
+#nestContainer .size31,
+#nestContainer .size32,
+#nestContainer .size33 {
+  background: #d3d6db; }
 
 #loginBox .modal-background {
   opacity: 0.4; }
@@ -50,7 +51,7 @@ body {
   position: fixed;
   height: 180px;
   width: 600px;
-  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6); }
+  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.4); }
 
 .pLogo {
   border: 3px solid #1fc8db;
@@ -63,7 +64,7 @@ body {
     margin: 0 auto;
     overflow: hidden; }
   .pLogo #wave {
-    animation: moveTheWave 4s linear infinite;
+    animation: moveTheWave 50s linear infinite;
     fill: none;
     stroke-dasharray: 0 16 101 16;
     stroke-width: 3;
@@ -77,6 +78,14 @@ body {
   100% {
     stroke-dashoffset: -133;
     transform: translate3d(-90px, 0, 0); } }
+
+#popupBox .modal-content {
+  width: 95vw; }
+  #popupBox .modal-content .image-custom {
+    display: flex;
+    justify-content: center; }
+    #popupBox .modal-content .image-custom img {
+      max-height: 85vh; }
 
 .layer-neg-3 {
   z-index: -3; }
@@ -105,4 +114,4 @@ body {
   opacity: 0.3; }
 
 .has-shadow {
-  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.6); }
+  box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.4); }

@@ -1,11 +1,6 @@
 
 // Global vars:
   // $: jquery
-  // eventBus: on('event', callback); emit('event', data); listEvents();
-  // imgHelper: render($target); multiRender($target); genURL(x, y); genLongEdgeURL(x, y);
-
-// eventBus events:
-  // touch.js emits a swipe event and swipe html target ('leftSwipe', <p>oeu</p>)
 
 
 // photon main IIFE with API
@@ -29,10 +24,14 @@ var photon = (function() {
         gridDict[ratio].push([i, j]);
       }
     }
+    gridDict['1'].pop(); // removes 5x5 blocks from ratios of 1, they are too big
     return true;
   }(5,5)); // IIFE also makes it anon.
 
-  function gridFitter(width, height){
+  // returns image spec object, can also pass it to a callback
+  // in case of async issues on batch img processing
+  // NOTE: conventionally a promise is used instead of return
+  function gridFitter(width, height, callback){
     var bestFit = {
       ratios: [],
       startErr: Infinity
@@ -47,18 +46,89 @@ var photon = (function() {
       }
     }
     var randSample = bestFit.ratios[Math.floor(Math.random()*bestFit.ratios.length)];
+    var output = {
+      col: randSample[0],
+      row: randSample[1],
+      css: ''
+    };
     if (myAspRatio > randSample[0]/randSample[1]){
-      randSample.push('height: 100%; width: auto;');
+      output.css = 'background-size: auto 100%;'; // width & height for CSS
     } else {
-      randSample.push('width: 100%, height: auto;');
+      output.css = 'background-size: 100% auto;';
     } // doesn't need one for 1:1, because no trim, ergo agnostic
-    return randSample; // ex. [3,2, (css)]
+
+    if (callback) {callback(output);}
+    return output;
   }
+
+  //////////////////////////////////////////////////////////
+  // image loading to DOM's nest container
+  // gridFitter also takes an optional callback in case of async issues
+  function convertImgToNest (imgObj){
+    var gridSpec = photon.gridFitter(imgObj.width, imgObj.height);
+    var styleStr = 'background:url(' + imgObj.url + ') no-repeat center center;' + gridSpec.css;
+    var tagStr = imgObj.tags;
+    var nestClass = 'size' + gridSpec.col + gridSpec.row;
+    var $imgElement = $('<div>').addClass('nestBox').addClass(nestClass);
+    $imgElement.attr('style', styleStr);
+    $imgElement.attr('data-tags', tagStr);
+    $imgElement.attr('data-large-url', imgObj.url);
+    return $imgElement;
+  }
+  function renderNestImages(imagesObj, direction){
+    var imgArr = [];
+    imagesObj.photos.forEach(function(ele, i, arr){
+      imgArr.push(convertImgToNest(ele));
+    });
+    if (direction == 'prepend') {
+      $('#nestContainer').prepend(imgArr).nested('prepend', imgArr);
+    } else {
+      $('#nestContainer').append(imgArr).nested('append', imgArr);
+    }
+  }
+
+  //////////////////////////////////////////////////////////
+  // for popupBox modal tags
+  function renderTagsTo(dataStr, $target){
+    var dataArray = dataStr.split(',');
+    dataArray.forEach(function(ele, i, arr){
+      $target.append($('<span>').addClass('tag').text(ele));
+    });
+  }
+
+
+  //////////////////////////////////////////////////////////
+  // search
+  function fuzzysearch (needle, haystack) {
+    var hlen = haystack.length;
+    var nlen = needle.length;
+    if (nlen > hlen) {
+      return false;
+    }
+    if (nlen === hlen) {
+      return needle === haystack;
+    }
+    outer: for (var i = 0, j = 0; i < nlen; i++) {
+      var nch = needle.charCodeAt(i);
+      while (j < hlen) {
+        if (haystack.charCodeAt(j++) === nch) {
+          continue outer;
+        }
+      }
+      return false;
+    }
+    return true;
+  }
+
 
   //////////////////////////////////////////////////////////
   // API
   return {
-    gridFitter: gridFitter
+    renderNestImages: renderNestImages,
+    gridFitter: gridFitter,
+    renderTagsTo: renderTagsTo,
+    // below is during construction, can be removed
+    fuzzysearch: fuzzysearch
   };
 }());
 
@@ -68,13 +138,13 @@ var photon = (function() {
 ////////////////////////////////////////////////////////////////
 // UI //////////////////////////////////////////////////////////
 
+
 // photon jQuery wrapper for doc ready
 // no API here (yet?)
 $(function(){
 
   //////////////////////////////////////////////////////////
   // helpers while building
-
   function makeBoxes() {
     var boxes = [],
     count = Math.random()*15;
@@ -87,7 +157,6 @@ $(function(){
     }
     return boxes;
   }
-
   $('#nestPrepend').click(function(){
     var boxes = makeBoxes();
     $nContainer.prepend(boxes).nested('prepend',boxes);
@@ -99,87 +168,80 @@ $(function(){
   $('#nestNuke').click(function(){
     $nContainer.children().remove();
   });
-  $('#loginTestBtn').on('click', function(){
-    $('#loginBox').toggleClass('is-active');
+  $('#testPrepend').on('click', function(){
+    photon.renderNestImages(samplePhotosObj, 'prepend');
   });
-
-  $('#loginBox').find('.modal-background').on('click', function(){
-    $('#loginBox').toggleClass('is-active');
+  $('#testAppend').on('click', function(){
+    photon.renderNestImages(samplePhotosObj);
   });
-
-  // add tags to header
-  var bulmaColors = ['is-dark', null, 'is-success', 'is-warning', 'is-danger'];
-  function randColor (){
-    return bulmaColors[Math.floor(Math.random()*bulmaColors.length)];
-  }
-
-  (function addDummy(qty){
-    for (var n = 0; n < 20; n++){
-      $('#tags').append($('<span>').addClass('tag '+ randColor()).text('tag label'));
-    }
-  }(21));
 
   //////////////////////////////////////////////////////////
-  // all the $vars for UI manipulation
-  var defaultPadding = 5;
-  var scrollPoint = 300;
-  var $fixnav = $('.fixnav');
-  var pLogo = document.querySelector('#wave');
-  var $nContainer = $('#nestContainer');
-  var $navPadding = $('.navpadding');
-  var $window = $(window);
-
+  // all the vars for UI manipulation
+  var defaultPadding = 5,
+      scrollPoint = 300,
+      $fixnav = $('.fixnav'),
+      pLogo = document.querySelector('#wave'),
+      $nContainer = $('#nestContainer'),
+      $navPadding = $('.navpadding'),
+      $window = $(window),
+      $loginBox = $('#loginBox'),
+      $loginBtn = $('#loginBtn'),
+      $popupBox = $('#popupBox'),
+      $modalBackgrounds = $('.modal-background');
   var nestOptions = {
-    minWidth: 177,
+    minWidth: 95,
     minColumns: 1,
     gutter: 5,
     centered: true,
-    resizeToFit: false, // will resize block bigger than the gap
+    resizeToFit: false, // NOTE: do NOT make true, nested lib has a bug
     resizeToFitOptions: {
-      resizeAny: true // will resize any block to fit the gap
+      resizeAny: true
     },
     animate: false,
     animationOptions: {
       speed: 20,
       duration: 100,
       queue: true,
-      complete: function () {} // call back :D works w/ or w/o animate
+      complete: function(){} // call back :D works w/ or w/o animate
     }
   };
-
-  //////////////////////////////////////////////////////////
-  // nestContainer
-  function addImgToNest (imgObj){
-    var imgElement = $('<img>').addClass('nestBox');
-    var width = imgObj.width;
-    var height = imgObj.height;
-    var url = imgObj.originalURL;
-  }
-
-
-  //////////////////////////////////////////////////////////
-  // nestContainer
-  $nContainer.nested(nestOptions);
-
-  //////////////////////////////////////////////////////////
-  // footer fade in
-  $window.on('scroll', function() {
-    if ( $(window).scrollTop() > scrollPoint ) {
-      $fixnav.css('opacity', 0.8);
-    } else {
-      $fixnav.css('opacity', 1);
-    }
-  });
 
   //////////////////////////////////////////////////////////
   // navpadding
   $navPadding.css('height', $fixnav.height() + defaultPadding);
 
   //////////////////////////////////////////////////////////
+  // nestContainer
+  $nContainer.nested(nestOptions);
+
+  //////////////////////////////////////////////////////////
+  // login pop up
+  $modalBackgrounds.on('click', function(){ // reusable for all modal-backgrounds
+    $('.modal').removeClass('is-active');
+  });
+  $loginBtn.on('click', function(){
+    $loginBox.addClass('is-active');
+  });
+
+  //////////////////////////////////////////////////////////
+  // nestBox pictures Modal
+  $nContainer.on('click', '.nestBox', function(){
+    var url = $(this).data('large-url');
+    var tags = $(this).data('tags');
+    var $tagField = $popupBox.find('div.image-custom');
+    $tagField.children().remove();
+    photon.renderTagsTo(tags, $tagField);
+    $popupBox.find('img').attr('src', url);
+    $popupBox.addClass('is-active');
+  });
+  $popupBox.on('click', function(){
+    $(this).removeClass('is-active');
+  });
+
+  //////////////////////////////////////////////////////////
   // logo
   // forked from http://codepen.io/winkerVSbecks/pen/EVJGVj by Varun Vachhar
-  buildWave(90, 60);
-  function buildWave(w, h) {
+  (function buildWave(w, h) {
     var logoSmoothness = 0.5;
     var a = h / 4;
     var y = h / 2;
@@ -233,118 +295,148 @@ $(function(){
         a, -a
     ].join(' ');
     pLogo.setAttribute('d', pathData);
-  }
+  }(90, 60));
 
 });
 
-
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
 
+//////////////////////////////////////////////////////////
+// sample data objects for testing, can delete when deploy
 var samplePhotoObj = {
+  id: 0,
+  url: 'images/24.jpg',
+  width: 1080,
+  height: 654,
+  tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
+};
+
+var samplePhotosObj = {
   photos: [
     {
-      originalURL: 'images/22.jpg',
+      id: 0,
+      url: 'images/22.jpg',
       width: 1080,
       height: 1080,
+      tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
     },
     {
-      originalURL: 'images/26.jpg',
+      url: 'images/26.jpg',
       width: 1080,
       height: 717,
+      tags: ['tag1', 'tag2', 'tag4', 'tag6']
     },
     {
-      originalURL: 'images/20.jpg',
+      url: 'images/20.jpg',
       width: 1080,
       height: 1080,
+      tags: ['tag1', 'tag3', 'tag4', 'tag6']
     },
     {
-      originalURL: 'images/36.jpg',
+      url: 'images/36.jpg',
       width: 720,
       height: 1080,
+      tags: ['tag2', 'tag4', 'tag5']
     },
     {
-      originalURL: 'images/39.jpg',
+      url: 'images/39.jpg',
       width: 1080,
       height: 720,
+      tags: ['tag1', 'tag5', 'tag6']
     },
     {
-      originalURL: 'images/18.jpg',
+      url: 'images/18.jpg',
       width: 1080,
       height: 720,
+      tags: ['tag5', 'tag6']
     },
     {
-      originalURL: 'images/9.jpg',
+      url: 'images/9.jpg',
       width: 1080,
       height: 720,
+      tags: ['tag1', 'tag2', 'tag5', 'tag6']
     },
     {
-      originalURL: 'images/35.jpg',
+      url: 'images/35.jpg',
       width: 1080,
       height: 1080,
+      tags: ['tag1', 'tag2']
     },
     {
-      originalURL: 'images/33.jpg',
+      url: 'images/33.jpg',
       width: 950,
       height: 650,
+      tags: ['tag1', 'tag2', 'tag6']
     },
     {
-      originalURL: 'images/31.jpg',
+      url: 'images/31.jpg',
       width: 280,
       height: 280,
+      tags: ['tag1', 'tag2', 'tag3', 'tag4']
     },
     {
-      originalURL: 'images/24.jpg',
+      url: 'images/24.jpg',
       width: 1080,
       height: 654,
+      tags: ['tag1', 'tag4', 'tag5', 'tag6']
     },
     {
-      originalURL: 'images/2.jpg',
+      url: 'images/2.jpg',
       width: 1080,
       height: 391,
+      tags: ['tag1', 'tag2', 'tag3', 'tag4']
     },
     {
-      originalURL: 'images/21.jpg',
+      url: 'images/21.jpg',
       width: 1080,
       height: 608,
+      tags: ['tag1', 'tag4', 'tag5', 'tag6']
     },
     {
-      originalURL: 'images/4.jpg',
+      url: 'images/4.jpg',
       width: 1080,
       height: 720,
+      tags: ['tag1', 'tag2', 'tag3']
     },
     {
-      originalURL: 'images/17.jpg',
+      url: 'images/17.jpg',
       width: 1080,
       height: 720,
+      tags: ['tag2', 'tag5', 'tag6']
     },
     {
-      originalURL: 'images/12.jpg',
+      url: 'images/12.jpg',
       width: 1080,
       height: 720,
+      tags: ['tag3', 'tag4']
     },
     {
-      originalURL: 'images/19.jpg',
+      url: 'images/19.jpg',
       width: 1080,
       height: 719,
+      tags: ['tag1', 'tag3', 'tag6']
     },
     {
-      originalURL: 'images/15.jpg',
+      url: 'images/15.jpg',
       width: 1080,
       height: 683,
+      tags: ['tag1', 'tag3', 'tag4', 'tag5']
     },
     {
-      originalURL: 'images/32.jpg',
+      url: 'images/32.jpg',
       width: 1080,
       height: 721,
+      tags: ['tag1', 'tag2', 'tag5', 'tag6']
     },
     {
-      originalURL: 'images/28.jpg',
+      url: 'images/28.jpg',
       width: 1080,
       height: 705,
+      tags: ['tag1', 'tag3', 'tag6']
     }
   ]
 };
