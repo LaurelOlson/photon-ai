@@ -14,6 +14,11 @@ module.exports = function(app, passport) {
 
   // PHOTO STUFF
 
+  /* GET random photos */
+  app.get('/photos', isLoggedOut, function(req, res, next) {
+
+  })
+
   /* GET user photos */
   app.get('/photos', isLoggedIn, function(req, res, next) {
     var id = req.user.id;
@@ -42,11 +47,11 @@ module.exports = function(app, passport) {
       height: req.body.height,
       width: req.body.width
     }).then(function(photo) {
-      models.user.findById(req.user.id).then(function(user) {
+      models.user.findById(req.body.user_id).then(function(user) {
         user.addLike(photo);
         user.addAdd(photo);
       });
-      res.json(photo);
+      res.json(photo.url);
     });
   });
 
@@ -80,6 +85,17 @@ module.exports = function(app, passport) {
   // show login form
   app.get('/login', isLoggedOut, function(req, res) {
     res.render('login.ejs', { message: req.flash('loginMessage') });
+  });
+
+  app.post('/login/ext', passport.authenticate('local-login', {
+   successRedirect: '/login/ext',
+   failureRedirect: '/',
+   failureFlash: true
+  }));
+
+  app.get('/login/ext', function(req, res) {
+    console.log(req.user.id);
+    res.json(req.user.id);
   });
 
   app.post('/login', passport.authenticate('local-login', {

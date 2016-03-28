@@ -26,7 +26,7 @@ while (i < 1) { // Create 1 users
 
 function assignPhotos(user) {
   var x = 0;
-  while (x < 25) { // Randomly assign 50 photos to each user as like or add
+  while (x < 25) { // Randomly assign 25 photos to each user as like or add
     var id = Math.floor((Math.random() * NUM_PHOTOS) + 1);
     if ( id % 3 === 0 ) { // add user as liker
       models.photo.findById(id).then(function(photo) {
