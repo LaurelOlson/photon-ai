@@ -1,3 +1,5 @@
+// Login Strategies
+var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 
 var configDB = require('./database.js');
@@ -27,6 +29,65 @@ module.exports = function(passport) {
       done(e, false);
     });
   });
+
+  // local login
+  passport.use('local-login', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true // allows us to check if a user is logged in or not
+  },
+  function(req, email, password, done) {
+    User.findOne({ where: { localemail: email }})
+      .then(function(user) {
+        if (!user) { // user with that email doesn't exist
+          done(null, false, req.flash('loginMessage', 'Invalid email or password'));
+        } else if (!user.validPassword(password)) { // password is invalid
+          done(null, false, req.flash('loginMessage', 'Invalid email or password'));
+        } else { // successful login
+          done(null, user);
+        }
+      })
+      .catch(function(e) {
+        done(null, false, req.flash('loginMessage', e.name + " " + e.message));
+      });
+  }));
+
+  // local signup
+  passport.use('local-signup', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true 
+  },
+  function(req, email, password, done) {
+    User.findOne({ where: { localemail: email }})
+      .then(function(existingUser) {
+        if (existingUser) { 
+          return done(null, false, req.flash('loginMessage', 'Email is already taken')); 
+        }
+        // logged in => so we're connecting a new local account (updating account???)
+        if (req.user) {
+          var user = req.user;
+          user.localemail = email;
+          user.localpassword = User.generateHash(password);
+          user.save().catch(function(err) {
+            throw err;
+          }).then(function() {
+            done(null, user);
+          });
+        } else { // not logged in so create a new user
+          var newUser = User.build({ localemail: email, localpassword: User.generateHash(password) })
+          newUser.save().then(function() { 
+              done(null, newUser); 
+            })
+            .catch(function(err) { 
+              done(null, false, req.flash('loginMessage', err)); 
+            });
+        }
+      })
+      .catch(function(e) {
+        done(null, false, req.flash('loginMessage', e.name + " " + e.message));
+      })
+  }));
 
   // facebook
   passport.use(new FacebookStrategy({

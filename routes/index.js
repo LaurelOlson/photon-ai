@@ -12,6 +12,8 @@ module.exports = function(app, passport) {
     res.render('index.ejs');
   });
 
+  // PHOTO STUFF
+
   /* GET user photos */
   app.get('/photos', isLoggedIn, function(req, res, next) {
     var id = req.user.id;
@@ -33,14 +35,14 @@ module.exports = function(app, passport) {
   //   });
   // });
 
-  /* POST new photo */
-  app.post('/user/:id/addedphotos', function(req, res) {
+  /* POST new added photo (from chrome ext) */
+  app.post('/addedphotos', function(req, res) {
     models.photo.create({
       url: req.body.url,
       height: req.body.height,
       width: req.body.width
     }).then(function(photo) {
-      models.user.findById(req.params.id).then(function(user) {
+      models.user.findById(req.user.id).then(function(user) {
         user.addLike(photo);
         user.addAdd(photo);
       });
@@ -48,15 +50,23 @@ module.exports = function(app, passport) {
     });
   });
 
+  /* POST new liked photo (from web app) */
+  app.post('/likedphotos', function(req, res) {
+    var id = req.body.photo_id;
+    models.photo.findById(id).then(function(photo) {
+      photo.addLiker(req.user);
+    });
+  });
+
+  /* DELETE a liked photo */
+  app.delete('/likedphotos/:id', function(req, res) {
+    var id = req.params.id;
+    models.photo.findById(id).then(function(photo) {
+      photo.removeLiker(req.user);
+    });
+  });
 
   // LOGIN STUFF //
-
-  app.get('/profile', isLoggedIn, function(req, res) {
-    res.redirect('/photos');
-    // res.render('profile.ejs', {
-    //   user: req.user
-    // });
-  });
 
   app.get('/logout', function(req, res) {
     req.logout();
@@ -65,17 +75,31 @@ module.exports = function(app, passport) {
 
   // AUTHENTICATE (FIRST LOGIN)
 
+  // locally 
+
   // show login form
-  app.get('/login', function(req, res) {
+  app.get('/login', isLoggedOut, function(req, res) {
     res.render('login.ejs', { message: req.flash('loginMessage') });
   });
+
+  app.post('/login', passport.authenticate('local-login', {
+    successRedirect: '/photos',
+    failureRedirect: '/login',
+    failureFlash: true
+  }));
 
   // SIGNUP
 
   // show signup form
-  app.get('/signup', function(req, res) {
+  app.get('/signup', isLoggedOut, function(req, res) {
     res.render('signup.ejs', { message: req.flash('loginMessage') });
   });
+
+  app.post('/signup', passport.authenticate('local-signup', {
+    successRedirect: '/photos',
+    failureRedirect: '/signup',
+    failureFlash: true
+  }));
 
   // facebook
 
@@ -84,7 +108,7 @@ module.exports = function(app, passport) {
 
   // handle callback after facebook has authenticated
   app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-    successRedirect: '/profile',
+    successRedirect: '/photos',
     failureRedirect: '/'
   }));
 
@@ -93,26 +117,31 @@ module.exports = function(app, passport) {
   // facebook
 
   // send to facebook for authorization
-  app.get('/connect/facebook', passport.authorize('facebook', { scope: 'email' }));
+  // app.get('/connect/facebook', passport.authorize('facebook', { scope: 'email' }));
 
-  // handle callback after facebook has authorized
-  app.get('/connect/facebook/callback', passport.authorize('facebook', {
-    successRedirect: '/profile',
-    failureRedirect: '/'
-  }));
+  // // handle callback after facebook has authorized
+  // app.get('/connect/facebook/callback', passport.authorize('facebook', {
+  //   successRedirect: '/profile',
+  //   failureRedirect: '/'
+  // }));
 
   // UNLINK ACCOUNTS
 
   // facebook
 
-  app.get('/unlink/facebook', function(req, res) {
-    var user = req.user;
-    user.fbook_token = null;
-    user.save()
-      .then(function() { res.redirect('/profile'); })
-      .catch(function() { res.redirect('/profile'); });
-  });
+  // app.get('/unlink/facebook', function(req, res) {
+  //   var user = req.user;
+  //   user.fbook_token = null;
+  //   user.save()
+  //     .then(function() { res.redirect('/profile'); })
+  //     .catch(function() { res.redirect('/profile'); });
+  // });
 
+}
+
+function isLoggedOut(req, res, next) {
+  if (req.isAuthenticated()) { res.redirect('/'); }
+  return next();
 }
 
 function isLoggedIn(req, res, next) {
@@ -130,6 +159,7 @@ function addPhotos(photos) {
   return new Promise(function(resolve_photos, reject_photos) {
     
     var user_photos = [];
+
     // Iterate over photos as promises.
     // This way, we wait until the photo promise is resolved before moving on to the next photo
     Promise.each(photos, function(photo) {

@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>Node Authentication</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <style>
         body        { padding-top:80px; }
     </style>
@@ -16,10 +16,16 @@
 
         <p>Login or Register with:</p>
 
+        <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
+        <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
         <a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
-
     </div>
 
+    <div class="text-center">
+        <p>A demo by <a href="http://scotch.io">Scotch</a>.</p>
+        <p>Modified for SQL Sequelize <a href="http://anneblankert.blogspot.nl/2015/06/node-authentication-migrate-from.html">article</a>.</p>
+    </div>
+    
 </div>
 </body>
 </html>
