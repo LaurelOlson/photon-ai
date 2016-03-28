@@ -44,7 +44,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender);
     sendPhotosToView(somePhotos, direction);
   });
-  pubsub.on('login', function(){});
 
   // USER CONTROLLER ///////////////////////////////////////
 
@@ -68,7 +67,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // user login and create user object
-
   function makeUserObj(emailAddress){
 
   }
@@ -222,8 +220,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // API
   return {
-    jason: jason,
-    vanGogh: vanGogh,
     fetchPhotosFor: fetchPhotosFor,
     getPhotosFrom: getPhotosFrom,
     photoStates: photoStates,

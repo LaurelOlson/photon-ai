@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "build-css": "node-sass --include-path scss billiam/sassy/photon.scss billiam/stylesheet/photon.css",
+    "build-css": "node-sass --include-path scss assets/sassy/photon.scss views/stylesheet/photon.css",
     "watch-css": "nodemon -e scss -x \"npm run build-css\"",
-    "build-css-bulma": "node-sass --include-path sass billiam/sassy/bulma.sass billiam/stylesheet/bulma.css",
+    "build-css-bulma": "node-sass --include-path sass assets/sassy/bulma.sass views/stylesheet/bulma.css",
     "watch-css-bulma": "nodemon -e sass -x \"npm run build-css-bulma\""
   },
   "dependencies": {

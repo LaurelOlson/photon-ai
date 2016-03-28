@@ -17,7 +17,7 @@ require('./config/passport')(passport); // pass passport for configuration
 app.use(morgan('dev')); // log requests to console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get info from html forms
-app.use(express.static(path.join(__dirname, 'billiam'))); // static site
+app.use(express.static(path.join(__dirname, 'public'))); // static site
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); // set up ejs for templating
