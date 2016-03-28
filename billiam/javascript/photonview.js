@@ -3,7 +3,7 @@ if (!window.Photon) {
   window.Photon = {};
 }
 
-Photon.view = (function(){
+Photon.view = (function(pubsub){
 
   //////////////////////////////////////////////////////////
   // helpers while building
@@ -44,7 +44,7 @@ Photon.view = (function(){
     return true;
   }(5,5)); // IIFE also makes it anon.
 
-  function gridFitter(width, height, callback){
+  function gridFitter(width, height){
     var bestFit = {
       ratios: [],
       startErr: Infinity
@@ -69,7 +69,6 @@ Photon.view = (function(){
     } else {
       output.css = 'background-size: 100% auto;';
     } // doesn't need one for 1:1, because no trim, ergo agnostic
-    if (callback) {callback(output);}
     return output;
   }
 
@@ -97,7 +96,7 @@ Photon.view = (function(){
     }
   }
 
-  function renderNestImage(imgObj, $target, direction){
+  function renderNestSingleImage(imgObj, $target, direction){
     var imgArr = [];
     imgArr.push(convertImgToNest(imgObj));
     if (direction == 'prepend') {
@@ -132,6 +131,12 @@ Photon.view = (function(){
     });
     $('#testAppend').on('click', function(){
       renderNestImages(samplePhotosObj, $nContainer);
+    });
+    $('#imgPrepend').on('click', function(){
+      pubsub.emit('imageRequested', 'prepend');
+    });
+    $('#imgAppend').on('click', function(){
+      pubsub.emit('imageRequested', 'append');
     });
 
     //////////////////////////////////////////////////////////
@@ -197,8 +202,8 @@ Photon.view = (function(){
 
     $menuToggleBtn.on('click', menuUnhide);
     $menuToggle.on('click', menuHide);
-    Photon.eventBus.on('rightSwipe', menuUnhide);
-    Photon.eventBus.on('leftSwipe', menuHide);
+    pubsub.on('rightSwipe', menuUnhide);
+    pubsub.on('leftSwipe', menuHide);
 
 
 
@@ -238,66 +243,67 @@ Photon.view = (function(){
     //////////////////////////////////////////////////////////
     // logo
     // forked from http://codepen.io/winkerVSbecks/pen/EVJGVj by Varun Vachhar
-      (function buildWave(w, h) {
-        var logoSmoothness = 0.5;
-        var a = h / 4;
-        var y = h / 2;
-        var pathData = [
-          'M', w * 0, y + a / 2,
-          'c',
-          a * logoSmoothness, 0,
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-          's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-          's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-          's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-          's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-          's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-          's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-          's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-          's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-          's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-          's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-          's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-          's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a,
-          's',
-          -(1 - a) * logoSmoothness, a,
-          a, a,
-          's',
-          -(1 - a) * logoSmoothness, -a,
-          a, -a
-        ].join(' ');
-        $pLogo.attr('d', pathData);
-      }(90, 60));
+    (function buildWave(w, h) {
+      var logoSmoothness = 0.5;
+      var a = h / 4;
+      var y = h / 2;
+      var pathData = [
+        'M', w * 0, y + a / 2,
+        'c',
+        a * logoSmoothness, 0,
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+        's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+        's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+        's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+        's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+        's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+        's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+        's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+        's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+        's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+        's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+        's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+        's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a,
+        's',
+        -(1 - a) * logoSmoothness, a,
+        a, a,
+        's',
+        -(1 - a) * logoSmoothness, -a,
+        a, -a
+      ].join(' ');
+      $pLogo.attr('d', pathData);
+    }(90, 60));
   });
   // API
   return {
     POST: 'status: view is loaded',
-    renderNestImage: renderNestImage
+    renderNestImages: renderNestImages,
+    renderNestSingleImage: renderNestSingleImage
   };
 
-}());
+}(Photon.eventBus));

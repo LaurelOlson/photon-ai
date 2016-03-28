@@ -2,6 +2,7 @@
 // subscribe: eventBus.on('eventName', callback);
 // emit: eventBus.emit('eventName', data);
 // helper: if there are no listeners to that event, it will console.log
+// NOTE: load this one first in html
 if (!window.Photon) {
   window.Photon = {};
 }
@@ -15,7 +16,7 @@ Photon.eventBus = (function(){
       });
     } else {
       // NOTE this is a helper for debugging, not needed for production
-      console.log('pubsub:', eventName, 'has no subscribers (doesn\'t exist in bus)');
+      console.log('eventBus:', eventName, 'has no subscribers (doesn\'t exist in bus)');
     }
   }
 

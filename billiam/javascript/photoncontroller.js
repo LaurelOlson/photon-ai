@@ -89,61 +89,70 @@ var samplePhotoObjExt = {
 var samplePhotosObj = {
   photos: [
     {
-      id: 0,
+      id: 22,
       url: 'images/22.jpg',
       width: 1080,
       height: 1080,
       tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
     },
     {
+      id: 26,
       url: 'images/26.jpg',
       width: 1080,
       height: 717,
       tags: ['tag1', 'tag2', 'tag4', 'tag6']
     },
     {
+      id: 20,
       url: 'images/20.jpg',
       width: 1080,
       height: 1080,
       tags: ['tag1', 'tag3', 'tag4', 'tag6']
     },
     {
+      id: 36,
       url: 'images/36.jpg',
       width: 720,
       height: 1080,
       tags: ['tag2', 'tag4', 'tag5']
     },
     {
+      id: 39,
       url: 'images/39.jpg',
       width: 1080,
       height: 720,
       tags: ['tag1', 'tag5', 'tag6']
     },
     {
+      id: 18,
       url: 'images/18.jpg',
       width: 1080,
       height: 720,
       tags: ['tag5', 'tag6']
     },
     {
+      id: 9,
       url: 'images/9.jpg',
       width: 1080,
       height: 720,
       tags: ['tag1', 'tag2', 'tag5', 'tag6']
     },
     {
+      id: 35,
       url: 'images/35.jpg',
       width: 1080,
       height: 1080,
       tags: ['tag1', 'tag2']
     },
     {
+      id: 33,
       url: 'images/33.jpg',
       width: 950,
       height: 650,
       tags: ['tag1', 'tag2', 'tag6']
     },
     {
+      id: 31,
       url: 'images/31.jpg',
       width: 280,
       height: 280,
@@ -219,9 +228,8 @@ var samplePhotosObj = {
 
 
 // photon main IIFE with API
-// async should go to the jQuery wrapper below, on doc ready
-// NOTE: to be executed after modules have loaded
-Photon.Controller = (function() {
+// requires modules to be initialised first (html loading order matters)
+Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // config important variables
@@ -229,30 +237,19 @@ Photon.Controller = (function() {
   var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x8000/'; // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
 
   //////////////////////////////////////////////////////////
-  // testing variables
-  var jason = new Photon.User (sampleUserObj);
-  var vanGogh = new Photon.Photo (samplePhotoObj2);
-
-  //////////////////////////////////////////////////////////
   // fetching User from server
-  function fetchPhotos(userID, callback){
-    if (userID){
-      $.getJSON(serverURL + 'users/' + userID + '/photos')
+  function fetchPhotosFor(user){
+    if (user.id){
+      $.getJSON(serverURL + 'users/' + user.id + '/photos')
       .done(function(data){
         // NOTE: currently server returns an array, not JSON
-        photos = data;
-        if (callback){
-          callback(data);
-        } else {
-          console.log('no callback provided, data will be console logged');
-          console.log(data);
-        }
+        user.setPhotos(data);
       })
       .fail(function(xhr, status, error){
         console.log(status, error);
       });
     } else {
-      console.log('missing user id');
+      console.log('missing user id, TODO: build "fetch rand photos"');
       // then fetch random photos
     }
   }
@@ -260,10 +257,8 @@ Photon.Controller = (function() {
   function fetchRandPhotos(){} // TODO
 
 
-
-
   //////////////////////////////////////////////////////////
-  // search
+  // TODO: search
   function fuzzysearch (needle, haystack) {
     var hlen = haystack.length;
     var nlen = needle.length;
@@ -287,10 +282,18 @@ Photon.Controller = (function() {
 
 
   //////////////////////////////////////////////////////////
+  // testing variables
+  var jason = new User(9);
+  var vanGogh = new Photo(samplePhotoObj2);
+  //////////////////////////////////////////////////////////
+  // driver code
+  fetchPhotosFor(jason);
+
+  //////////////////////////////////////////////////////////
   // API
   return {
     user: jason,
     photo: vanGogh,
-    test: fetchPhotos,
+    fetchPhotosFor: fetchPhotosFor,
   };
-}());
+}(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));
