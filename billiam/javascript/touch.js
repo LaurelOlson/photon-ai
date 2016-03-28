@@ -5,6 +5,7 @@
 if (!window.Photon) {
   window.Photon = {};
 }
+
 Photon.touchEngine = (function(){
 
   // config: minimum swipe distance over a given time
@@ -115,5 +116,8 @@ Photon.touchEngine = (function(){
         break;
     }
   }
-
+  // API
+  return {
+    POST: 'status: touch engine is loaded'
+  };
 }());

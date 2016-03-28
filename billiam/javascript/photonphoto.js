@@ -2,6 +2,7 @@
 if (!window.Photon) {
   window.Photon = {};
 }
+
 Photon.Photo = function(imgObj){
   this.id = imgObj.id;
   this.smallURL = null;
@@ -13,12 +14,14 @@ Photon.Photo = function(imgObj){
   this.landmark = [];
   this.safeSearch = {};
 };
+
 Photon.Photo.prototype.resize = function(){
   if (!this.smallURL) {
     this.smallURL = monicasResizer + this.url.replace(/^http[s]*:[/]*/g, '');
   }
 };
-Photon.Photo.prototype.findWidthHeight = function(callback){
+
+Photon.Photo.prototype.findWidthHeight = function(){
   var photoObj = this;
   if (!this.width || !this.height) {
     var $tempImg = $('<img>').attr({
@@ -38,7 +41,6 @@ Photon.Photo.prototype.findWidthHeight = function(callback){
       photoObj.height = $zeImg.height();
       console.log('img loaded');
       $zeImg.remove();
-      if (callback){callback();}
     });
   }
 };

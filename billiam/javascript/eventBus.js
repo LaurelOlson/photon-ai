@@ -31,6 +31,7 @@ Photon.eventBus = (function(){
 
   // API
   return {
+    POST: 'status: eventBus is loaded',
     listEvents: listEvents,
     emit: emit,
     on: on

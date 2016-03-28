@@ -2,15 +2,20 @@
 if (!window.Photon) {
   window.Photon = {};
 }
-Photon.User = function(userObj){
-  var userID = userObj.id; //num
-  var userName = userObj.name;
-  var photos = userObj.photos; //Array
-  var recommendedPhotos = userObj.recommended;
+Photon.User = function(id){
+  var userID = id || null; //num
+  var photos = [];
+  var recommendedPhotos = [];
   this.getPhotos = function(){
     return photos;
   };
+  this.setPhotos = function(photoArray){
+    photos = photoArray;
+  };
   this.getRecPhotos = function(){
     return recommendedPhotos;
+  };
+  this.setRecPhotos = function(photoArray){
+    recommendedPhotos = photoArray;
   };
 };

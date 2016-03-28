@@ -28,7 +28,7 @@
 // sample data objects for testing, can delete when deploy
 
 var sampleUserObj = {
-  id: 4,
+  id: 9,
   name: 'Jason',
   photos: [
   {
@@ -75,6 +75,14 @@ var samplePhotoObj2 = {
   url: 'images/24.jpg',
   width: 1080,
   height: 654,
+  tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
+};
+
+var samplePhotoObjExt = {
+  id: 456,
+  url: 'https://images.unsplash.com/photo-1449177009399-be6867ef0505',
+  width: 5616,
+  height: 3744,
   tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
 };
 
@@ -203,6 +211,12 @@ var samplePhotosObj = {
     }
   ]
 };
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
 
 // photon main IIFE with API
 // async should go to the jQuery wrapper below, on doc ready
@@ -213,6 +227,40 @@ Photon.Controller = (function() {
   // config important variables
   var serverURL = 'https://localhost:3000/';
   var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x8000/'; // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
+
+  //////////////////////////////////////////////////////////
+  // testing variables
+  var jason = new Photon.User (sampleUserObj);
+  var vanGogh = new Photon.Photo (samplePhotoObj2);
+
+  //////////////////////////////////////////////////////////
+  // fetching User from server
+  function fetchPhotos(userID, callback){
+    if (userID){
+      $.getJSON(serverURL + 'users/' + userID + '/photos')
+      .done(function(data){
+        // NOTE: currently server returns an array, not JSON
+        photos = data;
+        if (callback){
+          callback(data);
+        } else {
+          console.log('no callback provided, data will be console logged');
+          console.log(data);
+        }
+      })
+      .fail(function(xhr, status, error){
+        console.log(status, error);
+      });
+    } else {
+      console.log('missing user id');
+      // then fetch random photos
+    }
+  }
+
+  function fetchRandPhotos(){} // TODO
+
+
+
 
   //////////////////////////////////////////////////////////
   // search
@@ -237,17 +285,12 @@ Photon.Controller = (function() {
     return true;
   }
 
-  var jason = new Photon.User (sampleUserObj);
 
   //////////////////////////////////////////////////////////
   // API
   return {
-    test: jason.getPhotos
+    user: jason,
+    photo: vanGogh,
+    test: fetchPhotos,
   };
 }());
-
-
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
