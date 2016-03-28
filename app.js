@@ -17,7 +17,7 @@ require('./config/passport')(passport); // pass passport for configuration
 app.use(morgan('dev')); // log requests to console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get info from html forms
-app.use(express.static(path.join(__dirname, 'public'))); // static site
+app.use(express.static(path.join(__dirname, 'billiam'))); // static site
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); // set up ejs for templating
@@ -76,11 +76,11 @@ require('./routes/index.js')(app, passport); // load our routes and pass in our 
 
 // app.use('/', routes);
 // app.use('/users', users);
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'billiam')));
+// app.use(logger('dev'));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(cookieParser());
+// app.use(express.static(path.join(__dirname, 'billiam')));
 
 // // serialize user for the session
 // passport.serializeUser(function(user, done) {
