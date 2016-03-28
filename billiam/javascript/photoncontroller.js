@@ -33,11 +33,22 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // config important variables
   var serverURL = 'https://localhost:3000/';
+  var photoQtyPerRender = 24;
+
+  // EVENT LISTENERS ///////////////////////////////////////
+
+  //////////////////////////////////////////////////////////
+  // from view
+  pubsub.on('imagesRequested', function(direction){
+    var currentUser = sampleUserObj;
+    var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender);
+    sendPhotosToView(somePhotos, direction);
+  });
 
   // USER CONTROLLER ///////////////////////////////////////
 
   //////////////////////////////////////////////////////////
-  // cookies
+  // cookies // NOTE: untested
   function setUserIDCookie(userObj){
     if (userObj){
       document.cookie = 'userID=' + userObj.id;
@@ -61,7 +72,11 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
       $.getJSON(serverURL + 'users/' + userObj.id + '/photos')
       .done(function(data){
         // NOTE: currently server returns an array, not JSON
-        userObj.setPhotos(data);
+        var photonImgs = [];
+        data.forEach(function(ele, i, arr){
+          photonImgs.push(new Photo(ele));
+        });
+        userObj.setPhotos(photonImgs);
         return true;
       })
       .fail(function(xhr, status, error){
@@ -104,7 +119,14 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   // PHOTO CONTROLLER //////////////////////////////////////
 
   //////////////////////////////////////////////////////////
-  //
+  // send photos to view for rendering
+  function sendPhotosToView(photoArray, direction){
+    //direction: append, prepend
+    var returnObj = {};
+    returnObj.photos = photoArray;
+    returnObj.direction = direction;
+    pubsub.emit('renderImgsToPage', returnObj);
+  }
 
   //////////////////////////////////////////////////////////
   // loading callback TODO: found this on StackOverflow
@@ -196,6 +218,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     fetchPhotosFor: fetchPhotosFor,
     getPhotosFrom: getPhotosFrom,
     photoStates: photoStates,
-    photoStatesCount: photoStatesCount
+    photoStatesCount: photoStatesCount,
+    sendPhotosToView: sendPhotosToView
   };
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));

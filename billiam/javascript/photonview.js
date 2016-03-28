@@ -92,6 +92,7 @@ Photon.view = (function(pubsub){
     imagesObj.photos.forEach(function(ele, i, arr){
       imgArr.push(convertImgToNest(ele));
     });
+    console.log('renderNestImages: converted images are:', imgArr);
     if (direction == 'prepend') {
       $target.prepend(imgArr).nested('prepend', imgArr);
     } else {
@@ -166,6 +167,12 @@ Photon.view = (function(pubsub){
     //////////////////////////////////////////////////////////
     // nestContainer
     $nestContainer.nested(nestOptions);
+
+    //////////////////////////////////////////////////////////
+    // event listeners from controller
+    pubsub.on('renderImgsToPage', function(photoObj){
+      renderNestImages(photoObj, $nestContainer, photoObj.direction);
+    });
 
     //////////////////////////////////////////////////////////
     // buttons during development

@@ -32,7 +32,7 @@ Photon.Photo.prototype.findWidthHeight = function(){
   if (!this.width || !this.height) {
     var $tempImg = $('<img>').attr({
       src: this.url,
-      id: 'photonImgFindSize'
+      id: 'photonImgFindSize' + photoObj.id
     }).css({
       position: 'fixed',
       top: 0,
@@ -41,7 +41,7 @@ Photon.Photo.prototype.findWidthHeight = function(){
       'z-index': -100
     });
     $('body').append($tempImg);
-    $('#photonImgFindSize').on('load', function(){
+    $('#photonImgFindSize' + photoObj.id).on('load', function(){
       var $zeImg = $(this);
       photoObj.width = $zeImg.width();
       photoObj.height = $zeImg.height();
