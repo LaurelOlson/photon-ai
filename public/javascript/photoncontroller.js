@@ -34,21 +34,19 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   // config important variables
   var serverURL = '/';
   var photoQtyPerRender = 24;
-
+  var currentUser = null;
   // EVENT LISTENERS ///////////////////////////////////////
 
   //////////////////////////////////////////////////////////
   // from view (API via pubsub)
   pubsub.on('imagesRequested', function(direction){
-    var currentUser = sampleUserObj;
     var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender);
     sendPhotosToView(somePhotos, direction);
   });
 
   pubsub.on('userLoggedIn', function(){
-    // create a user
-    // fetch photos for user
-    // display first pictures
+    currentUser = new User ();
+    fetchPhotos(currentUser);
   });
 
   // USER CONTROLLER ///////////////////////////////////////
@@ -180,7 +178,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //
 
 
-  // STATE MACHINE /////////////////////////////////////////
+  // STATE LOGGER //////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
   // what's already loaded
@@ -231,12 +229,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // testing variables
-  var sampleEmail = "user@example.com";
 
   //////////////////////////////////////////////////////////
   // driver code
-  var anUser = new User(sampleEmail);
-  // fetchPhotos(anUser);
 
   //////////////////////////////////////////////////////////
   // API
