@@ -8,19 +8,16 @@ const NUM_PHOTOS = 300;
 // SEED USERS
 
 var i = 0;
-while (i < 3) { // Create 1 users
+while (i < 5) { // Create 1 users
   models.user.create({
     name: faker.name.firstName(),
-    localemail: faker.internet.email(),
+    localemail: faker.internet.email().toLowerCase(),
     localpassword: models.user.generateHash('password'),
-    fbook_email: faker.internet.email(),
     fbook_id: '1237895',
     fbook_token: '1278959'
   });
   i++;
 } 
-
-// models.user.findById(1).then(assignPhotos);
 
 // SEED LIKED_PHOTOS, ADDED_PHOTOS
 

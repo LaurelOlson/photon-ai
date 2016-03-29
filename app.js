@@ -18,7 +18,6 @@ app.use(morgan('dev')); // log requests to console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get info from html forms
 app.use(express.static(path.join(__dirname, 'public'))); // static site
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); // set up ejs for templating
 
@@ -34,6 +33,12 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes
 require('./routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
+app.use(function(err, req, res, next) {
+  if(err) {
+    console.log(err.stack);
+  }
+  next(err);
+});
 // launch
 // app.listen(port);
 // console.log('Listening on port' + port);
