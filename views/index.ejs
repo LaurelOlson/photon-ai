@@ -57,7 +57,13 @@
                 <p class="title">456</p>
               </div>
               <div class="column is-1-desktop is-2-tablet">
-                <p class="button is-warning" id="loginBtn">Login</p>
+              <% if (loggedIn) { %>
+              <form action="/logout" method="get">
+                <button type="submit" class="button" id="logoutBtn">Logout</button>
+              </form>
+              <% } else { %>
+                <button class="button is-warning" id="loginBtn">Login</button>
+              <% } %>
               </div>
             </div>
           </div>
@@ -65,11 +71,8 @@
       </section>
 
       <% if (message.length > 0) { %>
-        <div id="loginMessage" class="notification is-warning"><%= message %></div>
+        <div class="notification is-warning"><%= message %></div>
       <% } %>
-      <% if (loggedIn) { %>
-        <div class="notification is-success">logged in</div>
-        <% } %>
 
 
       <div class="container is-fluid layer-1">
@@ -97,7 +100,6 @@
             <div class="box">
               <p class="is-pulled-right"><strong>photon</strong>.ai</p>
               <div>&nbsp;</div>
-
               <form action="/login" method="post">
                 <p class="control has-icon">
                   <input class="input" type="text" name="email" placeholder="Email" value="Charlotte.Kreiger@gmail.com">
@@ -113,7 +115,6 @@
                   <button class="button is-info is-pulled-right">login with Facebook</button>
                 </p>
               </form>
-
             </div>
           </div>
         </div>
@@ -137,19 +138,19 @@
     </main>
 
     <menu class="pMenu">
-          <button class="button" id="nestPrepend">Prepend dummy</button>
-          <p>&nbsp;</p>
-          <button class="button" id="nestAppend">Append dummy</button>
-          <hr>
-          <button class="button is-success" id="testPrepend">Prepend Local</button>
-          <p>&nbsp;</p>
-          <button class="button is-success" id="testAppend">Append Local</button>
-          <hr>
-          <button class="button" id="imgPrepend">Prepend real</button>
-          <p>&nbsp;</p>
-          <button class="button" id="imgAppend">Append real</button>
-          <hr>
-          <button class="button is-danger" id="nestNuke">Nuke</button>
+      <button class="button" id="nestPrepend">Prepend dummy</button>
+      <p>&nbsp;</p>
+      <button class="button" id="nestAppend">Append dummy</button>
+      <hr>
+      <button class="button is-success" id="testPrepend">Prepend Local</button>
+      <p>&nbsp;</p>
+      <button class="button is-success" id="testAppend">Append Local</button>
+      <hr>
+      <button class="button" id="imgPrepend">Prepend real</button>
+      <p>&nbsp;</p>
+      <button class="button" id="imgAppend">Append real</button>
+      <hr>
+      <button class="button is-danger" id="nestNuke">Nuke</button>
     </menu>
     <div class="pMenuToggle"></div>
 

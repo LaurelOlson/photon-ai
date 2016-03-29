@@ -67,9 +67,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // user login and create user object
-  function makeUserObj(emailAddress){
-    return new User(emailAddress);
-  }
 
 
   //////////////////////////////////////////////////////////
@@ -204,7 +201,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // TODO: search
-  function fuzzysearch (needle, haystack) {
+  function fuzzySearch (needle, haystack) {
     var hlen = haystack.length;
     var nlen = needle.length;
     if (nlen > hlen) {
@@ -228,12 +225,12 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // testing variables
-  // var sampleEmail = "user@example.com";
+  var sampleEmail = "user@example.com";
 
   //////////////////////////////////////////////////////////
   // driver code
-  // var anUser = new User(sampleEmail);
-  // fetchPhotos(anUser);
+  var anUser = new User(sampleEmail);
+  fetchPhotos(anUser);
 
   //////////////////////////////////////////////////////////
   // API

@@ -137,7 +137,9 @@ Photon.view = (function(pubsub){
     $window = $(window),
     $loginBox = $('#loginBox'),
     $loginBtn = $('#loginBtn'),
+    $logoutBtn = $('#logoutBtn'),
     $popupBox = $('#popupBox'),
+    $modals = $('.modal'),
     $modalBackgrounds = $('.modal-background'),
     $mainContent = $('main'),
     $menuBar = $('menu'),
@@ -243,10 +245,16 @@ Photon.view = (function(pubsub){
     //////////////////////////////////////////////////////////
     // login pop up
     $modalBackgrounds.on('click', function(){ // reusable for all modal-backgrounds
-      $('.modal').removeClass('is-active');
+      $modals.removeClass('is-active');
     });
     $loginBtn.on('click', function(){
       $loginBox.addClass('is-active');
+    });
+    $logoutBtn.on('click', function(){
+      $logoutBtn.addClass('is-loading');
+    });
+    $loginBox.on('click', 'button', function(){
+      $(this).addClass('is-loading');
     });
 
     //////////////////////////////////////////////////////////
