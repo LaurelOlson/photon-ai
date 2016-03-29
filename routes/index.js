@@ -17,10 +17,26 @@ module.exports = function(app, passport, raccoon) {
 
   // PHOTO STUFF
 
-  /* GET random photos */
-  // app.get('/photos/random', isLoggedOut, function(req, res, next) {
+  /* GET recommended photos */
+  app.get('/photos/recommended', function(req, res) {
+    var id = req.user.id;
+    raccoon.recommendFor(id, '2', function(results) {
+      models.photo.findAll({ where: { id: { in: results }}}).then(addPhotos).then(function(user_photos) {
+        res.json(user_photos);
+      });
+    });
+  });
 
-  // })
+  /* GET random photos */
+  app.get('/photos/random', function(req, res, next) {
+    raccoon.bestRated(function(results) {
+      models.photo.findAll({ where: { id: { in: results } } })
+        .then(addPhotos)
+          .then(function(user_photos) {
+            res.json(user_photos);
+          });
+    });
+  });
 
   /* GET user photos */
   app.get('/photos', isLoggedIn, function(req, res, next) {
@@ -78,16 +94,6 @@ module.exports = function(app, passport, raccoon) {
   });
 
   // AUTHENTICATE (FIRST LOGIN)
-
-  app.get('/photos/recommended', function(req, res) {
-    var id = req.user.id;
-    raccoon.recommendFor(id, '2', function(results) {
-      // results is an array of photo id's as STRINGS
-      models.photo.findAll({ where: { id: { in: results }}}).then(addPhotos).then(function(user_photos) {
-        res.json(user_photos);
-      });
-    });
-  });
 
   // locally
 
