@@ -48,6 +48,17 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     currentUser = new User();
     fetchPhotosFor(currentUser);
   });
+  pubsub.on('searchRequested', function(query){
+    // sanitise input
+    var queryArr = sanitise(query);
+    // find matching photos from user
+      // currentUser.photos.tags is an array
+    var foundPhotos = tagSearch(queryArr);
+    console.log(foundPhotos);
+    // ask view to remove images
+    // on remove, update state logger
+    // render matching images to view
+  });
 
   // USER CONTROLLER ///////////////////////////////////////
 
@@ -180,20 +191,43 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   // SEARCH ////////////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
-  // TODO: search
+  // sanitisation via whitelist of ltrs and nums
+  function sanitise(str){
+    return str.match(/\w+/g); //any alphaNumChar
+  }
+
+  //////////////////////////////////////////////////////////
+  // search against current user's photos
+  function tagSearch(termsArr){
+    var matchedPhotos = [];
+    currentUser.photos.forEach(function(ele, i, arr){
+      var haystack = ele.tags.join('');
+      for (var j = 0; j < termsArr.length; j++){
+        var needle = termsArr[j];
+        if (fuzzySearch(needle, haystack)) {
+          matchedPhotos.push(ele);
+          break;
+        }
+      }
+    });
+    return matchedPhotos;
+  }
+
+  //////////////////////////////////////////////////////////
+  // as long as char appears in order in hay
   function fuzzySearch (needle, haystack) {
-    var hlen = haystack.length;
-    var nlen = needle.length;
-    if (nlen > hlen) {
+    var hLength = haystack.length;
+    var nLength = needle.length;
+    if (nLength > hLength) {
       return false;
     }
-    if (nlen === hlen) {
+    if (nLength === hLength) {
       return needle === haystack;
     }
-    outer: for (var i = 0, j = 0; i < nlen; i++) {
-      var nch = needle.charCodeAt(i);
-      while (j < hlen) {
-        if (haystack.charCodeAt(j++) === nch) {
+    outer: for (var i = 0, j = 0; i < nLength; i++) {
+      var nChar = needle.charCodeAt(i);
+      while (j < hLength) {
+        if (haystack.charCodeAt(j++) === nChar) {
           continue outer;
         }
       }

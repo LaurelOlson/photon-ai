@@ -143,6 +143,7 @@ Photon.view = (function(pubsub){
     $menuBar = $('menu'),
     $menuToggle = $('.pMenuToggle'),
     $menuToggleBtn = $('#menuToggleBtn'),
+    $searchBtn = $('#searchBtn'),
     $statsLiked = $('#statsLiked'),
     $statsDiscovered = $('statsDiscovered'),
     $statsTotal = $('statsTotal'),
@@ -292,6 +293,16 @@ Photon.view = (function(pubsub){
     $popupBox.on('click', function(){
       $(this).removeClass('is-active');
     });
+
+    //////////////////////////////////////////////////////////
+    // search
+    $searchBtn.on('click', function(){
+      var $inputBox = $searchBtn.closest('p.control').find('input.input');
+      var text = $inputBox.val();
+      pubsub.emit('searchRequested', text);
+      $inputBox.val('');
+    });
+
 
     //////////////////////////////////////////////////////////
     // NOTE: this is work in progress and doesn't work!!! NOTE!

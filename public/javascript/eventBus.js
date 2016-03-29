@@ -11,6 +11,7 @@
   // 'renderImgsToPage', photoObject (.photos, .direction)
   // 'userLoggedIn', null
   // 'userPhotosFetched', qty
+  // 'searchRequested', string
 
 if (!window.Photon) {
   window.Photon = {};
