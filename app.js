@@ -18,11 +18,10 @@ app.use(morgan('dev')); // log requests to console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get info from html forms
 app.use(express.static(path.join(__dirname, 'public'))); // static site
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); // set up ejs for templating
 
-app.use(session({ 
+app.use(session({
   secret: 'suchsecretsuchsession',
   resave: true,
   saveUninitialized: true
@@ -34,6 +33,12 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes
 require('./routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
+app.use(function(err, req, res, next) {
+  if(err) {
+    console.log(err.stack);
+  }
+  next(err);
+});
 // launch
 // app.listen(port);
 // console.log('Listening on port' + port);
@@ -63,15 +68,9 @@ require('./routes/index.js')(app, passport); // load our routes and pass in our 
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-// app.use(logger('dev'));
-// app.use(cookieParser());
-// app.use(bodyParser());
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(express.static(path.join(__dirname, 'public')));
 
 // passport stuff
-// app.use(session({ 
+// app.use(session({
 //   secret: 'suchsecretsuchsession',
 //   resave: true,
 //   saveUninitialized: true
@@ -82,6 +81,11 @@ require('./routes/index.js')(app, passport); // load our routes and pass in our 
 
 // app.use('/', routes);
 // app.use('/users', users);
+// app.use(logger('dev'));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(cookieParser());
+// app.use(express.static(path.join(__dirname, 'billiam')));
 
 // // serialize user for the session
 // passport.serializeUser(function(user, done) {
