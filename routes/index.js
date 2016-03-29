@@ -28,7 +28,7 @@ module.exports = function(app, passport, raccoon) {
   });
 
   /* GET random photos */
-  app.get('/photos/random', function(req, res, next) {
+  app.get('/photos/top_rated', function(req, res, next) {
     raccoon.bestRated(function(results) {
       models.photo.findAll({ where: { id: { in: results } } })
         .then(addPhotos)
