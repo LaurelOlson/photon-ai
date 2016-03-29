@@ -83,13 +83,14 @@ Photon.view = (function(pubsub){
     }
     var smallerLink = imgObj.smallURL || imgObj.url;
     var styleStr = 'background:url(' + smallerLink + ') no-repeat center center;' + gridSpec.css;
-    var tagStr = imgObj.tags;
+    var landmarkStr = imgObj.landmarks;
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
     $imgElement.attr('style', styleStr);
-    // $imgElement.attr('data-url', imgObj.url);
-    // $imgElement.attr('data-gridspec', gridSpec.css);
-    $imgElement.attr('data-tags', tagStr);
+    $imgElement.attr('data-tags', imgObj.tags);
+    $imgElement.attr('data-landmarks', imgObj.landmarks);
+    $imgElement.attr('data-people', imgObj.people);
+    $imgElement.attr('data-safesearch', imgObj.safesearch);
     $imgElement.attr('data-large-url', imgObj.url);
     return $imgElement;
   }
@@ -116,10 +117,21 @@ Photon.view = (function(pubsub){
     }
   }
 
-  function renderTagsTo(dataStr, $target){
+  function renderTagsTo(dataStr, $target, colour){
+    if (!dataStr){
+      return;
+    }
+    var colourDict = {
+      'white': '',
+      'blue': 'is-info',
+      'green': 'is-success',
+      'yellow': 'is-warning',
+      'red': 'is-danger',
+      'black': 'is-dark'
+    };
     var dataArray = dataStr.split(',');
     dataArray.forEach(function(ele, i, arr){
-      $target.append($('<span>').addClass('tag').text(ele));
+      $target.append($('<span>').addClass('tag').addClass(colourDict[colour]).text(ele));
     });
   }
 
@@ -284,9 +296,15 @@ Photon.view = (function(pubsub){
     $nestContainer.on('click', '.nestBox', function(){
       var url = $(this).data('large-url');
       var tags = $(this).data('tags');
+      var landmarks = $(this).data('landmarks');
+      // var people = $(this).data('people');
+      // var safesearch = $(this).data('safesearch');
       var $tagField = $popupBox.find('div.image-custom');
       $tagField.children().remove();
-      renderTagsTo(tags, $tagField);
+      renderTagsTo(tags, $tagField, 'blue');
+      renderTagsTo(landmarks, $tagField, 'yellow');
+      // renderTagsTo(people, $tagField, 'green');
+      // renderTagsTo(safesearch, $tagField, 'red');
       $popupBox.find('img').attr('src', url);
       $popupBox.addClass('is-active');
     });

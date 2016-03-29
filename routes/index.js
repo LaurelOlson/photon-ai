@@ -45,7 +45,7 @@ module.exports = function(app, passport, raccoon) {
     }}).spread(function(photo, created) {
       seedTag(photo);
       models.user.findById(req.body.user_id).then(function(user) {
-        user.addLike(photo);        
+        user.addLike(photo);
         user.addAdd(photo);
         raccoon.liked(user.id, photo.id, function() {});
       });
@@ -256,7 +256,7 @@ var visionRequest = {
 
 var download = function(uri, filename, callback) {
   request.head(uri, function(err, res, body) {
-    if (err) { 
+    if (err) {
       return console.error(err);
     }
     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);

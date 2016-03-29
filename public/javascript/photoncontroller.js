@@ -246,6 +246,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // API
   return {
-    currentUser: currentUser
+    currentUser: currentUser,
+    tagSearch: tagSearch
   };
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));
