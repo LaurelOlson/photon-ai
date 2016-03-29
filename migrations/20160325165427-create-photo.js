@@ -9,12 +9,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       url: {
+        unique: true,
+        allowNull: false,
         type: Sequelize.STRING
       },
       width: {
+        allowNull: false,
         type: Sequelize.FLOAT
       },
       height: {
+        allowNull: false,
         type: Sequelize.FLOAT
       },
       createdAt: {
