@@ -33,7 +33,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // config important variables
   var serverURL = '/';
-  var photoQtyPerRender = 24;
+  var photoQtyPerRender = 4;
   var currentUser = null;
   // EVENT LISTENERS ///////////////////////////////////////
 
@@ -45,8 +45,8 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   });
 
   pubsub.on('userLoggedIn', function(){
-    currentUser = new User ();
-    fetchPhotos(currentUser);
+    currentUser = new User();
+    fetchPhotosFor(currentUser);
   });
 
   // USER CONTROLLER ///////////////////////////////////////
@@ -75,7 +75,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // fetching user photos from server
-  function fetchPhotos(userObj){
+  function fetchPhotosFor(userObj){
     $.getJSON(serverURL + 'photos')
     .done(function(data){
       // NOTE: currently server returns an array, not JSON
@@ -84,35 +84,13 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
         photonImgs.push(new Photo(ele));
       });
       userObj.setPhotos(photonImgs);
+      pubsub.emit('userPhotosFetched', userObj.photos.length);
       return true;
     })
     .fail(function(xhr, status, error){
       console.log(status, error);
       return false;
     });
-  }
-
-  function fetchPhotosFor(userObj){
-    if (userObj.email){
-      $.getJSON(serverURL + 'photos')
-      .done(function(data){
-        // NOTE: currently server returns an array, not JSON
-        var photonImgs = [];
-        data.forEach(function(ele, i, arr){
-          photonImgs.push(new Photo(ele));
-        });
-        userObj.setPhotos(photonImgs);
-        return true;
-      })
-      .fail(function(xhr, status, error){
-        console.log(status, error);
-        return false;
-      });
-    } else {
-      console.log('fetchPhotosFor: missing user id');
-      // then fetch random photos
-      return false;
-    }
   }
 
   function fetchRandPhotos(){} // TODO
@@ -122,8 +100,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   function getPhotosFrom(userObj, qty){
     var outputQty = qty;
     var photoArray = [];
-    console.log('geting photos from user', userObj.id);
-    console.log('user has total photo qty:', userObj.photos.length);
     for (var i = 0; i < outputQty; i++){
       var aPhoto = userObj.photos[i];
       if (aPhoto === undefined){
@@ -236,11 +212,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // API
   return {
-    fetchPhotosFor: fetchPhotosFor,
-    getPhotosFrom: getPhotosFrom,
-    photoStates: photoStates,
-    photoStatesCount: photoStatesCount,
-    sendPhotosToView: sendPhotosToView,
-    fetchPhotos: fetchPhotos
+    currentUser: currentUser
   };
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));

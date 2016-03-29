@@ -10,6 +10,7 @@
   // 'tap'
   // 'renderImgsToPage', photoArray
   // 'userLoggedIn', null
+  // 'userPhotosFetched', qty
 
 if (!window.Photon) {
   window.Photon = {};

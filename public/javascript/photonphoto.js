@@ -63,26 +63,26 @@ Photon.Photo = function(imgObj){
 
 // NOTE: this is not needed for production
 // exists because seed data lacks dimensions
-Photon.Photo.prototype.findWidthHeight = function(){
-  var photoObj = this;
-  if (!this.width || !this.height) {
-    var $tempImg = $('<img>').attr({
-      src: this.url,
-      id: 'photonImgFindSize' + photoObj.id
-    }).css({
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      visibility: 'hidden',
-      'z-index': -100
-    });
-    $('body').append($tempImg);
-    $('#photonImgFindSize' + photoObj.id).on('load', function(){
-      var $zeImg = $(this);
-      photoObj.width = $zeImg.width();
-      photoObj.height = $zeImg.height();
-      console.log('img dimensions found');
-      $zeImg.remove();
-    });
-  }
-};
+// Photon.Photo.prototype.findWidthHeight = function(){
+//   var photoObj = this;
+//   if (!this.width || !this.height) {
+//     var $tempImg = $('<img>').attr({
+//       src: this.url,
+//       id: 'photonImgFindSize' + photoObj.id
+//     }).css({
+//       position: 'fixed',
+//       top: 0,
+//       left: 0,
+//       visibility: 'hidden',
+//       'z-index': -100
+//     });
+//     $('body').append($tempImg);
+//     $('#photonImgFindSize' + photoObj.id).on('load', function(){
+//       var $zeImg = $(this);
+//       photoObj.width = $zeImg.width();
+//       photoObj.height = $zeImg.height();
+//       console.log('img dimensions found');
+//       $zeImg.remove();
+//     });
+//   }
+// };

@@ -99,7 +99,6 @@ Photon.view = (function(pubsub){
     imagesObj.photos.forEach(function(ele, i, arr){
       imgArr.push(convertImgToNest(ele));
     });
-    console.log('renderNestImages: converted images are:', imgArr);
     if (direction == 'prepend') {
       $target.prepend(imgArr).nested('prepend', imgArr);
     } else {
@@ -134,7 +133,6 @@ Photon.view = (function(pubsub){
     $nestContainer = $('#nestContainer'),
     $nestBoxes = $('.nestBox'),
     $navPadding = $('.navpadding'),
-    $window = $(window),
     $loginBox = $('#loginBox'),
     $loginBtn = $('#loginBtn'),
     $logoutBtn = $('#logoutBtn'),
@@ -144,7 +142,11 @@ Photon.view = (function(pubsub){
     $mainContent = $('main'),
     $menuBar = $('menu'),
     $menuToggle = $('.pMenuToggle'),
-    $menuToggleBtn = $('#menuToggleBtn');
+    $menuToggleBtn = $('#menuToggleBtn'),
+    $statsLiked = $('#statsLiked'),
+    $statsDiscovered = $('statsDiscovered'),
+    $statsTotal = $('statsTotal'),
+    $window = $(window);
     var nestOptions = {
       minWidth: calcNestColWidth(),
       minColumns: 1,
@@ -174,10 +176,7 @@ Photon.view = (function(pubsub){
     }
 
     //////////////////////////////////////////////////////////
-    // nestContainer
-    // if ($logoutBtn.length() > 0){
-    //   console.log('there is a log out button');
-    // }
+    // server-side auth, duct tape fix for login
     if (document.getElementById("logoutBtn")) {
       pubsub.emit('userLoggedIn', null);
     }
@@ -191,6 +190,20 @@ Photon.view = (function(pubsub){
     pubsub.on('renderImgsToPage', function(photoObj){
       renderNestImages(photoObj, $nestContainer, photoObj.direction);
     });
+    pubsub.on('userPhotosFetched', function(qty){
+      updateNavStats($statsLiked, qty);
+    });
+
+    // NOTE: template for discovered(recommended) and database total
+    // pubsub.on('userPhotosFetched', function(qty){
+    //   updateNavStats($statsLiked, qty);
+    // });
+
+    //////////////////////////////////////////////////////////
+    // navbar stats
+    function updateNavStats($target, qty){
+      $target.children('.title').text(qty);
+    }
 
     //////////////////////////////////////////////////////////
     // buttons during development

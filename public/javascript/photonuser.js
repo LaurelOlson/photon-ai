@@ -14,10 +14,9 @@ Photon.User = function(){
 //   return this.photos;
 // };
 Photon.User.prototype.setPhotos = function(photoArray){
-  console.log('fetching photos for user', this.id);
-  console.log('photos was qty:', this.photos.length);
+  console.log('user photos was qty:', this.photos.length);
   this.photos = photoArray;
-  console.log('photos now has qty:', this.photos.length);
+  console.log('user photos now has qty:', this.photos.length);
 };
 // Photon.User.prototype.getRecPhotos = function(){
 //   return this.recommendedPhotos;
