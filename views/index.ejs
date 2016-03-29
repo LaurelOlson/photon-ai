@@ -67,6 +67,10 @@
       <% if (message.length > 0) { %>
         <div id="loginMessage" class="notification is-warning"><%= message %></div>
       <% } %>
+      <% if (loggedIn) { %>
+        <div class="notification is-success">logged in</div>
+        <% } %>
+
 
       <div class="container is-fluid layer-1">
         <div id="nestContainer">
@@ -96,7 +100,7 @@
 
               <form action="/login" method="post">
                 <p class="control has-icon">
-                  <input class="input" type="text" name="email" placeholder="Email">
+                  <input class="input" type="text" name="email" placeholder="Email" value="Charlotte.Kreiger@gmail.com">
                   <i class="fa fa-envelope"></i>
                 </p>
                 <p class="control has-icon">
@@ -108,15 +112,6 @@
                   <button class="button">Register</button>
                   <button class="button is-info is-pulled-right">login with Facebook</button>
                 </p>
-                <!-- <div class="form-group">
-                  <label>Email</label>
-                  <input type="text" class="form-control" name="email">
-                </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <input type="password" class="form-control" name="password">
-                </div>
-                <button type="submit" class="btn btn-warning btn-lg">Login</button> -->
               </form>
 
             </div>

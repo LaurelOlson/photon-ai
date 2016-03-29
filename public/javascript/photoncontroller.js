@@ -68,14 +68,31 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // user login and create user object
   function makeUserObj(emailAddress){
-
+    return new User(emailAddress);
   }
 
 
   //////////////////////////////////////////////////////////
   // fetching user photos from server
+  function fetchPhotos(userObj){
+    $.getJSON(serverURL + 'photos')
+    .done(function(data){
+      // NOTE: currently server returns an array, not JSON
+      var photonImgs = [];
+      data.forEach(function(ele, i, arr){
+        photonImgs.push(new Photo(ele));
+      });
+      userObj.setPhotos(photonImgs);
+      return true;
+    })
+    .fail(function(xhr, status, error){
+      console.log(status, error);
+      return false;
+    });
+  }
+
   function fetchPhotosFor(userObj){
-    if (userObj.id){
+    if (userObj.email){
       $.getJSON(serverURL + 'photos')
       .done(function(data){
         // NOTE: currently server returns an array, not JSON
@@ -211,11 +228,12 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // testing variables
-  // var jason = new User('jason@example.com');
-  // var vanGogh = new Photo(samplePhotoObjExtNoWidth);
+  // var sampleEmail = "user@example.com";
+
   //////////////////////////////////////////////////////////
   // driver code
-  // fetchPhotosFor(jason);
+  // var anUser = new User(sampleEmail);
+  // fetchPhotos(anUser);
 
   //////////////////////////////////////////////////////////
   // API
@@ -224,6 +242,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     getPhotosFrom: getPhotosFrom,
     photoStates: photoStates,
     photoStatesCount: photoStatesCount,
-    sendPhotosToView: sendPhotosToView
+    sendPhotosToView: sendPhotosToView,
+    fetchPhotos: fetchPhotos
   };
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));

@@ -3,11 +3,11 @@ if (!window.Photon) {
   window.Photon = {};
 }
 Photon.User = function(email){
-  var userID = email.toLowerCase() || null; //num
+  var userEmail = email.toLowerCase() || null; //num
   var photos = [];
   var recommendedPhotos = [];
   // below is exporting of private vars
-  this.id = userID;
+  this.email = userEmail;
   this.photos = photos;
   this.recommendedPhotos = recommendedPhotos;
 };

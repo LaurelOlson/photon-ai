@@ -9,7 +9,7 @@ var Promise = Sequelize.Promise;
 module.exports = function(app, passport) {
 
   app.get('/', function(req, res) {
-    res.render('index.ejs', { message: req.flash('loginMessage')});
+    res.render('index.ejs', { message: req.flash('loginMessage'), loggedIn: req.isAuthenticated() });
   });
 
   // PHOTO STUFF
@@ -153,7 +153,7 @@ module.exports = function(app, passport) {
   //     .catch(function() { res.redirect('/profile'); });
   // });
 
-}
+};
 
 function isLoggedOut(req, res, next) {
   if (req.isAuthenticated()) { res.redirect('/'); }
