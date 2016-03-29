@@ -11,7 +11,7 @@ var i = 0;
 while (i < 5) { // Create 1 users
   models.user.create({
     name: faker.name.firstName(),
-    localemail: faker.internet.email(),
+    localemail: faker.internet.email().toLowerCase(),
     localpassword: models.user.generateHash('password'),
     google_id: '1235667',
     google_identifier: '123859278',
@@ -21,34 +21,32 @@ while (i < 5) { // Create 1 users
   i++;
 } 
 
-// models.user.findById(1).then(assignPhotos);
-
 // SEED LIKED_PHOTOS, ADDED_PHOTOS
 
-function assignPhotos(user) {
-  var x = 0;
-  while (x < 25) { // Randomly assign 25 photos to each user as like or add
-    var id = Math.floor((Math.random() * NUM_PHOTOS) + 1);
-    if ( id % 3 === 0 ) { // add user as liker
-      models.photo.findById(id).then(function(photo) {
-        photo.addLiker(user).then(function() {
-          photo.hasLiker(user).then(console.log); // should return true
-          user.hasLike(photo).then(console.log); // should return true
-        });
-      });    
-    } else { // add user as adder and as liker
-      models.photo.findById(id).then(function(photo) {
-        photo.addLiker(user).then(function() {
-          photo.hasLiker(user).then(console.log); // should return true
-          user.hasLike(photo).then(console.log); // should return true
-        }).then(function() {
-          photo.addAdder(user).then(function() {
-            photo.hasAdder(user).then(console.log); // should return true
-            user.hasAdd(photo).then(console.log); // should return true
-          });
-        });
-      });  
-    }
-    x++;
-  }
-}
+// function assignPhotos(user) {
+//   var x = 0;
+//   while (x < 25) { // Randomly assign 25 photos to each user as like or add
+//     var id = Math.floor((Math.random() * NUM_PHOTOS) + 1);
+//     if ( id % 3 === 0 ) { // add user as liker
+//       models.photo.findById(id).then(function(photo) {
+//         photo.addLiker(user).then(function() {
+//           photo.hasLiker(user).then(console.log); // should return true
+//           user.hasLike(photo).then(console.log); // should return true
+//         });
+//       });    
+//     } else { // add user as adder and as liker
+//       models.photo.findById(id).then(function(photo) {
+//         photo.addLiker(user).then(function() {
+//           photo.hasLiker(user).then(console.log); // should return true
+//           user.hasLike(photo).then(console.log); // should return true
+//         }).then(function() {
+//           photo.addAdder(user).then(function() {
+//             photo.hasAdder(user).then(console.log); // should return true
+//             user.hasAdd(photo).then(console.log); // should return true
+//           });
+//         });
+//       });  
+//     }
+//     x++;
+//   }
+// }

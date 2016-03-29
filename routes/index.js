@@ -5,6 +5,9 @@ var Sequelize = require('sequelize');
 var sequelize = new Sequelize(configDB.url);
 var models = require('../models/index');
 var Promise = Sequelize.Promise;
+var fs = require('fs');
+var request = require('request');
+var secret_stuff = require('../secret_stuff/secret_stuff.js');
 
 module.exports = function(app, passport) {
 
@@ -32,14 +35,6 @@ module.exports = function(app, passport) {
       });
   });
 
-  /* GET a photo */
-  // app.get('/photos/:id', function(req, res, next) {
-  //   var id = req.params.id;
-  //   models.photo.findById(id).then(function(photo) {
-  //     res.json(photo);
-  //   });
-  // });
-
   /* POST new added photo (from chrome ext) */
   app.post('/addedphotos', function(req, res) {
     models.photo.create({
@@ -47,10 +42,11 @@ module.exports = function(app, passport) {
       height: req.body.height,
       width: req.body.width
     }).then(function(photo) {
+      seedTag(photo);
       models.user.findById(req.body.user_id).then(function(user) {
         user.addLike(photo);
         user.addAdd(photo);
-      });
+      })
       res.json(photo.url);
     });
   });
@@ -122,16 +118,6 @@ module.exports = function(app, passport) {
     failureRedirect: '/signup',
     failureFlash: true
   }));
-
-  // google
-
-  // send to google for authentication
-  // app.get('/auth/google', passport.authenticate('google'));
-
-  // app.get('/auth/google/return', passport.authenticate('google', {
-  //   successRedirect: '/photos',
-  //   failureRedirect: '/'
-  // }));
 
   // facebook
 
@@ -216,13 +202,6 @@ function addPhotos(photos) {
             };
             photo_hash.tags.push(tag_hash);
           }).then(resolve_photo); // once we've iterated over each tag, move onto the next photo
-          // tags.forEach(function(tag) {
-          //   var tag_hash = {
-          //     name: tag.name,
-          //     type: tag.type
-          //   };
-          //   photo_hash.tags.push(tag_hash);
-          // });
         });
         // .then(resolve_photo); // once we've iterated over each tag, move onto the next photo
       }); // promise 
@@ -230,3 +209,100 @@ function addPhotos(photos) {
     }).then(function() { resolve_photos(user_photos); }); // end photos.forEach
   }); // end promise returned by addPhotos
 } // end addPhotos
+
+const MIN_LABEL_SCORE = 0.8;
+
+var visionRequest = {
+  "requests":[
+    {
+      "image": {
+        "content": "<paste the contents of your base64-encoded output_file here>"
+      },
+      "features": [
+        {
+          "type": "SAFE_SEARCH_DETECTION",
+          "maxResults": 5
+        },
+        {
+          "type": "LABEL_DETECTION",
+          "maxResults": 10
+        },
+        {
+          "type": "FACE_DETECTION",
+          "maxResults": 3
+        },
+        {
+          "type": "LANDMARK_DETECTION",
+          "maxResults": 10
+        }
+      ]
+    }
+  ]
+
+var download = function(uri, filename, callback) {
+  request.head(uri, function(err, res, body) {
+    if (err) { 
+      return console.error(err);
+    }
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  });
+};
+
+function seedTag(photo) {
+  var file = 'seeders/temp/photo-' + photo.id + '.jpg';
+  download(photo.url, file, convertToBase64);
+
+  function convertToBase64(err, data) {
+    if (err) {
+      return console.error(err);
+    }
+    // update photos table to add height and width of photo
+    fs.readFile(file, 'base64', sendToGoogleVision);
+  }
+
+  function sendToGoogleVision(err, data) {
+    if (err) {
+      return console.error(err);
+    }
+    visionRequest.requests[0].image.content = data;
+    var request_options = {
+      url: 'https://vision.googleapis.com/v1/images:annotate',
+      qs: { key: secret_stuff.vision_key },
+      method: 'POST',
+      json: visionRequest
+    };
+    request(request_options, parseResponse);
+  }
+
+  function parseResponse(error, response, body) {
+    if (error) {
+      return console.error(error);
+    }
+    var tags = [];
+    var landmarks = body.responses[0].landmarkAnnotations;
+    var labels = body.responses[0].labelAnnotations;
+    if (labels) {
+      labels.forEach(function(label) {
+        if (label.score >= MIN_LABEL_SCORE) {
+          tags.push({ name: label.description, type: 'label' });
+        }
+      });
+    }
+    if (landmarks) {
+      landmarks.forEach(function(landmark) {
+        tags.push({ name: landmark.description, type: 'landmark' });
+      });
+    }
+    tags.forEach(addTagToDB);
+  }
+
+  function addTagToDB(vision_tag) {
+    models.tag.findOrCreate({ where: { name: vision_tag.name, type: vision_tag.type } }).then(function(promise) {
+      var tag = promise[0];
+      photo.addTag(tag).then(function() {
+        photo.hasTag(tag).then(console.log);
+        tag.hasPhoto(photo).then(console.log);
+      });
+    });
+  }
+}

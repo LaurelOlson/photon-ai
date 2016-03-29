@@ -69,7 +69,7 @@ module.exports = function(passport) {
         // logged in => so we're connecting a new local account (updating account???)
         if (req.user) {
           var user = req.user;
-          user.localemail = email.toLowerCase;
+          user.localemail = email.toLowerCase();
           user.localpassword = User.generateHash(password);
           user.save().catch(function(err) {
             throw err;
@@ -77,7 +77,7 @@ module.exports = function(passport) {
             done(null, user);
           });
         } else { // not logged in so create a new user
-          var newUser = User.build({ localemail: email.toLowerCase, localpassword: User.generateHash(password) });
+          var newUser = User.build({ localemail: email.toLowerCase(), localpassword: User.generateHash(password) });
           newUser.save().then(function() { 
               done(null, newUser); 
             })
@@ -90,51 +90,6 @@ module.exports = function(passport) {
         done(null, false, req.flash('loginMessage', e.name + " " + e.message));
       });
   }));
-
-  // google
-  // passport.use(new GoogleStrategy({
-  //   returnURL: configAuth.googleAuth.returnURL,
-  //   realm: configAuth.googleAuth.realm
-  // },
-  // function(req, identifier, profile, done) {
-  //   if (!req.user) { // no one's logged in
-  //     User.findOne({ where: { google_id: profile.id }}) // try to find the user
-  //       .then(function(user) {
-  //         if (user) { // user found
-  //           if (!user.google_identifier) { // no identifier - user has been unlinked
-  //             user.google_identifier = identifier;
-  //             // user.name = profile.name.givenName + ' ' + profile.name.familyName;
-
-  //             user.save()
-  //               .then(function() { done(null, user); })
-  //               .catch(function() {});
-  //           } else { // user exists and user already has an identifier
-  //             done(null, user);
-  //           }
-  //         } else { // no user
-  //           var newUser = User.build({
-  //             google_id: profile.id,
-  //             google_identifier: identifier
-  //             // name: profile.name.givenName + ' ' + profile.name.familyName
-  //           });
-
-  //           newUser.save()
-  //             .then(function(user) { done(null, user); })
-  //             .catch(function() {});
-  //         }
-  //       });
-  //   } else { // user already exists and is logged in so we need to link accounts
-  //     var user = req.user; // pull user from session
-
-  //     user.google_id = profile.id;
-  //     user.google_identifier = identifier;
-  //     // user.name = profile.name.givenName + ' ' + profile.name.familyName;
-
-  //     user.save()
-  //       .then(function(user) { done(null, user); })
-  //       .catch(function() {});
-  //   }
-  // }));
 
   // facebook
   passport.use(new FacebookStrategy({
