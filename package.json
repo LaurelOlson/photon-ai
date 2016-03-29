@@ -30,6 +30,7 @@
     "pg-hstore": "^2.3.2",
     "raccoon": "^0.2.3",
     "redis": "^2.5.2",
+    "redis-server": "0.0.1",
     "request": "^2.69.0",
     "sequelize": "^3.19.3",
     "serve-favicon": "~2.3.0",

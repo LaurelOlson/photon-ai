@@ -11,6 +11,7 @@ var morgan = require('morgan'); // logger
 var cookieParser = require('cookie-parser'); // parse cookies
 var bodyParser = require('body-parser'); // parse posts
 var session = require('express-session'); // session middleware
+var raccoon = require('raccoon');
 
 require('./config/passport')(passport); // pass passport for configuration
 
@@ -29,9 +30,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
+raccoon.connect(6379, '127.0.0.1')
 
 // routes
-require('./routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./routes/index.js')(app, passport, raccoon); // load our routes and pass in our app and fully configured passport
 
 app.use(function(err, req, res, next) {
   if(err) {
@@ -39,6 +41,7 @@ app.use(function(err, req, res, next) {
   }
   next(err);
 });
+
 // launch
 // app.listen(port);
 // console.log('Listening on port' + port);

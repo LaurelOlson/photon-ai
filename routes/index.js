@@ -9,7 +9,7 @@ var fs = require('fs');
 var request = require('request');
 var secret_stuff = require('../secret_stuff/secret_stuff.js');
 
-module.exports = function(app, passport) {
+module.exports = function(app, passport, raccoon) {
 
   app.get('/', function(req, res) {
     res.render('index.ejs', { message: req.flash('loginMessage'), loggedIn: req.isAuthenticated() });
@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
   // PHOTO STUFF
 
   /* GET random photos */
-  // app.get('/photos', isLoggedOut, function(req, res, next) {
+  // app.get('/photos/random', isLoggedOut, function(req, res, next) {
 
   // })
 
@@ -47,6 +47,7 @@ module.exports = function(app, passport) {
       models.user.findById(req.body.user_id).then(function(user) {
         user.addLike(photo);        
         user.addAdd(photo);
+        raccoon.liked(user.id, photo.id, function() {});
       });
       res.json(photo.url);
     });
@@ -57,6 +58,7 @@ module.exports = function(app, passport) {
     var id = req.body.photo_id;
     models.photo.findById(id).then(function(photo) {
       photo.addLiker(req.user);
+      raccoon.liked(req.user.id, photo.id, function() {});
     });
   });
 
@@ -77,6 +79,16 @@ module.exports = function(app, passport) {
 
   // AUTHENTICATE (FIRST LOGIN)
 
+  app.get('/photos/recommended', function(req, res) {
+    var id = req.user.id;
+    raccoon.recommendFor(id, '2', function(results) {
+      // results is an array of photo id's as STRINGS
+      models.photo.findAll({ where: { id: { in: results }}}).then(addPhotos).then(function(user_photos) {
+        res.json(user_photos);
+      });
+    });
+  });
+
   // locally
 
   // show login form
@@ -85,14 +97,14 @@ module.exports = function(app, passport) {
   });
 
   // local login extension
-  app.post('/login/ext/local', passport.authenticate('local-login', {
+  app.post('/login/ext', passport.authenticate('local-login', {
    successRedirect: '/login/ext',
    failureRedirect: '/',
    failureFlash: true
   }));
 
   // facebook login extension
-  app.post('/login/ext', function(req, res) {
+  app.post('/login/ext/facebook', function(req, res) {
     models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user, created) {
       res.json(user.id);
     });
