@@ -36,12 +36,13 @@ module.exports = function(app, passport) {
   });
 
   /* POST new added photo (from chrome ext) */
+  // add like and add add will only add if doesn't already exist! (i think..)
   app.post('/addedphotos', function(req, res) {
-    models.photo.create({
-      url: req.body.url,
-      height: req.body.height,
-      width: req.body.width
-    }).then(function(photo) {
+    models.photo.findOrCreate({ where: {
+        url: req.body.url,
+        height: req.body.height,
+        width: req.body.width
+      }}).spread(function(photo, created) {
       seedTag(photo);
       models.user.findById(req.body.user_id).then(function(user) {
         user.addLike(photo);
@@ -83,20 +84,21 @@ module.exports = function(app, passport) {
     res.render('login.ejs', { message: req.flash('loginMessage') });
   });
 
-  app.post('/login/ext', passport.authenticate('local-login', {
+  // local login extension
+  app.post('/login/ext/local', passport.authenticate('local-login', {
    successRedirect: '/login/ext',
    failureRedirect: '/',
    failureFlash: true
   }));
 
-  // app.post('/login/ext', function(req, res) {
-  //   models.user.findOrCreate({ where: { fbook_token: req.token } }).then(function(user) {
-  //     res.json(req.user.id);
-  //   });
-  // });
+  // facebook login extension
+  app.post('/login/ext', function(req, res) {
+    models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user, created) {
+      res.json(user.id);
+    });
+  });
 
   app.get('/login/ext', function(req, res) {
-    console.log(req.user.id);
     res.json(req.user.id);
   });
 
@@ -238,6 +240,7 @@ var visionRequest = {
       ]
     }
   ]
+}
 
 var download = function(uri, filename, callback) {
   request.head(uri, function(err, res, body) {

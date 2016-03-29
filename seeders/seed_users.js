@@ -13,8 +13,6 @@ while (i < 5) { // Create 1 users
     name: faker.name.firstName(),
     localemail: faker.internet.email().toLowerCase(),
     localpassword: models.user.generateHash('password'),
-    google_id: '1235667',
-    google_identifier: '123859278',
     fbook_id: '1237895',
     fbook_token: '1278959'
   })
