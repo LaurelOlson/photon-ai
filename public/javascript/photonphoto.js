@@ -45,10 +45,10 @@ Photon.Photo = function(imgObj){
           allLandmarks.push(ele.name);
           break;
         case 'people':
-          allPeople.push(ele.name);
+          // TODO: build
           break;
         case 'safesearch':
-          allSafeSearch.push(ele.name);
+          // TODO: build
           break;
       }
     });
@@ -89,3 +89,17 @@ Photon.Photo = function(imgObj){
 //     });
 //   }
 // };
+
+// except from google vision:
+// "joyLikelihood": "VERY_LIKELY",
+// "sorrowLikelihood": "VERY_UNLIKELY",
+// "angerLikelihood": "VERY_UNLIKELY",
+// "surpriseLikelihood": "VERY_UNLIKELY",
+// "underExposedLikelihood": "VERY_UNLIKELY",
+// "blurredLikelihood": "VERY_UNLIKELY",
+// "headwearLikelihood": "VERY_UNLIKELY"
+//
+// "adult": "VERY_UNLIKELY",
+// "spoof": "VERY_UNLIKELY",
+// "medical": "VERY_UNLIKELY",
+// "violence": "UNLIKELY"
