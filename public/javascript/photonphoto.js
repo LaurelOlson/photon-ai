@@ -9,6 +9,7 @@ Photon.Photo = function(imgObj){
   if (!imgObj.tags.length){
     console.log('Photo model: has no tags:', imgObj);
   }
+  console.log(imgObj.tags);
   var imgID = imgObj.id;
   var imgURL = imgObj.url;
   var imgSmallURL = imgObj.smallurl || null;
@@ -41,13 +42,13 @@ Photon.Photo = function(imgObj){
           allTags.push(ele.name);
           break;
         case 'landmark':
-          // do stuff
+          allLandmarks.push(ele.name);
           break;
         case 'people':
-          // do stuff
+          allPeople.push(ele.name);
           break;
         case 'safesearch':
-          // do stuff
+          allSafeSearch.push(ele.name);
           break;
       }
     });
