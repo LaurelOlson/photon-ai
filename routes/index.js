@@ -84,19 +84,22 @@ module.exports = function(app, passport) {
     res.render('login.ejs', { message: req.flash('loginMessage') });
   });
 
-  // local login extension
-  app.post('/login/ext', passport.authenticate('local-login', {
-   successRedirect: '/login/ext',
-   failureRedirect: '/',
-   failureFlash: true
-  }));
+  // // local login extension
+  // app.post('/login/ext', passport.authenticate('local-login', {
+  //  successRedirect: '/login/ext',
+  //  failureRedirect: '/',
+  //  failureFlash: true
+  // }));
 
   // facebook login extension
-  // app.post('/login/ext', function(req, res) {
-  //   models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user, created) {
-  //     res.json(user.id);
-  //   });
-  // });
+  app.post('/login/ext', function(req, res) {
+    models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user, created) {
+      passport.serializeUser(function(user, done) {
+        done(null, user.id);
+      });
+      res.json(user.id);
+    });
+  });
 
   app.get('/login/ext', function(req, res) {
     res.json(req.user.id);
