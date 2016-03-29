@@ -42,13 +42,13 @@ module.exports = function(app, passport) {
 
   /* POST new added photo (from chrome ext) */
   app.post('/addedphotos', function(req, res) {
-    models.photo.create({
-      url: req.body.url,
-      height: req.body.height,
-      width: req.body.width
-    }).then(function(photo) {
+    models.photo.findOrCreate({ where: {
+        url: req.body.url,
+        height: req.body.height,
+        width: req.body.width
+      }}).spread(function(photo, created) {
       models.user.findById(req.body.user_id).then(function(user) {
-        user.addLike(photo);
+        user.addLike(photo);        
         user.addAdd(photo);
       });
       res.json(photo.url);
