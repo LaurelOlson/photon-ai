@@ -7,7 +7,8 @@ module.exports = function(sequelize, DataTypes) {
     name: DataTypes.STRING,
     localemail: DataTypes.STRING,
     localpassword: DataTypes.STRING,
-    fbook_email: DataTypes.STRING,
+    google_id: DataTypes.STRING,
+    google_identifier: DataTypes.STRING,
     fbook_id: DataTypes.STRING,
     fbook_token: DataTypes.STRING
   }, {

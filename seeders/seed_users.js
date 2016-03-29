@@ -8,15 +8,16 @@ const NUM_PHOTOS = 300;
 // SEED USERS
 
 var i = 0;
-while (i < 1) { // Create 1 users
+while (i < 5) { // Create 1 users
   models.user.create({
     name: faker.name.firstName(),
     localemail: faker.internet.email(),
     localpassword: models.user.generateHash('password'),
-    fbook_email: faker.internet.email(),
+    google_id: '1235667',
+    google_identifier: '123859278',
     fbook_id: '1237895',
     fbook_token: '1278959'
-  }).then(assignPhotos);
+  })
   i++;
 } 
 

@@ -17,6 +17,12 @@ module.exports = {
       localpassword: {
         type: Sequelize.STRING
       },
+      google_id: {
+        type: Sequelize.STRING
+      },
+      google_identifier: { 
+        type: Sequelize.STRING
+      },
       fbook_email: {
         type: Sequelize.STRING
       },

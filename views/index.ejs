@@ -11,6 +11,10 @@
 <body>
 <div class="container">
 
+    <% if (loggedIn) { %>
+        <div>Log Out</div>
+    <% } %>
+
     <div class="jumbotron text-center">
         <h1><span class="fa fa-lock"></span> Node Authentication</h1>
 
@@ -19,7 +23,8 @@
         <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
         <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
         <a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
-    </div>
+<!--         <a href="/auth/google" class="btn btn-primary"><span class="fa fa-facebook"></span> Google</a>
+ -->    </div>
 
     <div class="text-center">
         <p>A demo by <a href="http://scotch.io">Scotch</a>.</p>

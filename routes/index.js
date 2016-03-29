@@ -9,7 +9,7 @@ var Promise = Sequelize.Promise;
 module.exports = function(app, passport) {
 
   app.get('/', function(req, res) {
-    res.render('index.ejs');
+    res.render('index.ejs', { message: req.flash('loginMessage'), loggedIn: req.isAuthenticated() });
   });
 
   // PHOTO STUFF
@@ -93,13 +93,19 @@ module.exports = function(app, passport) {
    failureFlash: true
   }));
 
+  // app.post('/login/ext', function(req, res) {
+  //   models.user.findOrCreate({ where: { fbook_token: req.token } }).then(function(user) {
+  //     res.json(req.user.id);
+  //   });
+  // });
+
   app.get('/login/ext', function(req, res) {
     console.log(req.user.id);
     res.json(req.user.id);
   });
 
   app.post('/login', passport.authenticate('local-login', {
-    successRedirect: '/photos',
+    successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
   }));
@@ -112,10 +118,20 @@ module.exports = function(app, passport) {
   });
 
   app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/photos',
+    successRedirect: '/',
     failureRedirect: '/signup',
     failureFlash: true
   }));
+
+  // google
+
+  // send to google for authentication
+  // app.get('/auth/google', passport.authenticate('google'));
+
+  // app.get('/auth/google/return', passport.authenticate('google', {
+  //   successRedirect: '/photos',
+  //   failureRedirect: '/'
+  // }));
 
   // facebook
 
@@ -124,7 +140,7 @@ module.exports = function(app, passport) {
 
   // handle callback after facebook has authenticated
   app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-    successRedirect: '/photos',
+    successRedirect: '/',
     failureRedirect: '/'
   }));
 
