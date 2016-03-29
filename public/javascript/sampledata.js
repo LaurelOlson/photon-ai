@@ -111,6 +111,8 @@ var sampleUserObj = {
 var samplePhotoObj1 = {
   "id": 6,
   "url": "https://images.unsplash.com/photo-1432383079404-c66efb4828a3",
+  "width": 3900,
+  "height": 3120,
   "tags": [{"name":"sea","type":"label"},{"name":"coast","type":"label"},{"name":"water","type":"label"},{"name":"ocean","type":"label"},{"name":"shore","type":"label"},{"name":"reflection","type":"label"},{"name":"stack","type":"label"}]
 };
 

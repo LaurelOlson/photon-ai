@@ -193,10 +193,9 @@ Photon.view = (function(pubsub){
     pubsub.on('userPhotosFetched', function(qty){
       updateNavStats($statsLiked, qty);
     });
-
     // NOTE: template for discovered(recommended) and database total
     // pubsub.on('userPhotosFetched', function(qty){
-    //   updateNavStats($statsLiked, qty);
+    //   updateNavStats($statsDiscovered, qty);
     // });
 
     //////////////////////////////////////////////////////////

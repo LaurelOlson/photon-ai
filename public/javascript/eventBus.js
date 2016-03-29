@@ -8,7 +8,7 @@
   // 'leftSwipe' + variants
   // 'imagesRequested', 'append' or 'prepend'
   // 'tap'
-  // 'renderImgsToPage', photoArray
+  // 'renderImgsToPage', photoObject (.photos, .direction)
   // 'userLoggedIn', null
   // 'userPhotosFetched', qty
 
