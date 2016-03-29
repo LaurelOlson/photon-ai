@@ -4,11 +4,9 @@
 
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
-// var GoogleStrategy = require('passport-google').Strategy;
 
 var configDB = require('./database.js');
 var Sequelize = require('sequelize');
-// var pg = require('pg');
 var sequelize = new Sequelize(configDB.url);
 
 var User = sequelize.import('../models/user');
