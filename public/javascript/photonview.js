@@ -175,6 +175,15 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // nestContainer
+    // if ($logoutBtn.length() > 0){
+    //   console.log('there is a log out button');
+    // }
+    if (document.getElementById("logoutBtn")) {
+      pubsub.emit('userLoggedIn', null);
+    }
+
+    //////////////////////////////////////////////////////////
+    // nestContainer
     $nestContainer.nested(nestOptions);
 
     //////////////////////////////////////////////////////////

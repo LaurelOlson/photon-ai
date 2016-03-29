@@ -38,11 +38,17 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   // EVENT LISTENERS ///////////////////////////////////////
 
   //////////////////////////////////////////////////////////
-  // from view
+  // from view (API via pubsub)
   pubsub.on('imagesRequested', function(direction){
     var currentUser = sampleUserObj;
     var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender);
     sendPhotosToView(somePhotos, direction);
+  });
+
+  pubsub.on('userLoggedIn', function(){
+    // create a user
+    // fetch photos for user
+    // display first pictures
   });
 
   // USER CONTROLLER ///////////////////////////////////////
@@ -230,7 +236,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // driver code
   var anUser = new User(sampleEmail);
-  fetchPhotos(anUser);
+  // fetchPhotos(anUser);
 
   //////////////////////////////////////////////////////////
   // API

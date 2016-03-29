@@ -9,6 +9,7 @@
   // 'imagesRequested', 'append' or 'prepend'
   // 'tap'
   // 'renderImgsToPage', photoArray
+  // 'userLoggedIn', null
 
 if (!window.Photon) {
   window.Photon = {};
