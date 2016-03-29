@@ -54,10 +54,17 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     // find matching photos from user
       // currentUser.photos.tags is an array
     var foundPhotos = tagSearch(queryArr);
-    console.log(foundPhotos);
     // ask view to remove images
-    // on remove, update state logger
+    pubsub.emit('nukePhotosFromView', 'all');
+    // on remove, update state logger (pubsub event triggered)
+    for (var key in photoStates){
+      photoStates[key] = 'removed';
+    }
+    foundPhotos.forEach(function(ele, i, arr){
+      registerPhotoState(ele.id);
+    });
     // render matching images to view
+    sendPhotosToView(foundPhotos, 'prepend');
   });
 
   // USER CONTROLLER ///////////////////////////////////////
@@ -117,11 +124,11 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
         console.log('getPhotosFrom: no more user photos to load');
         // TODO: maybe emit an event for frontend
         outputQty = 0;
-      } else if (isPhotoAlreadyLoaded(aPhoto)){
+      } else if (isPhotoAlreadyLoaded(aPhoto.id)){
         outputQty++;
       } else {
         photoArray.push(aPhoto);
-        registerPhotoState(aPhoto);
+        registerPhotoState(aPhoto.id);
       }
     }
     console.log('loaded qty:', photoArray.length);
@@ -169,24 +176,50 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // what's already loaded
-  var photoStates = {};
-  function isPhotoAlreadyLoaded(photoObj){
-    return photoStates[photoObj.id];
-    // if it's the string 'loaded', it's inherently truthy
-  }
-  function registerPhotoState(photoObj){
-    if (photoStates[photoObj.id]){
-      console.log('registerPhotoState: duplicated detected, photo:', photoObj.id);
-      return true;
-    }
-    photoStates[photoObj.id] = 'loaded';
-    return true;
-  }
-  // photoStatesCount is more for debugging
-  function photoStatesCount (){
-    return Object.keys(photoStates).length;
+  var photoStates = {
+    // example:
+    // 456: 'loaded',
+    // 789: 'removed',
+  };
+  function isPhotoAlreadyLoaded(id){
+    return photoStates[id] == 'loaded';
   }
 
+  function registerPhotoState(id){
+    if (photoStates[id] === 'loaded'){
+      console.log('registerPhotoState: duplicated detected, photo:', id);
+      return false;
+    }
+    photoStates[id] = 'loaded';
+    return true;
+  }
+
+  function updatePhotoState(id, status){
+    if (id in obj) {
+      photoStates[id] = status;
+      return true;
+    }
+      console.log('updatePhotoState: ID doesn\'t exist', id);
+      return false;
+  }
+
+  // this is more for construction and debugging
+  function reportStates(){
+    var loaded = [];
+    var removed = [];
+    (function(){
+      for (var key in photoStates){
+        if (photoStates[key] === 'loaded'){
+          loaded.push(key);
+        } else {
+          removed.push(key);
+        }
+      }
+    }());
+    console.log('Registered QTY:', Object.keys(photoStates).length);
+    console.log('Loaded:', loaded);
+    console.log('Removed:', removed);
+  }
 
   // SEARCH ////////////////////////////////////////////////
 
@@ -247,6 +280,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   // API
   return {
     currentUser: currentUser,
-    tagSearch: tagSearch
+    reportStates: reportStates
   };
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));

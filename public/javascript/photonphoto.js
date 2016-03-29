@@ -7,9 +7,8 @@ Photon.Photo = function(imgObj){
   // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
   var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x4000/';
   if (!imgObj.tags.length){
-    console.log('Photo model: has no tags:', imgObj);
+    console.log('Photo: has no tags:', imgObj);
   }
-  console.log(imgObj.tags);
   var imgID = imgObj.id;
   var imgURL = imgObj.url;
   var imgSmallURL = imgObj.smallurl || null;

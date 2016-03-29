@@ -12,6 +12,7 @@
   // 'userLoggedIn', null
   // 'userPhotosFetched', qty
   // 'searchRequested', string
+  // 'nukePhotosFromView', ('all', or array of photo URLs to delete)
 
 if (!window.Photon) {
   window.Photon = {};
