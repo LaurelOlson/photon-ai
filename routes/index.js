@@ -45,7 +45,7 @@ module.exports = function(app, passport) {
     }}).spread(function(photo, created) {
       seedTag(photo);
       models.user.findById(req.body.user_id).then(function(user) {
-        user.addLike(photo);        
+        user.addLike(photo);
         user.addAdd(photo);
       });
       res.json(photo.url);
@@ -85,18 +85,18 @@ module.exports = function(app, passport) {
   });
 
   // local login extension
-  app.post('/login/ext/local', passport.authenticate('local-login', {
+  app.post('/login/ext', passport.authenticate('local-login', {
    successRedirect: '/login/ext',
    failureRedirect: '/',
    failureFlash: true
   }));
 
   // facebook login extension
-  app.post('/login/ext', function(req, res) {
-    models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user, created) {
-      res.json(user.id);
-    });
-  });
+  // app.post('/login/ext', function(req, res) {
+  //   models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user, created) {
+  //     res.json(user.id);
+  //   });
+  // });
 
   app.get('/login/ext', function(req, res) {
     res.json(req.user.id);
@@ -244,7 +244,7 @@ var visionRequest = {
 
 var download = function(uri, filename, callback) {
   request.head(uri, function(err, res, body) {
-    if (err) { 
+    if (err) {
       return console.error(err);
     }
     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);

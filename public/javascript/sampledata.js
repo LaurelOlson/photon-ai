@@ -146,7 +146,7 @@ var samplePhotosObj = {
       url: 'images/22.jpg',
       width: 1080,
       height: 1080,
-      tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
+      tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7']
     },
     {
       id: 26,
