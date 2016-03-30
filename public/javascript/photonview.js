@@ -202,7 +202,6 @@ Photon.view = (function(pubsub){
     }
     if (document.getElementById("loginBtn")) {
       pubsub.emit('noUserLoggedIn', null);
-      console.log('Photon.view:424: needs to build search disable');
       $searchGroup.hide();
       $statsLiked.hide();
       $statsDiscovered.hide();
@@ -350,11 +349,13 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // recommended photos manipulation
-    $nestContainer.one('mouseenter', '.photonRec', function(enterEvt){
-      var $payload = $('<div>').addClass('overlay');
-      var $payloadHorse = $('<button>').addClass('button is-warning').text('add to my collection');
-      $payload.append($payloadHorse);
-      $(this).append($payload);
+    $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
+      if ($(this).children('.overlay').length === 0) {
+        var $payload = $('<div>').addClass('overlay');
+        var $payloadHorse = $('<button>').addClass('button is-warning').text('add to my collection');
+        $payload.append($payloadHorse);
+        $(this).append($payload);
+      }
     });
 
     $nestContainer.on('mouseenter', '.photonRec', function(leaveEvt){
