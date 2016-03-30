@@ -64,7 +64,7 @@ module.exports = function(app, passport, raccoon) {
       models.user.findById(req.body.user_id).then(function(user) {
         user.addLike(photo);
         user.addAdd(photo);
-        raccoon.liked(user.id, photo.id, function() { console.log('======================= ADDED TO RACCOON LIKES ==============')});
+        raccoon.liked(user.id, photo.id, function() {});
       });
       res.json(photo.url);
     });
@@ -74,8 +74,10 @@ module.exports = function(app, passport, raccoon) {
   app.post('/likedphotos/:id', function(req, res) {
     var id = req.params.id;
     models.photo.findById(id).then(function(photo) {
-      photo.addLiker(req.user);
-      raccoon.liked(req.user.id, photo.id, function() {});
+      models.user.findById(req.user.id).then(function(user) {
+        user.addLike(photo);
+        raccoon.liked(req.user.id, photo.id, function() {});
+      });
     });
   });
 
@@ -83,8 +85,10 @@ module.exports = function(app, passport, raccoon) {
   app.delete('/likedphotos/:id', function(req, res) {
     var id = req.params.id;
     models.photo.findById(id).then(function(photo) {
-      photo.removeLiker(req.user);
-      raccoon.disliked(req.user.id, id, function() {});
+      models.user.findById(req.user.id).then(function(user) {
+        user.removeLike(photo);
+        raccoon.disliked(req.user.id, id, function() {});
+      });
     });
   });
 
