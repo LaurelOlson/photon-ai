@@ -322,14 +322,14 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // recommended photos manipulation
-    $nestContainer.one('mouseenter', '.photonRec', function(enterEvt){
+    $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
       var $payload = $('<div>').addClass('overlay');
       var $payloadHorse = $('<button>').addClass('button is-warning').text('add to my photos');
       $payload.append($payloadHorse);
       $(this).append($payload);
     });
     $nestContainer.on('mouseleave', '.photonRec', function(leaveEvt){
-      // $(this).find('.overlay').remove();
+      $(this).find('.overlay').remove();
     });
 
     //////////////////////////////////////////////////////////
