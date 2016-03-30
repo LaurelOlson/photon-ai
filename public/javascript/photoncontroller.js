@@ -110,7 +110,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     $.getJSON(serverURL + 'photos/recommended')
     .done(function(data){
       if (data.length === 0) {
-        console.log('fetchRecPhotos: no data received');
+        console.log('fetchRecPhotos: rec array is empty');
         return false;
       }
       // NOTE: currently server returns an array, not JSON
@@ -149,7 +149,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
         registerPhotoState(aPhoto.id);
       }
     }
-    console.log('loaded qty:', photoArray.length);
+    console.log('usr photo loaded qty:', photoArray.length);
     return photoArray;
   }
 
@@ -164,7 +164,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
       userObj.recPhotos.sort( function() { return 0.5 - Math.random(); } );
       var aPhoto = userObj.recPhotos[i];
       if (aPhoto === undefined){
-        console.log('getRecPhotosFrom: no more user photos to load');
+        console.log('getRecPhotosFrom: no more rec photos to load');
         // TODO: maybe emit an event for frontend
         outputQty = 0;
       } else if (isPhotoAlreadyLoaded(aPhoto.id)){
@@ -174,7 +174,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
         registerPhotoState(aPhoto.id);
       }
     }
-    console.log('loaded qty:', photoArray.length);
+    console.log('rec photos loaded qty:', photoArray.length);
     return photoArray;
   }
 
