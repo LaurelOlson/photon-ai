@@ -76,7 +76,7 @@ module.exports = function(app, passport, raccoon) {
     models.photo.findById(id).then(function(photo) {
       models.user.findById(req.user.id).then(function(user) {
         user.addLike(photo);
-        raccoon.liked(req.user.id, photo.id, function() {});
+        raccoon.liked(req.user.id, photo.id, function() { res.json('success') });
       });
     });
   });
@@ -87,7 +87,7 @@ module.exports = function(app, passport, raccoon) {
     models.photo.findById(id).then(function(photo) {
       models.user.findById(req.user.id).then(function(user) {
         user.removeLike(photo);
-        raccoon.disliked(req.user.id, id, function() {});
+        raccoon.disliked(req.user.id, id, function() { res.json('success') });
       });
     });
   });
