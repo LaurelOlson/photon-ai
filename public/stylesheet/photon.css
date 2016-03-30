@@ -129,12 +129,10 @@ menu.pMenu {
     background: rgba(31, 200, 219, 0.3);
     height: 100%;
     width: 100%; }
-    .photonRec .overlay .overlayText {
+    .photonRec .overlay .button {
       position: absolute;
       top: 5px;
-      left: 5px;
-      color: blue;
-      font-size: 2em; }
+      left: 5px; }
 
 .layer-neg-3 {
   z-index: -3; }

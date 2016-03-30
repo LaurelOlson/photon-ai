@@ -216,12 +216,10 @@ menu.pMenu {
     background: rgba(31, 200, 219, 0.3);
     height: 100%;
     width: 100%;
-    .overlayText {
+    .button {
       position: absolute;
       top: 5px;
       left: 5px;
-      color: blue;
-      font-size: 2em;
     }
   }
 }
