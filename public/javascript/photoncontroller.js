@@ -75,12 +75,23 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     var payload = {
       photo: photoID
     };
-    // communicate with server
-    $.post(serverURL + 'likedphotos/' + photoID, payload, function(data, status, xhr){
-      // this function only runs on success as per $docs
-      // on success, pass back to view
+    // // communicate with server NOTE version 1
+    // $.post(serverURL + 'likedphotos/' + photoID, payload, function(data, status, xhr){
+    //   // this function only runs on success as per $docs
+    //   // on success, pass back to view
+    //   console.log(status);
+    //   pubsub.emit('recRegistered', $btn);
+    // });
+    // communicate with server NOTE version 2
+    $.ajax({
+      url: serverURL + 'likedphotos/' + photoID,
+      method: 'POST'
+    }).done(function(data, status, xhr){
+        console.log(status);
+        pubsub.emit('recRegistered', $btn);
+    }).fail(function(xhr, status, error){
       console.log(status);
-      pubsub.emit('recRegistered', $btn);
+      console.log(error);
     });
   });
 

@@ -203,6 +203,9 @@ Photon.view = (function(pubsub){
     if (document.getElementById("loginBtn")) {
       pubsub.emit('noUserLoggedIn', null);
       console.log('Photon.view:424: needs to build search disable');
+      $searchGroup.hide();
+      $statsLiked.hide();
+      $statsDiscovered.hide();
     }
 
     //////////////////////////////////////////////////////////
