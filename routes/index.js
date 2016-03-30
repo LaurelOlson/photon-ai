@@ -71,7 +71,7 @@ module.exports = function(app, passport, raccoon) {
   });
 
   /* POST new liked photo (from web app) */
-  app.post('/likedphotos', function(req, res) {
+  app.post('/likedphotos/:id', function(req, res) {
     var id = req.body.photo_id;
     models.photo.findById(id).then(function(photo) {
       photo.addLiker(req.user);
