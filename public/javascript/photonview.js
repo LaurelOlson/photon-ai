@@ -162,8 +162,8 @@ Photon.view = (function(pubsub){
     $menuToggleBtn = $('#menuToggleBtn'),
     $searchBtn = $('#searchBtn'),
     $statsLiked = $('#statsLiked'),
-    $statsDiscovered = $('statsDiscovered'),
-    $statsTotal = $('statsTotal'),
+    $statsDiscovered = $('#statsDiscovered'),
+    $statsDisplaying = $('#statsDisplaying'),
     $window = $(window);
     var nestOptions = {
       minWidth: calcNestColWidth(),
@@ -211,10 +211,14 @@ Photon.view = (function(pubsub){
     pubsub.on('userPhotosFetched', function(qty){
       updateNavStats($statsLiked, qty);
     });
-    // NOTE: template for discovered(recommended) and database total
-    // pubsub.on('userPhotosFetched', function(qty){
-    //   updateNavStats($statsDiscovered, qty);
-    // });
+    pubsub.on('recPhotosFetched', function(qty){
+      updateNavStats($statsDiscovered, 0); //initialise for this session
+    });
+    pubsub.on('recRegistered', function(){
+      var current = +$statsDiscovered.find('.title').text();
+      var newVal = current + 1;
+      updateNavStats($statsDiscovered, newVal); //initialise for this session
+    });
     pubsub.on('nukePhotosFromView', function(commandOrArr){
       switch (typeof(commandOrArr)) {
       case 'string':
@@ -236,6 +240,18 @@ Photon.view = (function(pubsub){
     function updateNavStats($target, qty){
       $target.children('.title').text(qty);
     }
+
+    pubsub.on('renderImgsToPage', function(photosObj){
+      var currentVal = $nestContainer.children('.nestBox').length;
+      updateNavStats($statsDisplaying, currentVal);
+    });
+
+    pubsub.on('allPhotosNuked', function(boolean){
+      if (boolean){
+        updateNavStats($statsDisplaying, 0);
+      }
+    });
+
 
     //////////////////////////////////////////////////////////
     // buttons during development
@@ -300,7 +316,10 @@ Photon.view = (function(pubsub){
     function nukeAllPhotos(){
       $nestContainer.children().remove();
       $nestContainer.nested('refresh', nestOptions);
+      pubsub.emit('allPhotosNuked', true);
     }
+
+    // TODO
     function nukeSelectedPhotos(arrayOfURLs){
 
     }

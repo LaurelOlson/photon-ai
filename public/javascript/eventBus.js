@@ -14,6 +14,7 @@
   // 'recPhotosFetched', qty
   // 'searchRequested', string
   // 'nukePhotosFromView', ('all', or array of photo URLs to delete)
+  // 'allPhotosNuked', true
   // 'recBtnClicked', $btn
   // 'recRegistered', $btn
 
