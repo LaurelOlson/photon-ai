@@ -14,6 +14,8 @@
   // 'recPhotosFetched', qty
   // 'searchRequested', string
   // 'nukePhotosFromView', ('all', or array of photo URLs to delete)
+  // 'recBtnClicked', $btn
+  // 'recRegistered', $btn
 
 if (!window.Photon) {
   window.Photon = {};

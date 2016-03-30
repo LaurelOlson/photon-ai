@@ -39,11 +39,13 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   //////////////////////////////////////////////////////////
   // from view (API via pubsub)
-  pubsub.on('imagesRequested', function(direction){
+  pubsub.on('photosRequested', function(direction){
     var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender);
+    sendPhotosToView(somePhotos, direction);
+  });
+  pubsub.on('recPhotosRequested', function(direction){
     var someRecPhotos = getRecPhotosFrom(currentUser, photoQtyPerRender);
-    var photoBundle = somePhotos.concat(someRecPhotos);
-    sendPhotosToView(photoBundle, direction);
+    sendPhotosToView(someRecPhotos, direction);
   });
 
   pubsub.on('userLoggedIn', function(){
@@ -64,8 +66,29 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     sendPhotosToView(foundPhotos, 'prepend');
   });
 
+  pubsub.on('recBtnClicked', function($btn){
+    var photoID = $btn.closest('.photonRec').data('id');
+    var payload = {
+      photo: photoID
+    };
+    // communicate with server
+    $.post(serverURL + 'likedphotos/' + photoID, payload, function(data, status, xhr){
+      // this function only runs on success as per $docs
+      // on success, pass back to view
+      console.log(status);
+      pubsub.emit('recRegistered', $btn);
+    });
+  });
+
+
+
+  //////////////////////////////////////////////////////////
+  // auto loading images upon photo fetch, which is automatic upon user login
   pubsub.on('userPhotosFetched', function(){
-    pubsub.emit('imagesRequested', 'append');
+    pubsub.emit('photosRequested', 'append');
+  });
+  pubsub.on('recPhotosFetched', function(){
+    pubsub.emit('recPhotosRequested', 'append');
   });
   // USER CONTROLLER ///////////////////////////////////////
 

@@ -257,10 +257,10 @@ Photon.view = (function(pubsub){
       renderNestImages(samplePhotosObj, $nestContainer);
     });
     $('#imgPrepend').on('click', function(){
-      pubsub.emit('imagesRequested', 'prepend');
+      pubsub.emit('photosRequested', 'prepend');
     });
     $('#imgAppend').on('click', function(){
-      pubsub.emit('imagesRequested', 'append');
+      pubsub.emit('photosRequested', 'append');
     });
 
 
@@ -324,12 +324,24 @@ Photon.view = (function(pubsub){
     // recommended photos manipulation
     $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
       var $payload = $('<div>').addClass('overlay');
-      var $payloadHorse = $('<button>').addClass('button is-warning').text('add to my photos');
+      var $payloadHorse = $('<button>').addClass('button is-warning').text('add to my collection');
       $payload.append($payloadHorse);
       $(this).append($payload);
     });
+
     $nestContainer.on('mouseleave', '.photonRec', function(leaveEvt){
       $(this).find('.overlay').remove();
+    });
+
+    $nestContainer.on('click', '.button', function(evt){
+      evt.stopPropagation();
+      $btn = $(this);
+      pubsub.emit('recBtnClicked', $btn); // controller subs
+    });
+
+    pubsub.on('recRegistered', function($btn){
+      $btn.removeClass('is-warning').addClass('is-success').text('added to collection');
+      $btn.prop('disabled', true);
     });
 
     //////////////////////////////////////////////////////////
