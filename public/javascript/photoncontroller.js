@@ -41,7 +41,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   // from view (API via pubsub)
   pubsub.on('imagesRequested', function(direction){
     var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender);
-    sendPhotosToView(somePhotos, direction);
+    var someRecPhotos = getRecPhotosFrom(currentUser, photoQtyPerRender);
+    var photoBundle = somePhotos.concat(someRecPhotos);
+    sendPhotosToView(photoBundle, direction);
   });
 
   pubsub.on('userLoggedIn', function(){
@@ -107,6 +109,10 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     });
     $.getJSON(serverURL + 'photos/recommended')
     .done(function(data){
+      if (data.length === 0) {
+        console.log('fetchRecPhotos: no data received');
+        return false;
+      }
       // NOTE: currently server returns an array, not JSON
       var photonImgs = [];
       data.forEach(function(ele, i, arr){
@@ -134,6 +140,31 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
       var aPhoto = userObj.photos[i];
       if (aPhoto === undefined){
         console.log('getPhotosFrom: no more user photos to load');
+        // TODO: maybe emit an event for frontend
+        outputQty = 0;
+      } else if (isPhotoAlreadyLoaded(aPhoto.id)){
+        outputQty++;
+      } else {
+        photoArray.push(aPhoto);
+        registerPhotoState(aPhoto.id);
+      }
+    }
+    console.log('loaded qty:', photoArray.length);
+    return photoArray;
+  }
+
+  //////////////////////////////////////////////////////////
+  // load recommended user photos from user
+  function getRecPhotosFrom(userObj, qty){
+    var outputQty = qty;
+    var photoArray = [];
+    for (var i = 0; i < outputQty; i++){
+      // shuffles array to get random photos each time
+      // http://stackoverflow.com/questions/7158654/how-to-get-random-elements-from-an-array
+      userObj.recPhotos.sort( function() { return 0.5 - Math.random(); } );
+      var aPhoto = userObj.recPhotos[i];
+      if (aPhoto === undefined){
+        console.log('getRecPhotosFrom: no more user photos to load');
         // TODO: maybe emit an event for frontend
         outputQty = 0;
       } else if (isPhotoAlreadyLoaded(aPhoto.id)){

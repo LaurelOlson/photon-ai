@@ -22,5 +22,7 @@ Photon.User.prototype.setPhotos = function(photoArray){
 //   return this.recommendedPhotos;
 // };
 Photon.User.prototype.setRecPhotos = function(photoArray){
+  console.log('rec photos was qty:', this.recPhotos.length);
   this.recPhotos = photoArray;
+  console.log('rec photos now has qty:', this.recPhotos.length);
 };
