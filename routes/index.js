@@ -20,7 +20,8 @@ module.exports = function(app, passport, raccoon) {
   /* GET recommended photos */
   app.get('/photos/recommended', isLoggedIn, function(req, res) {
     var id = req.user.id;
-    raccoon.recommendFor(id, '2', function(results) {
+    raccoon.recommendFor(id, 5, function(results) {
+      console.log(results);
       models.photo.findAll({ where: { id: { in: results }}}).then(addPhotos).then(function(user_photos) {
         res.json(user_photos);
       });
@@ -63,7 +64,7 @@ module.exports = function(app, passport, raccoon) {
       models.user.findById(req.body.user_id).then(function(user) {
         user.addLike(photo);
         user.addAdd(photo);
-        raccoon.liked(user.id, photo.id, function() {});
+        raccoon.liked(user.id, photo.id, function() { console.log('======================= ADDED TO RACCOON LIKES ==============')});
       });
       res.json(photo.url);
     });
