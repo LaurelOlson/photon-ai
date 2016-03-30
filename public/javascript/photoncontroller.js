@@ -234,14 +234,17 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   function tagSearch(termsArr){
     var matchedPhotos = [];
     currentUser.photos.forEach(function(ele, i, arr){
-      var haystack = ele.tags.join('');
-      for (var j = 0; j < termsArr.length; j++){
-        var needle = termsArr[j];
+      var haystack = termsArr.join('').toLowerCase();
+      var searchTerms = ele.tags.concat(ele.landmarks);
+      for (var j = 0; j < searchTerms.length; j++){
+        var needle = searchTerms[j].toLowerCase();
         if (fuzzySearch(needle, haystack)) {
           matchedPhotos.push(ele);
           break;
         }
       }
+
+
     });
     return matchedPhotos;
   }
