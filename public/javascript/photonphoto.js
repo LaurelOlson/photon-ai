@@ -7,9 +7,8 @@ Photon.Photo = function(imgObj){
   // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
   var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x4000/';
   if (!imgObj.tags.length){
-    console.log('Photo model: has no tags:', imgObj);
+    console.log('Photo: has no tags:', imgObj);
   }
-  console.log(imgObj.tags);
   var imgID = imgObj.id;
   var imgURL = imgObj.url;
   var imgSmallURL = imgObj.smallurl || null;
@@ -45,10 +44,10 @@ Photon.Photo = function(imgObj){
           allLandmarks.push(ele.name);
           break;
         case 'people':
-          allPeople.push(ele.name);
+          // TODO: build
           break;
         case 'safesearch':
-          allSafeSearch.push(ele.name);
+          // TODO: build
           break;
       }
     });
@@ -89,3 +88,17 @@ Photon.Photo = function(imgObj){
 //     });
 //   }
 // };
+
+// except from google vision:
+// "joyLikelihood": "VERY_LIKELY",
+// "sorrowLikelihood": "VERY_UNLIKELY",
+// "angerLikelihood": "VERY_UNLIKELY",
+// "surpriseLikelihood": "VERY_UNLIKELY",
+// "underExposedLikelihood": "VERY_UNLIKELY",
+// "blurredLikelihood": "VERY_UNLIKELY",
+// "headwearLikelihood": "VERY_UNLIKELY"
+//
+// "adult": "VERY_UNLIKELY",
+// "spoof": "VERY_UNLIKELY",
+// "medical": "VERY_UNLIKELY",
+// "violence": "UNLIKELY"

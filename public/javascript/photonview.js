@@ -210,6 +210,21 @@ Photon.view = (function(pubsub){
     // pubsub.on('userPhotosFetched', function(qty){
     //   updateNavStats($statsDiscovered, qty);
     // });
+    pubsub.on('nukePhotosFromView', function(commandOrArr){
+      switch (typeof(commandOrArr)) {
+      case 'string':
+        if (commandOrArr === 'all') {
+          nukeAllPhotos();
+        }
+        break;
+      case 'object':
+        nukeSelectedPhotos(commandOrArr);
+        break;
+      default:
+        console.log('view: nuke listener switch: invalid command or array');
+        break;
+      }
+    });
 
     //////////////////////////////////////////////////////////
     // navbar stats
@@ -228,8 +243,7 @@ Photon.view = (function(pubsub){
       $nestContainer.append(boxes).nested('append',boxes);
     });
     $('#nestNuke').click(function(){
-      $nestContainer.children().remove();
-      $nestContainer.nested('refresh', nestOptions);
+      nukeAllPhotos();
     });
     $('#testPrepend').on('click', function(){
       renderNestImages(samplePhotosObj, $nestContainer, 'prepend');
@@ -277,6 +291,16 @@ Photon.view = (function(pubsub){
     $nestContainer.nested(nestOptions);
 
     //////////////////////////////////////////////////////////
+    // removal of photos
+    function nukeAllPhotos(){
+      $nestContainer.children().remove();
+      $nestContainer.nested('refresh', nestOptions);
+    }
+    function nukeSelectedPhotos(arrayOfURLs){
+
+    }
+
+    //////////////////////////////////////////////////////////
     // login pop up
     $modalBackgrounds.on('click', function(){ // reusable for all modal-backgrounds
       $modals.removeClass('is-active');
@@ -320,7 +344,6 @@ Photon.view = (function(pubsub){
       pubsub.emit('searchRequested', text);
       $inputBox.val('');
     });
-
 
     //////////////////////////////////////////////////////////
     // NOTE: this is work in progress and doesn't work!!! NOTE!
