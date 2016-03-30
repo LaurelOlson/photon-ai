@@ -9,7 +9,7 @@ var fs = require('fs');
 var request = require('request');
 var secret_stuff = require('../secret_stuff/secret_stuff.js');
 
-module.exports = function(app, passport) {
+module.exports = function(app, passport, raccoon) {
 
   app.get('/', function(req, res) {
     res.render('index.ejs', { message: req.flash('loginMessage'), loggedIn: req.isAuthenticated() });
@@ -17,10 +17,26 @@ module.exports = function(app, passport) {
 
   // PHOTO STUFF
 
-  /* GET random photos */
-  // app.get('/photos', isLoggedOut, function(req, res, next) {
+  /* GET recommended photos */
+  app.get('/photos/recommended', isLoggedIn, function(req, res) {
+    var id = req.user.id;
+    raccoon.recommendFor(id, '2', function(results) {
+      models.photo.findAll({ where: { id: { in: results }}}).then(addPhotos).then(function(user_photos) {
+        res.json(user_photos);
+      });
+    });
+  });
 
-  // })
+  /* GET random photos */
+  app.get('/photos/top_rated', function(req, res, next) {
+    raccoon.bestRated(function(results) {
+      models.photo.findAll({ where: { id: { in: results } } })
+        .then(addPhotos)
+          .then(function(user_photos) {
+            res.json(user_photos);
+          });
+    });
+  });
 
   /* GET user photos */
   app.get('/photos', isLoggedIn, function(req, res, next) {
@@ -47,6 +63,7 @@ module.exports = function(app, passport) {
       models.user.findById(req.body.user_id).then(function(user) {
         user.addLike(photo);
         user.addAdd(photo);
+        raccoon.liked(user.id, photo.id, function() {});
       });
       res.json(photo.url);
     });
@@ -57,6 +74,7 @@ module.exports = function(app, passport) {
     var id = req.body.photo_id;
     models.photo.findById(id).then(function(photo) {
       photo.addLiker(req.user);
+      raccoon.liked(req.user.id, photo.id, function() {});
     });
   });
 
@@ -92,11 +110,11 @@ module.exports = function(app, passport) {
   }));
 
   // facebook login extension
-  // app.post('/login/ext', function(req, res) {
-  //   models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user, created) {
-  //     res.json(user.id);
-  //   });
-  // });
+  app.post('/login/ext/facebook', function(req, res) {
+    models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user, created) {
+      res.json(user.id);
+    });
+  });
 
   app.get('/login/ext', function(req, res) {
     res.json(req.user.id);
