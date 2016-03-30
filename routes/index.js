@@ -84,6 +84,7 @@ module.exports = function(app, passport, raccoon) {
     var id = req.params.id;
     models.photo.findById(id).then(function(photo) {
       photo.removeLiker(req.user);
+      raccoon.disliked(req.user.id, id, function() {});
     });
   });
 
