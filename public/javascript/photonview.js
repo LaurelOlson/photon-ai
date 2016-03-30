@@ -76,6 +76,14 @@ Photon.view = (function(pubsub){
     return output;
   }
 
+  function addUnlikeButton($target){
+    var $payload = $('<div>').addClass('overlay');
+    var $payloadHorse = $('<button>').addClass('button is-small is-outlined').text('unlike');
+    $payload.append($payloadHorse);
+    $target.append($payload);
+    return $target;
+  }
+
   function convertImgToNest(imgObj){
     var gridSpec = gridFitter(imgObj.width, imgObj.height);
     if (!gridSpec) {
@@ -85,9 +93,12 @@ Photon.view = (function(pubsub){
     var styleStr = 'background:url(' + smallerLink + ') no-repeat center center;' + gridSpec.css;
     var landmarkStr = imgObj.landmarks;
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
+    // var nestClass = 'size32';
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
     if (imgObj.isRec){
       $imgElement.addClass('photonRec');
+    } else {
+      $imgElement.addClass('photonLiked');
     }
     $imgElement.attr('style', styleStr);
     $imgElement.attr('data-id', imgObj.id);
@@ -96,7 +107,7 @@ Photon.view = (function(pubsub){
     $imgElement.attr('data-people', imgObj.people);
     $imgElement.attr('data-safesearch', imgObj.safesearch);
     $imgElement.attr('data-large-url', imgObj.url);
-    return $imgElement;
+    return addUnlikeButton($imgElement);
   }
 
   function renderNestImages(imagesObj, $target, direction){
@@ -187,7 +198,7 @@ Photon.view = (function(pubsub){
     function calcNestColWidth(){
       var windowWidth = $window.width();
       if (windowWidth > 960) {
-        return windowWidth / 10;
+        return windowWidth / 14;
       } else if (windowWidth < 768) {
         return windowWidth / 4;
       } else {
@@ -377,8 +388,17 @@ Photon.view = (function(pubsub){
       $btn.removeClass('is-warning').removeClass('is-loading').addClass('is-success').text('added to collection');
       $btn.prop('disabled', true);
       setTimeout(function(){
-        $btn.closest('.photonRec').removeClass('photonRec');
+        var $newLiked = $btn.closest('.photonRec').removeClass('photonRec').addClass('photonLiked');
+        addUnlikeButton($newLiked);
       }, 800);
+    });
+
+    //////////////////////////////////////////////////////////
+    // photo unliking
+    $nestContainer.on('mouseenter', ".nestBox:not('.photonRec')", function(evt){
+    });
+
+    $nestContainer.on('mouseleave', ".nestBox:not('.photonRec')", function(evt){
     });
 
     //////////////////////////////////////////////////////////

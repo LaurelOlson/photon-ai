@@ -33,7 +33,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // config important variables
   var serverURL = '/';
-  var photoQtyPerRender = 12;
+  var photoQtyPerRender = 96;
   var currentUser = null;
   // EVENT LISTENERS ///////////////////////////////////////
 
@@ -173,7 +173,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
         photonImgs.push(new Photo(ele));
       });
       photonImgs.sort( function() { return 0.5 - Math.random(); } );
-      var payload = photonImgs.slice(0, photoQtyPerRender * 2);
+      var payload = photonImgs.slice(0, photoQtyPerRender);
       sendPhotosToView(payload, 'append');
     })
     .fail(function(xhr, status, error){
