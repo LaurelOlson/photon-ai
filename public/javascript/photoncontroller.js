@@ -33,7 +33,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // config important variables
   var serverURL = '/';
-  var photoQtyPerRender = 4;
+  var photoQtyPerRender = 12;
   var currentUser = null;
   // EVENT LISTENERS ///////////////////////////////////////
 
@@ -51,6 +51,10 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   pubsub.on('userLoggedIn', function(){
     currentUser = new User();
     fetchPhotosFor(currentUser);
+  });
+
+  pubsub.on('noUserLoggedIn', function(){
+    fetchShowTopPhotos();
   });
 
   pubsub.on('searchRequested', function(query){
@@ -149,7 +153,22 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     });
   }
 
-  function fetchRandPhotos(){} // TODO
+  function fetchShowTopPhotos(){
+    $.getJSON(serverURL + 'photos/top_rated')
+    .done(function(data){
+      // NOTE: currently server returns an array, not JSON
+      var photonImgs = [];
+      data.forEach(function(ele, i, arr){
+        photonImgs.push(new Photo(ele));
+      });
+      photonImgs.sort( function() { return 0.5 - Math.random(); } );
+      var payload = photonImgs.slice(0, photoQtyPerRender * 2);
+      sendPhotosToView(payload, 'append');
+    })
+    .fail(function(xhr, status, error){
+      console.log(status, error);
+    });
+  }
 
   //////////////////////////////////////////////////////////
   // load user photos from user

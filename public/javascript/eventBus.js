@@ -10,6 +10,7 @@
   // 'tap'
   // 'renderImgsToPage', photoObject (.photos, .direction)
   // 'userLoggedIn', null
+  // 'noUserLoggedIn', null
   // 'userPhotosFetched', qty
   // 'recPhotosFetched', qty
   // 'searchRequested', string
