@@ -229,22 +229,21 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     return str.match(/\w+/g); //any alphaNumChar
   }
 
-  //////////////////////////////////////////////////////////
-  // search against current user's photos
   function tagSearch(termsArr){
     var matchedPhotos = [];
     currentUser.photos.forEach(function(ele, i, arr){
-      var haystack = termsArr.join('').toLowerCase();
-      var searchTerms = ele.tags.concat(ele.landmarks);
-      for (var j = 0; j < searchTerms.length; j++){
-        var needle = searchTerms[j].toLowerCase();
-        if (fuzzySearch(needle, haystack)) {
-          matchedPhotos.push(ele);
-          break;
+      var allLabels = ele.tags.concat(ele.landmarks);
+      for (var j = 0; j < allLabels.length; j++){
+        var haystack = allLabels[j].toLowerCase();
+        for (var k = 0; k < termsArr.length; k++){
+          var needle = termsArr[k].toLowerCase();
+          if (fuzzySearch(needle, haystack)) {
+            matchedPhotos.push(ele);
+            k = Infinity;
+            j = Infinity;
+          }
         }
       }
-
-
     });
     return matchedPhotos;
   }
