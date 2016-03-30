@@ -48,25 +48,23 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     currentUser = new User();
     fetchPhotosFor(currentUser);
   });
+
   pubsub.on('searchRequested', function(query){
-    // sanitise input
     var queryArr = sanitise(query);
-    // find matching photos from user
-      // currentUser.photos.tags is an array
     var foundPhotos = tagSearch(queryArr);
-    // ask view to remove images
     pubsub.emit('nukePhotosFromView', 'all');
-    // on remove, update state logger (pubsub event triggered)
     for (var key in photoStates){
       photoStates[key] = 'removed';
     }
     foundPhotos.forEach(function(ele, i, arr){
       registerPhotoState(ele.id);
     });
-    // render matching images to view
     sendPhotosToView(foundPhotos, 'prepend');
   });
 
+  pubsub.on('userPhotosFetched', function(){
+    pubsub.emit('imagesRequested', 'append');
+  });
   // USER CONTROLLER ///////////////////////////////////////
 
   //////////////////////////////////////////////////////////
@@ -103,11 +101,22 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
       });
       userObj.setPhotos(photonImgs);
       pubsub.emit('userPhotosFetched', userObj.photos.length);
-      return true;
     })
     .fail(function(xhr, status, error){
       console.log(status, error);
-      return false;
+    });
+    $.getJSON(serverURL + 'photos/recommended')
+    .done(function(data){
+      // NOTE: currently server returns an array, not JSON
+      var photonImgs = [];
+      data.forEach(function(ele, i, arr){
+        photonImgs.push(new Photo(ele, true));
+      });
+      userObj.setRecPhotos(photonImgs);
+      pubsub.emit('recPhotosFetched', userObj.recPhotos.length);
+    })
+    .fail(function(xhr, status, error){
+      console.log(status, error);
     });
   }
 
@@ -119,6 +128,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     var outputQty = qty;
     var photoArray = [];
     for (var i = 0; i < outputQty; i++){
+      // shuffles array to get random photos each time
+      // http://stackoverflow.com/questions/7158654/how-to-get-random-elements-from-an-array
+      userObj.photos.sort( function() { return 0.5 - Math.random(); } );
       var aPhoto = userObj.photos[i];
       if (aPhoto === undefined){
         console.log('getPhotosFrom: no more user photos to load');
@@ -233,14 +245,15 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     var matchedPhotos = [];
     currentUser.photos.forEach(function(ele, i, arr){
       var allLabels = ele.tags.concat(ele.landmarks);
+      loop1:
       for (var j = 0; j < allLabels.length; j++){
         var haystack = allLabels[j].toLowerCase();
+        loop2:
         for (var k = 0; k < termsArr.length; k++){
           var needle = termsArr[k].toLowerCase();
           if (fuzzySearch(needle, haystack)) {
             matchedPhotos.push(ele);
-            j = Infinity; // breaks parent loop without setting a flag
-            break;
+            break loop1;
           }
         }
       }

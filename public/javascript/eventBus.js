@@ -11,6 +11,7 @@
   // 'renderImgsToPage', photoObject (.photos, .direction)
   // 'userLoggedIn', null
   // 'userPhotosFetched', qty
+  // 'recPhotosFetched', qty
   // 'searchRequested', string
   // 'nukePhotosFromView', ('all', or array of photo URLs to delete)
 

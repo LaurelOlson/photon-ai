@@ -3,7 +3,7 @@ if (!window.Photon) {
   window.Photon = {};
 }
 
-Photon.Photo = function(imgObj){
+Photon.Photo = function(imgObj, recBoolean){
   // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
   var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x4000/';
   if (!imgObj.tags.length){
@@ -18,6 +18,7 @@ Photon.Photo = function(imgObj){
   var imgSafesearch = null;
   var imgWidth = imgObj.width || null;
   var imgHeight = imgObj.height || null;
+  var imgRec = recBoolean || false;
   // below is exporting of private vars
   this.id = imgID;
   this.url = imgURL;
@@ -61,6 +62,7 @@ Photon.Photo = function(imgObj){
   this.landmarks = imgLandmarks;
   this.people = imgPeople;
   this.safesearch = imgSafesearch;
+  this.isRec = imgRec;
 };
 
 // NOTE: this is not needed for production

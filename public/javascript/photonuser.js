@@ -4,10 +4,10 @@ if (!window.Photon) {
 }
 Photon.User = function(){
   var photos = [];
-  var recommendedPhotos = [];
+  var recPhotos = [];
   // below is exporting of private vars
   this.photos = photos;
-  this.recommendedPhotos = recommendedPhotos;
+  this.recPhotos = recPhotos;
 };
 
 // Photon.User.prototype.getPhotos = function(){
@@ -22,5 +22,5 @@ Photon.User.prototype.setPhotos = function(photoArray){
 //   return this.recommendedPhotos;
 // };
 Photon.User.prototype.setRecPhotos = function(photoArray){
-  this.recommendedPhotos = photoArray;
+  this.recPhotos = photoArray;
 };
