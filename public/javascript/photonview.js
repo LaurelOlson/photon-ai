@@ -160,7 +160,9 @@ Photon.view = (function(pubsub){
     $menuBar = $('menu'),
     $menuToggle = $('.pMenuToggle'),
     $menuToggleBtn = $('#menuToggleBtn'),
-    $searchBtn = $('#searchBtn'),
+    $searchGroup = $('#searchGroup'),
+    $searchInput = $searchGroup.find('input.input'),
+    $searchBtn = $searchGroup.find('.button'),
     $statsLiked = $('#statsLiked'),
     $statsDiscovered = $('#statsDiscovered'),
     $statsDisplaying = $('#statsDisplaying'),
@@ -200,6 +202,7 @@ Photon.view = (function(pubsub){
     }
     if (document.getElementById("loginBtn")) {
       pubsub.emit('noUserLoggedIn', null);
+      console.log('Photon.view:424: needs to build search disable');
     }
 
     //////////////////////////////////////////////////////////
@@ -397,11 +400,31 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // search
-    $searchBtn.on('click', function(){
-      var $inputBox = $searchBtn.closest('p.control').find('input.input');
-      var text = $inputBox.val();
+    function fireSearchRequest(){
+      var text = $searchInput.val();
+      console.log(text);
       pubsub.emit('searchRequested', text);
-      $inputBox.val('');
+      $searchInput.val('');
+    }
+
+    $searchBtn.on('click', function(){
+      fireSearchRequest();
+    });
+
+    $searchInput.on('keypress', function(evt){
+      if (evt.keyCode == 13){
+        fireSearchRequest();
+      }
+    });
+
+    $searchInput.on('blur', function(evt){
+      fireSearchRequest();
+    });
+
+    // NOTE: not disabling. Prevent search for non users
+    pubsub.on('noUserLoggedIn', function(){
+      $searchInput.prop('disabled', true);
+      $searchBtn.prop('disabled', true);
     });
 
     //////////////////////////////////////////////////////////
