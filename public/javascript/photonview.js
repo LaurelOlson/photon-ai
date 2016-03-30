@@ -76,7 +76,7 @@ Photon.view = (function(pubsub){
     return output;
   }
 
-  function convertImgToNest (imgObj){
+  function convertImgToNest(imgObj){
     var gridSpec = gridFitter(imgObj.width, imgObj.height);
     if (!gridSpec) {
       return null;
@@ -86,7 +86,11 @@ Photon.view = (function(pubsub){
     var landmarkStr = imgObj.landmarks;
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
+    if (imgObj.isRec){
+      $imgElement.addClass('photonRec');
+    }
     $imgElement.attr('style', styleStr);
+    $imgElement.attr('data-id', imgObj.id);
     $imgElement.attr('data-tags', imgObj.tags);
     $imgElement.attr('data-landmarks', imgObj.landmarks);
     $imgElement.attr('data-people', imgObj.people);
@@ -107,7 +111,8 @@ Photon.view = (function(pubsub){
     }
   }
 
-  function renderNestSingleImage(imgObj, $target, direction){
+  function renderNestSingleImage(imgObj, direction){
+    var $target = $('#nestContainer');
     var imgArr = [];
     imgArr.push(convertImgToNest(imgObj));
     if (direction == 'prepend') {
@@ -313,6 +318,18 @@ Photon.view = (function(pubsub){
     });
     $loginBox.on('click', 'button', function(){
       $(this).addClass('is-loading');
+    });
+
+    //////////////////////////////////////////////////////////
+    // recommended photos manipulation
+    $nestContainer.one('mouseenter', '.photonRec', function(enterEvt){
+      var $payload = $('<div>').addClass('overlay');
+      var $payloadHorse = $('<button>').addClass('button is-warning').text('add to my photos');
+      $payload.append($payloadHorse);
+      $(this).append($payload);
+    });
+    $nestContainer.on('mouseleave', '.photonRec', function(leaveEvt){
+      // $(this).find('.overlay').remove();
     });
 
     //////////////////////////////////////////////////////////

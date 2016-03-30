@@ -1,20 +1,6 @@
 
 //////////////////////////////////////////////////////////
 // sample data objects for testing, can delete when deploy
-var sampleUser = {
-  email: 'user@example.com'
-};
-
-var sampleUserObjExt = {
-  id: 14,
-  name: 'Laurel',
-  photos: [
-    {
-      "id":252,"width":4592,"height":3448,"url":"https://images.unsplash.com/photo-1434077471918-4ea96e6e45d5","tags":[{"name":"sky","type":"label"},{"name":"cloud","type":"label"}]
-    },
-  ]
-};
-
 var sampleUserObj = {
   id: 9,
   name: 'Jason',
@@ -130,7 +116,8 @@ var samplePhotoObjExt = {
   smallURL: 'http://104.131.96.71/unsafe/fit-in/800x4000/images.unsplash.com/photo-1449177009399-be6867ef0505',
   width: 5616,
   height: 3744,
-  tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
+  tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6'],
+  isRec: true
 };
 
 var samplePhotoObjExtNoWidth = {

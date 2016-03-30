@@ -122,6 +122,20 @@ menu.pMenu {
     #popupBox .modal-content .image-custom img {
       max-height: 85vh; }
 
+.photonRec {
+  opacity: 0.7; }
+  .photonRec .overlay {
+    position: relative;
+    background: rgba(31, 200, 219, 0.3);
+    height: 100%;
+    width: 100%; }
+    .photonRec .overlay .overlayText {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      color: blue;
+      font-size: 2em; }
+
 .layer-neg-3 {
   z-index: -3; }
 
