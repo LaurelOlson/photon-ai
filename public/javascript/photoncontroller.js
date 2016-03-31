@@ -154,6 +154,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
       .done(function(data){
         if (data.length === 0) {
           console.log('fetchRecPhotos: rec array is empty');
+          pubsub.emit('userPhotosFetched', (userObj.photos.length + userObj.recPhotos.length));
           return false;
         }
         // NOTE: currently server returns an array, not JSON
