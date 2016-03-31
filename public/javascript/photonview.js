@@ -346,6 +346,13 @@ Photon.view = (function(pubsub){
       $modals.removeClass('is-active');
     });
 
+    $(document).on('keydown', function(evt){
+      if (evt.keyCode == 27){
+        $modals.removeClass('is-active');
+      }
+    });
+
+
     $loginBtn.on('click', function(){
       $loginBox.addClass('is-active');
     });
