@@ -294,11 +294,6 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // toggle entire page menu slide
-    $menuToggleBtn.on('click', menuUnhide);
-    $menuToggle.on('click', menuHide);
-    pubsub.on('rightSwipe', menuUnhide);
-    pubsub.on('leftSwipe', menuHide);
-
     var menuUnhide = function(){
       if ($loginBox.hasClass('is-active') || $popupBox.hasClass('is-active')){
         return;
@@ -313,6 +308,11 @@ Photon.view = (function(pubsub){
       $menuBar.removeClass('is-active');
       $menuToggle.removeClass('is-active');
     };
+
+    $menuToggleBtn.on('click', menuUnhide);
+    $menuToggle.on('click', menuHide);
+    pubsub.on('rightSwipe', menuUnhide);
+    pubsub.on('leftSwipe', menuHide);
 
     //////////////////////////////////////////////////////////
     // sidebar functions
