@@ -60,7 +60,9 @@ module.exports = function(app, passport, raccoon) {
       height: req.body.height,
       width: req.body.width
     }}).spread(function(photo, created) {
-      seedTag(photo);
+      if (created) {
+        seedTag(photo);
+      }
       models.user.findById(req.body.user_id).then(function(user) {
         user.addLike(photo);
         user.addAdd(photo);
