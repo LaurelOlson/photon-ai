@@ -133,16 +133,19 @@ menu.pMenu {
     .photonRec .overlay .button {
       position: absolute;
       top: 5px;
-      left: 5px; }
+      right: 5px; }
 
 .photonLiked .overlay {
   position: relative;
   height: 100%;
   width: 100%; }
   .photonLiked .overlay .button {
+    opacity: 0.3;
     position: absolute;
     top: 5px;
     right: 5px; }
+    .photonLiked .overlay .button:hover {
+      opacity: 1; }
 
 .layer-neg-3 {
   z-index: -3; }

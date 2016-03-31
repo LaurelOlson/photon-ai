@@ -50,10 +50,12 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   pubsub.on('userLoggedIn', function(){
     currentUser = new User();
+    sessionStorage.setItem('loggedIn', 'true');
     fetchPhotosFor(currentUser);
   });
 
   pubsub.on('noUserLoggedIn', function(){
+    sessionStorage.setItem('loggedIn', 'false');
     fetchShowTopPhotos();
   });
 
@@ -75,20 +77,29 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     var payload = {
       photo: photoID
     };
-    // // communicate with server NOTE version 1
-    // $.post(serverURL + 'likedphotos/' + photoID, payload, function(data, status, xhr){
-    //   // this function only runs on success as per $docs
-    //   // on success, pass back to view
-    //   console.log(status);
-    //   pubsub.emit('recRegistered', $btn);
-    // });
-    // communicate with server NOTE version 2
     $.ajax({
       url: serverURL + 'likedphotos/' + photoID,
       method: 'POST'
     }).done(function(data, status, xhr){
-        console.log(status);
+        console.log('rec controller:', status);
         pubsub.emit('recRegistered', $btn);
+    }).fail(function(xhr, status, error){
+      console.log(status);
+      console.log(error);
+    });
+  });
+
+  pubsub.on('unlikeBtnClicked', function($btn){
+    var photoID = $btn.closest('.nestBox').data('id');
+    var payload = {
+      photo: photoID
+    };
+    $.ajax({
+      url: serverURL + 'likedphotos/' + photoID,
+      method: 'DELETE'
+    }).done(function(data, status, xhr){
+        console.log('unlike controller:', status);
+        pubsub.emit('unlikeRegistered', $btn);
     }).fail(function(xhr, status, error){
       console.log(status);
       console.log(error);
