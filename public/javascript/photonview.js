@@ -107,7 +107,7 @@ Photon.view = (function(pubsub){
     $imgElement.attr('data-people', imgObj.people);
     $imgElement.attr('data-safesearch', imgObj.safesearch);
     $imgElement.attr('data-large-url', imgObj.url);
-    return addUnlikeButton($imgElement);
+    return $imgElement;
   }
 
   function renderNestImages(imagesObj, $target, direction){
@@ -233,11 +233,6 @@ Photon.view = (function(pubsub){
     pubsub.on('recPhotosFetched', function(qty){
       updateNavStats($statsDiscovered, 0); //initialise for this session
     });
-    pubsub.on('recRegistered', function(){
-      var current = +$statsDiscovered.find('.title').text();
-      var newVal = current + 1;
-      updateNavStats($statsDiscovered, newVal); //initialise for this session
-    });
     pubsub.on('nukePhotosFromView', function(commandOrArr){
       switch (typeof(commandOrArr)) {
       case 'string':
@@ -271,6 +266,23 @@ Photon.view = (function(pubsub){
       }
     });
 
+    pubsub.on('somePhotosNuked', function(qty){
+      var current = +$statsDisplaying.find('.title').text();
+      var newVal = current - qty;
+      updateNavStats($statsDisplaying, newVal);
+    });
+
+    pubsub.on('recRegistered', function(){
+      var current = +$statsDiscovered.find('.title').text();
+      var newVal = current + 1;
+      updateNavStats($statsDiscovered, newVal); //initialise for this session
+    });
+
+    pubsub.on('unlikeRegistered', function(){
+      var current = +$statsLiked.find('.title').text();
+      var newVal = current - 1;
+      updateNavStats($statsLiked, newVal);
+    });
 
     //////////////////////////////////////////////////////////
     // buttons during development
@@ -377,7 +389,8 @@ Photon.view = (function(pubsub){
       $(this).find('.overlay').hide();
     });
 
-    $nestContainer.on('click', '.button', function(evt){
+    // the rec photo is tied to the '.is-warning' class, also makes it yellow
+    $nestContainer.on('click', '.is-warning', function(evt){
       evt.stopPropagation();
       $btn = $(this);
       $btn.addClass('is-loading');
@@ -395,10 +408,42 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // photo unliking
+    $nestContainer.on('mouseenter', '.photonLiked', function(enterEvt){
+      if (sessionStorage.getItem('loggedIn') !== 'true'){
+        return;
+      }
+      if ($(this).children('.overlay').length === 0) {
+        var $payload = $('<div>').addClass('overlay');
+        var $payloadHorse = $('<button>').addClass('button is-small is-outlined').text('unlike');
+        $payload.append($payloadHorse);
+        $(this).append($payload);
+      }
+    });
+
     $nestContainer.on('mouseenter', ".nestBox:not('.photonRec')", function(evt){
+      $(this).find('.overlay').show();
     });
 
     $nestContainer.on('mouseleave', ".nestBox:not('.photonRec')", function(evt){
+      $(this).find('.overlay').hide();
+    });
+
+    // the unlike button is tied to the '.is-small' class
+    $nestContainer.on('click', '.is-small', function(evt){
+      evt.stopPropagation();
+      $btn = $(this);
+      $btn.addClass('is-loading');
+      pubsub.emit('unlikeBtnClicked', $btn); // controller subs
+    });
+
+    pubsub.on('unlikeRegistered', function($btn){
+      $btn.removeClass('is-loading').addClass('is-success').text('unlike');
+      $btn.prop('disabled', true);
+      setTimeout(function(){
+        $btn.closest('.nestBox').remove();
+        pubsub.emit('somePhotosNuked', 1);
+        $nestContainer.nested('refresh', nestOptions);
+      }, 800);
     });
 
     //////////////////////////////////////////////////////////
