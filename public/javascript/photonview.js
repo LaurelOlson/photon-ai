@@ -529,7 +529,7 @@ Photon.view = (function(pubsub){
     $refreshBtn.on('click', function(evt){
       pubsub.emit('nukePhotosFromView', 'all');
       pubsub.emit('photosRequested', 'append');
-      pubsub.emit('recPhotosRequested', 'prepend');
+      // pubsub.emit('recPhotosRequested', 'prepend');
     });
 
 
