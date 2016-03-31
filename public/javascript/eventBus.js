@@ -18,12 +18,9 @@
   // 'somePhotosNuked', qty
   // 'recBtnClicked', $btn
   // 'recRegistered', $btn
-  // 'unlikeBtnClicked', $btn
+  // 'unlikeBtnClicked', photoID
   // 'photosRequested', directionString
 
-  // NOTE: PENDING DELETE
-  // 'userPhotosFetched', qty
-  // 'recPhotosFetched', qty
 
 if (!window.Photon) {
   window.Photon = {};

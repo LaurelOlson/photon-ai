@@ -5,6 +5,10 @@ if (!window.Photon) {
 
 Photon.view = (function(pubsub){
 
+  //////////////////////////////////////////////////////////
+  // GRID HANDLERS /////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+
   var gridDict = {
     // example
     // 0.66: ['23'],
@@ -59,12 +63,9 @@ Photon.view = (function(pubsub){
     return output;
   }
 
-  function addUnlikeButtonTo($target){
-    // target must be the nestBox container div
-    var $payload = $('<button>').addClass('button is-small is-outlined').text('X');
-    $target.find('.overlay').append($payload);
-  }
-
+  //////////////////////////////////////////////////////////
+  // IMAGE CONVERSION //////////////////////////////////////
+  //////////////////////////////////////////////////////////
   function convertImgToNest(imgObj){
     var gridSpec = gridFitter(imgObj.width, imgObj.height);
     if (!gridSpec) {
@@ -73,7 +74,6 @@ Photon.view = (function(pubsub){
     var smallerLink = imgObj.smallURL || imgObj.url;
     var styleStr = 'background:url(' + smallerLink + ') no-repeat center center;' + gridSpec.css;
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
-    // var nestClass = 'size32';
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
     if (imgObj.type === 'rec'){
       $imgElement.addClass('photonRec');
@@ -89,10 +89,37 @@ Photon.view = (function(pubsub){
     $imgElement.attr('data-tags', imgObj.tags);
     $imgElement.attr('data-landmarks', imgObj.landmarks);
     $imgElement.attr('data-emotions', imgObj.emotions);
-    // $imgElement.attr('data-safesearch', imgObj.safesearch);
     $imgElement.attr('data-large-url', imgObj.url);
     return $imgElement;
   }
+
+  function addUnlikeButtonTo($target){
+    // target must be the nestBox container div
+    var $payload = $('<button>').addClass('button is-small is-outlined').text('X');
+    $target.find('.overlay').append($payload);
+  }
+
+  function renderTagsTo(dataStr, $target, colour){
+    if (!dataStr){
+      return;
+    }
+    var bulmaColourDict = {
+      'white': '',
+      'blue': 'is-info',
+      'green': 'is-success',
+      'yellow': 'is-warning',
+      'red': 'is-danger',
+      'black': 'is-dark'
+    };
+    var dataArray = dataStr.split(',');
+    dataArray.forEach(function(ele, i, arr){
+      $target.append($('<span>').addClass('tag').addClass(bulmaColourDict[colour]).text(ele));
+    });
+  }
+
+  //////////////////////////////////////////////////////////
+  // IMAGE RENDERING ///////////////////////////////////////
+  //////////////////////////////////////////////////////////
 
   function renderNestImages(imagesObj, $target, direction){
     var imgArr = [];
@@ -117,29 +144,15 @@ Photon.view = (function(pubsub){
     }
   }
 
-  function renderTagsTo(dataStr, $target, colour){
-    if (!dataStr){
-      return;
-    }
-    var colourDict = {
-      'white': '',
-      'blue': 'is-info',
-      'green': 'is-success',
-      'yellow': 'is-warning',
-      'red': 'is-danger',
-      'black': 'is-dark'
-    };
-    var dataArray = dataStr.split(',');
-    dataArray.forEach(function(ele, i, arr){
-      $target.append($('<span>').addClass('tag').addClass(colourDict[colour]).text(ele));
-    });
-  }
-
-  // NOTE: wrapper for document ready parse
+  //////////////////////////////////////////////////////////
+  // WRAPPER FOR DOM READY PARSE ///////////////////////////
+  //////////////////////////////////////////////////////////
   $(function(){
+  //////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////
     // all the vars for UI manipulation
+    // defined once so $ doesn't query too frequently
     var defaultPadding = 5,
     scrollPoint = 300,
     $fixnav = $('.fixnav'),
@@ -167,6 +180,7 @@ Photon.view = (function(pubsub){
     $statsDiscovered = $('#statsDiscovered'),
     $statsDisplaying = $('#statsDisplaying'),
     $window = $(window);
+
     var nestOptions = {
       minWidth: calcNestColWidth(),
       minColumns: 1,
@@ -181,9 +195,11 @@ Photon.view = (function(pubsub){
         speed: 20,
         duration: 100,
         queue: true,
-        complete: function(){} // call back :D works w/ or w/o animate
+        complete: function(){} // NOTE: optional call back :D works w/ or w/o animate
       }
     };
+
+    // optimising for mobile, tablet, desktop
     function calcNestColWidth(){
       var windowWidth = $window.width();
       if (windowWidth > 1024) {
@@ -196,10 +212,11 @@ Photon.view = (function(pubsub){
     }
 
     //////////////////////////////////////////////////////////
-    // server-side auth, duct tape fix for login
+    // server-side auth, workaround without passing around tokens
     if (document.getElementById("logoutBtn")) {
       pubsub.emit('userLoggedIn', null);
     }
+
     if (document.getElementById("loginBtn")) {
       pubsub.emit('noUserLoggedIn', null);
       $searchGroup.hide();
@@ -216,15 +233,10 @@ Photon.view = (function(pubsub){
     pubsub.on('renderImgsToPage', function(photoObj){
       renderNestImages(photoObj, $nestContainer, photoObj.direction);
     });
+
     pubsub.on('userPhotosNormalised', function(pPhotos){
       updateNavStats($statsLiked, pPhotos.length);
     });
-
-    // NOTE: pending deletion
-    // pubsub.on('recPhotosFetched', function(qty){
-    //   // qty is ignored because this initialises counter ergo 0
-    //   updateNavStats($statsDiscovered, 0);
-    // });
 
     pubsub.on('nukePhotosFromView', function(commandOrArr){
       switch (typeof(commandOrArr)) {
@@ -282,6 +294,11 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // toggle entire page menu slide
+    $menuToggleBtn.on('click', menuUnhide);
+    $menuToggle.on('click', menuHide);
+    pubsub.on('rightSwipe', menuUnhide);
+    pubsub.on('leftSwipe', menuHide);
+
     var menuUnhide = function(){
       if ($loginBox.hasClass('is-active') || $popupBox.hasClass('is-active')){
         return;
@@ -290,20 +307,17 @@ Photon.view = (function(pubsub){
       $menuBar.toggleClass('is-active');
       $menuToggle.toggleClass('is-active');
     };
+
     var menuHide = function(){
       $mainContent.removeClass('is-inactive');
       $menuBar.removeClass('is-active');
       $menuToggle.removeClass('is-active');
     };
 
-    $menuToggleBtn.on('click', menuUnhide);
-    $menuToggle.on('click', menuHide);
-    pubsub.on('rightSwipe', menuUnhide);
-    pubsub.on('leftSwipe', menuHide);
-
     //////////////////////////////////////////////////////////
     // sidebar functions
     var optimizedWidth = calcNestColWidth();
+
     $sizeUp.on('click', function(){
       var newVal = +$sizeNumerator.text() + 1;
       nestOptions.minWidth += 30;
@@ -317,10 +331,6 @@ Photon.view = (function(pubsub){
       $sizeNumerator.text(newVal);
       $nestContainer.nested('refresh', nestOptions);
     });
-
-    //////////////////////////////////////////////////////////
-    // nestContainer
-    $nestContainer.nested(nestOptions);
 
     //////////////////////////////////////////////////////////
     // removal of photos
@@ -348,6 +358,9 @@ Photon.view = (function(pubsub){
       $(this).addClass('is-loading');
     });
 
+
+    //////////////////////////////////////////////////////////
+    // recommended photos handling and UI
     // the rec photo is tied to the '.is-primary' class, also makes it turquoise
     $nestContainer.on('click', '.is-primary', function(evt){
       evt.stopPropagation();
@@ -367,6 +380,7 @@ Photon.view = (function(pubsub){
       }, 800);
     });
 
+    // helper to hide elements for non-loggedin users
     function getCookie(key){
       var regexStr = '/(?:(?:^|.*;\s*)' + key + '\s*\=\s*([^;]*).*$)|^.*$/';
       return document.cookie.replace(regexStr, "$1");
@@ -457,14 +471,7 @@ Photon.view = (function(pubsub){
       fireSearchRequest();
     });
 
-    // NOTE: not disabling. Prevent search for non users
-    pubsub.on('noUserLoggedIn', function(){
-      $searchInput.prop('disabled', true);
-      $searchBtn.prop('disabled', true);
-    });
-
-    //////////////////////////////////////////////////////////
-    // refresh page after search
+    // refresh page option to clear search
     $refreshBtn.on('click', function(evt){
       pubsub.emit('nukePhotosFromView', 'all');
       pubsub.emit('photosRequested', 'append');
@@ -530,11 +537,11 @@ Photon.view = (function(pubsub){
     }(90, 60));
   });
 
+  // NOTE: API has been converted mostly to eventbus driven
+  // can probably be deprecated pending testing
   // API
   return {
     POST: 'status: view is loaded',
-    renderNestImages: renderNestImages,
-    renderNestSingleImage: renderNestSingleImage
   };
 
 }(Photon.eventBus));
