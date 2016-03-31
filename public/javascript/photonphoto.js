@@ -42,7 +42,7 @@ Photon.Photo = function(imgObj, recBoolean){
           allLandmarks.push(ele.name);
           break;
         case 'emotion':
-          allEmotion.push(ele.name);
+          allEmotions.push(ele.name);
           break;
         // case 'safesearch':
         //   // TODO: build
