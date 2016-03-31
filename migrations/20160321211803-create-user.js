@@ -8,17 +8,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstname: {
+      name: {
         type: Sequelize.STRING
       },
-      lastname: {
+      localemail: {
         type: Sequelize.STRING
       },
-      email: {
+      localpassword: {
         type: Sequelize.STRING
       },
-      password: {
+      fbook_id: {
         type: Sequelize.STRING
+      },
+      fbook_token: {
+        type: Sequelize.STRING(1234)
       },
       createdAt: {
         allowNull: false,

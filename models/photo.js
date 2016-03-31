@@ -1,7 +1,19 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Photo = sequelize.define('photo', {
-    url: DataTypes.STRING
+    url: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false
+    },
+    width: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
+    height: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    }
   }, {
     classMethods: {
       associate: function(models) {
