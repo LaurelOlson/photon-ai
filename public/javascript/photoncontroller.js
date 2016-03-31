@@ -50,18 +50,23 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   pubsub.on('userLoggedIn', function(){
     currentUser = new User();
-    sessionStorage.setItem('loggedIn', 'true');
+    setCookie('loggedIn', 'true');
+    // localStorage.setItem('loggedIn', 'true');
     fetchPhotosFor(currentUser);
   });
 
   pubsub.on('noUserLoggedIn', function(){
-    sessionStorage.setItem('loggedIn', 'false');
+    setCookie('loggedIn', 'false');
+    // localStorage.setItem('loggedIn', 'false');
     fetchShowTopPhotos();
   });
 
   pubsub.on('searchRequested', function(query){
     var queryArr = sanitise(query);
     var foundPhotos = tagSearch(queryArr);
+    if (foundPhotos === null || foundPhotos === undefined || foundPhotos.length === 0){
+      return;
+    }
     pubsub.emit('nukePhotosFromView', 'all');
     for (var key in photoStates){
       photoStates[key] = 'removed';
@@ -107,7 +112,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   });
 
 
-
   //////////////////////////////////////////////////////////
   // auto loading images upon photo fetch, which is automatic upon user login
   pubsub.on('userPhotosFetched', function(){
@@ -119,6 +123,21 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
 
   // USER CONTROLLER ///////////////////////////////////////
+
+  //////////////////////////////////////////////////////////
+  // cookies // NOTE: untested
+  function setCookie(key, value){
+    document.cookie = key + '=' + value;
+  }
+
+  function getCookie(key){
+    var regexStr = '/(?:(?:^|.*;\s*)' + key + '\s*\=\s*([^;]*).*$)|^.*$/';
+    return document.cookie.replace(regexStr, "$1");
+  }
+
+  function deleteCookie(key){
+    document.cookie = key + '=' +'; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  }
 
 
   //////////////////////////////////////////////////////////
@@ -165,7 +184,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
         photonImgs.push(new Photo(ele));
       });
       photonImgs.sort( function() { return 0.5 - Math.random(); } );
-      var payload = photonImgs.slice(0, photoQtyPerRender);
+      var payload = photonImgs.slice(0, photoQtyPerRender / 3);
       sendPhotosToView(payload, 'append');
     })
     .fail(function(xhr, status, error){
@@ -266,6 +285,16 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
       return false;
   }
 
+  function emptyStateLogger(){
+      for (var key in photoStates){
+         photoStates[key] = 'removed';
+      }
+  }
+
+  pubsub.on('allPhotosNuked', function(){
+      emptyStateLogger();
+  });
+
   // this is more for construction and debugging
   function reportStates(){
     var loaded = [];
@@ -293,6 +322,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   }
 
   function tagSearch(termsArr){
+    if (termsArr === null ||termsArr.length === 0){
+      return;
+    }
     var matchedPhotos = [];
     currentUser.photos.forEach(function(ele, i, arr){
       var allLabels = ele.tags.concat(ele.landmarks.concat(ele.emotions));
@@ -347,6 +379,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   return {
     currentUser: currentUser,
     reportStates: reportStates,
-    sendPhotosToView: sendPhotosToView
+    sendPhotosToView: sendPhotosToView,
+    setCookie: setCookie,
+    getCookie: getCookie,
+    deleteCookie: deleteCookie
   };
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));
