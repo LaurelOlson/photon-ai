@@ -50,12 +50,14 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   pubsub.on('userLoggedIn', function(){
     currentUser = new User();
-    sessionStorage.setItem('loggedIn', 'true');
+    setCookie('loggedIn', 'true');
+    // localStorage.setItem('loggedIn', 'true');
     fetchPhotosFor(currentUser);
   });
 
   pubsub.on('noUserLoggedIn', function(){
-    sessionStorage.setItem('loggedIn', 'false');
+    setCookie('loggedIn', 'false');
+    // localStorage.setItem('loggedIn', 'false');
     fetchShowTopPhotos();
   });
 
@@ -122,6 +124,21 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
 
   // USER CONTROLLER ///////////////////////////////////////
 
+  //////////////////////////////////////////////////////////
+  // cookies // NOTE: untested
+  function setCookie(key, value){
+    document.cookie = key + '=' + value;
+  }
+
+  function getCookie(key){
+    var regexStr = '/(?:(?:^|.*;\s*)' + key + '\s*\=\s*([^;]*).*$)|^.*$/';
+    return document.cookie.replace(regexStr, "$1");
+  }
+
+  function deleteCookie(key){
+    document.cookie = key + '=' +'; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  }
+
 
   //////////////////////////////////////////////////////////
   // fetching user photos from server
@@ -167,7 +184,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
         photonImgs.push(new Photo(ele));
       });
       photonImgs.sort( function() { return 0.5 - Math.random(); } );
-      var payload = photonImgs.slice(0, photoQtyPerRender);
+      var payload = photonImgs.slice(0, photoQtyPerRender / 3);
       sendPhotosToView(payload, 'append');
     })
     .fail(function(xhr, status, error){
@@ -362,6 +379,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   return {
     currentUser: currentUser,
     reportStates: reportStates,
-    sendPhotosToView: sendPhotosToView
+    sendPhotosToView: sendPhotosToView,
+    setCookie: setCookie,
+    getCookie: getCookie,
+    deleteCookie: deleteCookie
   };
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));
