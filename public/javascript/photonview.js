@@ -77,11 +77,9 @@ Photon.view = (function(pubsub){
   }
 
   function addUnlikeButtonTo($target){
-    var $payload = $('<div>').addClass('overlay');
+    // target must be the nestBox container div
     var $payloadHorse = $('<button>').addClass('button is-small is-outlined').text('X');
-    $payload.append($payloadHorse);
-    $target.append($payload);
-    return $target;
+    $target.find('.overlay').append($payloadHorse);
   }
 
   function convertImgToNest(imgObj){
@@ -97,6 +95,10 @@ Photon.view = (function(pubsub){
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
     if (imgObj.isRec){
       $imgElement.addClass('photonRec');
+      var $payload = $('<div>').addClass('overlay');
+      var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
+      $payload.append($payloadHorse);
+      $imgElement.append($payload);
     } else {
       $imgElement.addClass('photonLiked');
     }
@@ -372,22 +374,22 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // recommended photos manipulation
-    $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
-      if ($(this).children('.overlay').length === 0) {
-        var $payload = $('<div>').addClass('overlay');
-        var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
-        $payload.append($payloadHorse);
-        $(this).append($payload);
-      }
-    });
-
-    $nestContainer.on('mouseenter', '.photonRec', function(leaveEvt){
-      $(this).find('.overlay').show();
-    });
-
-    $nestContainer.on('mouseleave', '.photonRec', function(leaveEvt){
-      $(this).find('.overlay').hide();
-    });
+    // $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
+    //   if ($(this).children('.overlay').length === 0) {
+    //     var $payload = $('<div>').addClass('overlay');
+    //     var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
+    //     $payload.append($payloadHorse);
+    //     $(this).append($payload);
+    //   }
+    // });
+    //
+    // $nestContainer.on('mouseenter', '.photonRec', function(leaveEvt){
+    //   $(this).find('.overlay').show();
+    // });
+    //
+    // $nestContainer.on('mouseleave', '.photonRec', function(leaveEvt){
+    //   $(this).find('.overlay').hide();
+    // });
 
     // the rec photo is tied to the '.is-warning' class, also makes it yellow
     $nestContainer.on('click', '.is-warning', function(evt){
@@ -401,8 +403,8 @@ Photon.view = (function(pubsub){
       $btn.removeClass('is-warning').removeClass('is-loading').addClass('is-success').text('added');
       $btn.prop('disabled', true);
       setTimeout(function(){
-        var $newLiked = $btn.closest('.photonRec').removeClass('photonRec').addClass('photonLiked');
         $btn.remove();
+        var $newLiked = $btn.closest('.photonRec').addClass('photonLiked').removeClass('photonRec');
         addUnlikeButtonTo($newLiked);
       }, 800);
     });
