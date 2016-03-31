@@ -127,7 +127,6 @@ menu.pMenu {
   box-shadow: inset 0px 10px 30px 0px rgba(50, 50, 50, 0.4) !important; }
   .photonRec .overlay {
     position: relative;
-    background: rgba(31, 200, 219, 0.3);
     height: 100%;
     width: 100%; }
     .photonRec .overlay .button {

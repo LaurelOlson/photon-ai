@@ -254,31 +254,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     pubsub.emit('renderImgsToPage', returnObj);
   }
 
-  //////////////////////////////////////////////////////////
-  // loading callback TODO: found this on StackOverflow
-  // function preloadImage(imgObj, callback){
-  //   var objImagePreloader = new Image();
-  //   objImagePreloader.src = imgObj.url;
-  //   if (objImagePreloader.complete){
-  //     callback();
-  //     objImagePreloader.onload=function(){};
-  //   }
-  //   else{
-  //     objImagePreloader.onload = function() {
-  //       callback();
-  //       //    clear onLoad, IE behaves irratically with animated gifs otherwise
-  //       objImagePreloader.onload=function(){};
-  //     };
-  //   }
-  // }
-
-
-  // STORAGE CONTROLLER ////////////////////////////////////
-
-  //////////////////////////////////////////////////////////
-  //
-
-
   // STATE LOGGER //////////////////////////////////////////
 
   //////////////////////////////////////////////////////////
@@ -390,6 +365,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   // API
   return {
     currentUser: currentUser,
-    reportStates: reportStates
+    reportStates: reportStates,
+    sendPhotosToView: sendPhotosToView
   };
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));

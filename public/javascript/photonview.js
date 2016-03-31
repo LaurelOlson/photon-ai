@@ -95,6 +95,10 @@ Photon.view = (function(pubsub){
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
     if (imgObj.isRec){
       $imgElement.addClass('photonRec');
+      var $payload = $('<div>').addClass('overlay');
+      var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
+      $payload.append($payloadHorse);
+      $imgElement.append($payload);
     } else {
       $imgElement.addClass('photonLiked');
     }
@@ -370,22 +374,22 @@ Photon.view = (function(pubsub){
 
     //////////////////////////////////////////////////////////
     // recommended photos manipulation
-    $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
-      if ($(this).children('.overlay').length === 0) {
-        var $payload = $('<div>').addClass('overlay');
-        var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
-        $payload.append($payloadHorse);
-        $(this).append($payload);
-      }
-    });
-
-    $nestContainer.on('mouseenter', '.photonRec', function(leaveEvt){
-      $(this).find('.overlay').show();
-    });
-
-    $nestContainer.on('mouseleave', '.photonRec', function(leaveEvt){
-      $(this).find('.overlay').hide();
-    });
+    // $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
+    //   if ($(this).children('.overlay').length === 0) {
+    //     var $payload = $('<div>').addClass('overlay');
+    //     var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
+    //     $payload.append($payloadHorse);
+    //     $(this).append($payload);
+    //   }
+    // });
+    //
+    // $nestContainer.on('mouseenter', '.photonRec', function(leaveEvt){
+    //   $(this).find('.overlay').show();
+    // });
+    //
+    // $nestContainer.on('mouseleave', '.photonRec', function(leaveEvt){
+    //   $(this).find('.overlay').hide();
+    // });
 
     // the rec photo is tied to the '.is-warning' class, also makes it yellow
     $nestContainer.on('click', '.is-warning', function(evt){
