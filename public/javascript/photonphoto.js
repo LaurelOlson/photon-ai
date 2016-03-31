@@ -11,12 +11,12 @@ Photon.Photo = function(imgObj, recBoolean){
   var imgSmallURL = imgObj.smallurl || null;
   var imgTags = null;
   var imgLandmarks = null;
-  var imgPeople = null;
-  var imgSafesearch = null;
+  var imgEmotions = null;
+  // var imgSafesearch = null;
   var imgWidth = imgObj.width || null;
   var imgHeight = imgObj.height || null;
   var imgRec = recBoolean || false;
-  // below is exporting of private vars
+
   this.id = imgID;
   this.url = imgURL;
   this.smallURL = (function(){
@@ -31,8 +31,8 @@ Photon.Photo = function(imgObj, recBoolean){
   (function parseTags(tagsArr){
     var allTags = [];
     var allLandmarks = [];
-    var allPeople = [];
-    var allSafeSearch = [];
+    var allEmotions = [];
+    // var allSafeSearch = [];
     tagsArr.forEach(function(ele, i, arr){
       switch(ele.type){
         case 'label':
@@ -41,24 +41,24 @@ Photon.Photo = function(imgObj, recBoolean){
         case 'landmark':
           allLandmarks.push(ele.name);
           break;
-        case 'people':
-          // TODO: build
+        case 'emotion':
+          allEmotion.push(ele.name);
           break;
-        case 'safesearch':
-          // TODO: build
-          break;
+        // case 'safesearch':
+        //   // TODO: build
+        //   break;
       }
     });
     imgTags = allTags;
     imgLandmarks = allLandmarks;
-    imgPeople = allPeople;
-    imgSafesearch = allSafeSearch;
+    imgEmotions = allEmotions;
+    // imgSafesearch = allSafeSearch;
   }(imgObj.tags));
 
   this.tags = imgTags;
   this.landmarks = imgLandmarks;
-  this.people = imgPeople;
-  this.safesearch = imgSafesearch;
+  this.emotions = imgEmotions;
+  // this.safesearch = imgSafesearch;
   this.isRec = imgRec;
 };
 
