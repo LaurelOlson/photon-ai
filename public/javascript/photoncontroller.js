@@ -50,15 +50,16 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // from view (API via pubsub)
   pubsub.on('photosRequested', function(direction){
-    var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender, 'user');
-    var someRecPhotos = getPhotosFrom(currentUser, photoQtyPerRender, 'rec');
+    var userRecRatio = 0.8;
+    var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender * userRecRatio, 'user');
+    var someRecPhotos = getPhotosFrom(currentUser, photoQtyPerRender * (1 - userRecRatio), 'rec');
     var payload = somePhotos.concat(someRecPhotos);
     // shuffles array to get random photos each time
     // http://stackoverflow.com/questions/7158654/how-to-get-random-elements-from-an-array
     payload.sort(function(){
       return 0.5 - Math.random();
     });
-    sendPhotosToView(somePhotos, direction);
+    sendPhotosToView(payload, direction);
   });
 
   // // NOTE: pending deletion
@@ -349,7 +350,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
         console.log('getPhotosFrom: no more', typeStr, 'photos to load');
         break;
       } else if (isPhotoAlreadyLoaded(aPhoto.id)){
-        outputQty++;
+        uniqueCounter++;
       } else {
         payload.push(aPhoto);
         registerPhotoState(aPhoto.id);

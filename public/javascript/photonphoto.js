@@ -63,13 +63,13 @@ Photon.Photo = function(imgObj){
 
   //NOTE: this one can be deprecated, been replaced by this.type
   //However, leaving it here until dependent modules are converted
-  this.isRec = (function(){
-    if (imgObj.type === 'rec'){
-      return true;
-    } else {
-      return false;
-    }
-  }());
+  // this.isRec = (function(){
+  //   if (imgObj.type === 'rec'){
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }());
 
 };
 

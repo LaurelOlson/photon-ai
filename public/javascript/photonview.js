@@ -75,7 +75,7 @@ Photon.view = (function(pubsub){
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
     // var nestClass = 'size32';
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
-    if (imgObj.isRec){
+    if (imgObj.type === 'rec'){
       $imgElement.addClass('photonRec');
       var $payload = $('<div>').addClass('overlay');
       var $payloadHorse = $('<button>').addClass('button is-primary').text('+');
