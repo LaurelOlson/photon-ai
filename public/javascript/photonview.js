@@ -161,7 +161,6 @@ Photon.view = (function(pubsub){
     $pLogo = $('#wave'),
     $nestContainer = $('#nestContainer'),
     $nestBoxes = $('.nestBox'),
-    $navPadding = $('.navpadding'),
     $loginBox = $('#loginBox'),
     $loginBtn = $('#loginBtn'),
     $logoutBtn = $('#logoutBtn'),
@@ -176,6 +175,9 @@ Photon.view = (function(pubsub){
     $searchInput = $searchGroup.find('input.input'),
     $searchBtn = $('#searchBtn'),
     $refreshBtn = $('#refreshBtn'),
+    $sizeUp = $('#sizeUp'),
+    $sizeDown = $('#sizeDown'),
+    $sizeNumerator = $('#sizeNumerator'),
     $statsLiked = $('#statsLiked'),
     $statsDiscovered = $('#statsDiscovered'),
     $statsDisplaying = $('#statsDisplaying'),
@@ -341,9 +343,21 @@ Photon.view = (function(pubsub){
 
 
     //////////////////////////////////////////////////////////
-    // NOTE: can be deprecated as nav no longer has dynamic height b/c tags
-    // navpadding
-    $navPadding.css('height', $fixnav.height() + defaultPadding);
+    // sidebar functions
+    var optimizedWidth = calcNestColWidth();
+    $sizeUp.on('click', function(){
+      var newVal = +$sizeNumerator.text() + 1;
+      nestOptions.minWidth += 30;
+      $sizeNumerator.text(newVal);
+      $nestContainer.nested('refresh', nestOptions);
+    });
+
+    $sizeDown.on('click', function(){
+      var newVal = +$sizeNumerator.text() - 1;
+      nestOptions.minWidth -= 30;
+      $sizeNumerator.text(newVal);
+      $nestContainer.nested('refresh', nestOptions);
+    });
 
     //////////////////////////////////////////////////////////
     // nestContainer
