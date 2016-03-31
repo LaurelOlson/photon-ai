@@ -37,7 +37,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     userPhoto: 'photos',
     recPhoto: 'photos/recommended',
     topRatedPhoto: 'photos/top_rated',
-    likedPhoto: 'likedphotos'
+    likedPhoto: 'likedphotos/'
   };
   var photoQtyPerRender = 96;
   var currentUser = null;

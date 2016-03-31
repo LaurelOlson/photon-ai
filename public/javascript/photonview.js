@@ -434,13 +434,11 @@ Photon.view = (function(pubsub){
       var tags = $(this).data('tags');
       var landmarks = $(this).data('landmarks');
       var emotions = $(this).data('emotions');
-      // var safesearch = $(this).data('safesearch');
       var $tagField = $popupBox.find('div.image-custom');
       $tagField.children().remove();
       renderTagsTo(tags, $tagField, 'blue');
       renderTagsTo(landmarks, $tagField, 'yellow');
       renderTagsTo(emotions, $tagField, 'green');
-      // renderTagsTo(safesearch, $tagField, 'red');
       $popupBox.find('img').attr('src', url);
       $popupBox.addClass('is-active');
     });
