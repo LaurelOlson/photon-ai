@@ -231,9 +231,13 @@ menu.pMenu {
     height: 100%;
     width: 100%;
     .button {
+      opacity: 0.3;
       position: absolute;
       top: 5px;
       right: 5px;
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 }
