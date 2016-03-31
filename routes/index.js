@@ -308,12 +308,7 @@ function seedTag(photo) {
     var tags = [];
     var landmarks = body.responses[0].landmarkAnnotations;
     var labels = body.responses[0].labelAnnotations;
-    var faceAnnotations = body.responses[0].faceAnnotations;
-    if (faceAnnotations && faceAnnotations[0]) {
-      var joyLikelihood = faceAnnotations[0].joyLikelihood
-      var sorrowLikelihood = faceAnnotations[0].sorrowLikelihood
-      tags.push({ name: f})
-    }
+
     if (labels) {
       labels.forEach(function(label) {
         if (label.score >= MIN_LABEL_SCORE) {
