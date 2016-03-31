@@ -78,8 +78,8 @@ Photon.view = (function(pubsub){
 
   function addUnlikeButtonTo($target){
     // target must be the nestBox container div
-    var $payloadHorse = $('<button>').addClass('button is-small is-outlined').text('X');
-    $target.find('.overlay').append($payloadHorse);
+    var $payload = $('<button>').addClass('button is-small is-outlined').text('X');
+    $target.find('.overlay').append($payload);
   }
 
   function convertImgToNest(imgObj){
@@ -274,9 +274,12 @@ Photon.view = (function(pubsub){
     });
 
     pubsub.on('recRegistered', function(){
-      var current = +$statsDiscovered.find('.title').text();
-      var newVal = current + 1;
-      updateNavStats($statsDiscovered, newVal); //initialise for this session
+      var prevLiked = +$statsLiked.find('.title').text();
+      prevLiked++;
+      updateNavStats($statsLiked, prevLiked); //initialise for this session
+      var prevDiscov = +$statsDiscovered.find('.title').text();
+      prevDiscov++;
+      updateNavStats($statsDiscovered, prevDiscov); //initialise for this session
     });
 
     pubsub.on('unlikeRegistered', function(){
@@ -399,12 +402,13 @@ Photon.view = (function(pubsub){
     });
 
     pubsub.on('recRegistered', function($btn){
+      $parent = $btn.closest('.nestBox');
       $btn.removeClass('is-primary').removeClass('is-loading').addClass('is-success').text('added');
       $btn.prop('disabled', true);
       setTimeout(function(){
         $btn.remove();
-        var $newLiked = $btn.closest('.photonRec').addClass('photonLiked').removeClass('photonRec');
-        addUnlikeButtonTo($newLiked);
+        $parent.addClass('photonLiked').removeClass('photonRec');
+        addUnlikeButtonTo($parent);
       }, 800);
     });
 
