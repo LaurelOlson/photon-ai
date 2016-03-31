@@ -35,6 +35,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   var serverURL = '/';
   var photoQtyPerRender = 96;
   var currentUser = null;
+
   // EVENT LISTENERS ///////////////////////////////////////
 
   //////////////////////////////////////////////////////////
@@ -49,21 +50,14 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     sendPhotosToView(somePhotos, direction);
   });
 
-  // pubsub.on('recPhotosRequested', function(direction){
-  //   var someRecPhotos = getRecPhotosFrom(currentUser, photoQtyPerRender);
-  //   sendPhotosToView(someRecPhotos, direction);
-  // });
-
   pubsub.on('userLoggedIn', function(){
     currentUser = new User();
     setCookie('loggedIn', 'true');
-    // localStorage.setItem('loggedIn', 'true');
     fetchPhotosFor(currentUser);
   });
 
   pubsub.on('noUserLoggedIn', function(){
     setCookie('loggedIn', 'false');
-    // localStorage.setItem('loggedIn', 'false');
     fetchShowTopPhotos();
   });
 
@@ -123,10 +117,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   pubsub.on('userPhotosFetched', function(){
     pubsub.emit('photosRequested', 'append');
   });
-  // pubsub.on('recPhotosFetched', function(){
-  //   pubsub.emit('recPhotosRequested', 'append');
-  // });
-
 
   // USER CONTROLLER ///////////////////////////////////////
 
@@ -144,7 +134,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   function deleteCookie(key){
     document.cookie = key + '=' +'; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   }
-
 
   //////////////////////////////////////////////////////////
   // fetching user photos from server
@@ -376,7 +365,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     return true;
   }
 
-
   //////////////////////////////////////////////////////////
   // testing variables
 
@@ -393,4 +381,5 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     getCookie: getCookie,
     deleteCookie: deleteCookie
   };
+  
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));

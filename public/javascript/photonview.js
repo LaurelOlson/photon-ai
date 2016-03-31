@@ -5,23 +5,6 @@ if (!window.Photon) {
 
 Photon.view = (function(pubsub){
 
-  // //////////////////////////////////////////////////////////
-  // // helpers while building
-  // function makeBoxes() {
-  //   var boxes = [],
-  //   count = Math.random()*15;
-  //   if (count < 5) count = 5;
-  //   for (var i=0; i < count; i++ ) {
-  //     var box = document.createElement('div');
-  //     box.className = 'nestBox has-shadow is-loading size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
-  //     box.setAttribute('data-large-url', 'http://placehold.it/1200x800');
-  //     box.setAttribute('data-tags', 'tag1,tag2,tag3,tag4,tag5,tag6');
-  //     // add box DOM node to array of new elements
-  //     boxes.push( box );
-  //   }
-  //   return boxes;
-  // }
-
   var gridDict = {
     // example
     // 0.66: ['23'],
@@ -152,7 +135,9 @@ Photon.view = (function(pubsub){
     });
   }
 
+  // NOTE: wrapper for document ready parse
   $(function(){
+
     //////////////////////////////////////////////////////////
     // all the vars for UI manipulation
     var defaultPadding = 5,
@@ -161,7 +146,6 @@ Photon.view = (function(pubsub){
     $pLogo = $('#wave'),
     $nestContainer = $('#nestContainer'),
     $nestBoxes = $('.nestBox'),
-    $navPadding = $('.navpadding'),
     $loginBox = $('#loginBox'),
     $loginBtn = $('#loginBtn'),
     $logoutBtn = $('#logoutBtn'),
@@ -176,6 +160,9 @@ Photon.view = (function(pubsub){
     $searchInput = $searchGroup.find('input.input'),
     $searchBtn = $('#searchBtn'),
     $refreshBtn = $('#refreshBtn'),
+    $sizeUp = $('#sizeUp'),
+    $sizeDown = $('#sizeDown'),
+    $sizeNumerator = $('#sizeNumerator'),
     $statsLiked = $('#statsLiked'),
     $statsDiscovered = $('#statsDiscovered'),
     $statsDisplaying = $('#statsDisplaying'),
@@ -289,35 +276,6 @@ Photon.view = (function(pubsub){
       updateNavStats($statsLiked, newVal);
     });
 
-
-    // NOTE: PENDING DELETION FOR PRODUCTION
-    // //////////////////////////////////////////////////////////
-    // // buttons during development
-    // $('#nestPrepend').click(function(){
-    //   var boxes = makeBoxes();
-    //   $nestContainer.prepend(boxes).nested('prepend',boxes);
-    // });
-    // $('#nestAppend').click(function(){
-    //   var boxes = makeBoxes();
-    //   $nestContainer.append(boxes).nested('append',boxes);
-    // });
-    // $('#nestNuke').click(function(){
-    //   nukeAllPhotos();
-    // });
-    // $('#testPrepend').on('click', function(){
-    //   renderNestImages(samplePhotosObj, $nestContainer, 'prepend');
-    // });
-    // $('#testAppend').on('click', function(){
-    //   renderNestImages(samplePhotosObj, $nestContainer);
-    // });
-    // $('#imgPrepend').on('click', function(){
-    //   pubsub.emit('photosRequested', 'prepend');
-    // });
-    // $('#imgAppend').on('click', function(){
-    //   pubsub.emit('photosRequested', 'append');
-    // });
-    //
-
     //////////////////////////////////////////////////////////
     // toggle entire page menu slide
     var menuUnhide = function(){
@@ -339,11 +297,22 @@ Photon.view = (function(pubsub){
     pubsub.on('rightSwipe', menuUnhide);
     pubsub.on('leftSwipe', menuHide);
 
-
     //////////////////////////////////////////////////////////
-    // NOTE: can be deprecated as nav no longer has dynamic height b/c tags
-    // navpadding
-    $navPadding.css('height', $fixnav.height() + defaultPadding);
+    // sidebar functions
+    var optimizedWidth = calcNestColWidth();
+    $sizeUp.on('click', function(){
+      var newVal = +$sizeNumerator.text() + 1;
+      nestOptions.minWidth += 30;
+      $sizeNumerator.text(newVal);
+      $nestContainer.nested('refresh', nestOptions);
+    });
+
+    $sizeDown.on('click', function(){
+      var newVal = +$sizeNumerator.text() - 1;
+      nestOptions.minWidth -= 30;
+      $sizeNumerator.text(newVal);
+      $nestContainer.nested('refresh', nestOptions);
+    });
 
     //////////////////////////////////////////////////////////
     // nestContainer
@@ -357,44 +326,23 @@ Photon.view = (function(pubsub){
       pubsub.emit('allPhotosNuked', true);
     }
 
-    // TODO
-    function nukeSelectedPhotos(arrayOfURLs){
-
-    }
-
     //////////////////////////////////////////////////////////
     // login pop up
     $modalBackgrounds.on('click', function(){ // reusable for all modal-backgrounds
       $modals.removeClass('is-active');
     });
+
     $loginBtn.on('click', function(){
       $loginBox.addClass('is-active');
     });
+
     $logoutBtn.on('click', function(){
       $logoutBtn.addClass('is-loading');
     });
+
     $loginBox.on('click', 'button', function(){
       $(this).addClass('is-loading');
     });
-
-    //////////////////////////////////////////////////////////
-    // recommended photos manipulation
-    // $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
-    //   if ($(this).children('.overlay').length === 0) {
-    //     var $payload = $('<div>').addClass('overlay');
-    //     var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
-    //     $payload.append($payloadHorse);
-    //     $(this).append($payload);
-    //   }
-    // });
-    //
-    // $nestContainer.on('mouseenter', '.photonRec', function(leaveEvt){
-    //   $(this).find('.overlay').show();
-    // });
-    //
-    // $nestContainer.on('mouseleave', '.photonRec', function(leaveEvt){
-    //   $(this).find('.overlay').hide();
-    // });
 
     // the rec photo is tied to the '.is-primary' class, also makes it turquoise
     $nestContainer.on('click', '.is-primary', function(evt){
@@ -478,6 +426,7 @@ Photon.view = (function(pubsub){
       $popupBox.find('img').attr('src', url);
       $popupBox.addClass('is-active');
     });
+
     $popupBox.on('click', function(){
       $(this).removeClass('is-active');
     });
@@ -515,23 +464,7 @@ Photon.view = (function(pubsub){
     $refreshBtn.on('click', function(evt){
       pubsub.emit('nukePhotosFromView', 'all');
       pubsub.emit('photosRequested', 'append');
-      // pubsub.emit('recPhotosRequested', 'prepend');
     });
-
-
-
-    //////////////////////////////////////////////////////////
-    // NOTE: this is work in progress and doesn't work!!! NOTE!
-    // $nestContainer.one("DOMNodeInserted", '.nestBox', function() {
-    //   var $box = $(this);
-    //   $box.addClass('is-loading');
-    //   var $tempImg = $('<img/>').addClass('is-temp-img').attr('id', 'pTempPreloader');
-    //   $tempImg.attr('src', $box.data('large-url')).load(function() {
-    //     $box.attr('style', 'background:url(' + $box.data('large-url') + ') no-repeat center center;' + $box.data('gridSpec'));
-    //     $box.removeClass('is-loading');
-    //     $('#pTempPreloader').remove();
-    //   });
-    // });
 
     //////////////////////////////////////////////////////////
     // logo
@@ -592,7 +525,6 @@ Photon.view = (function(pubsub){
       $pLogo.attr('d', pathData);
     }(90, 60));
   });
-
 
   // API
   return {
