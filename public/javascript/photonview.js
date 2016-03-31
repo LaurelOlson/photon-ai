@@ -89,7 +89,6 @@ Photon.view = (function(pubsub){
     }
     var smallerLink = imgObj.smallURL || imgObj.url;
     var styleStr = 'background:url(' + smallerLink + ') no-repeat center center;' + gridSpec.css;
-    var landmarkStr = imgObj.landmarks;
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
     // var nestClass = 'size32';
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
@@ -106,8 +105,8 @@ Photon.view = (function(pubsub){
     $imgElement.attr('data-id', imgObj.id);
     $imgElement.attr('data-tags', imgObj.tags);
     $imgElement.attr('data-landmarks', imgObj.landmarks);
-    $imgElement.attr('data-people', imgObj.people);
-    $imgElement.attr('data-safesearch', imgObj.safesearch);
+    $imgElement.attr('data-emotions', imgObj.emotions);
+    // $imgElement.attr('data-safesearch', imgObj.safesearch);
     $imgElement.attr('data-large-url', imgObj.url);
     return $imgElement;
   }
@@ -391,16 +390,16 @@ Photon.view = (function(pubsub){
     //   $(this).find('.overlay').hide();
     // });
 
-    // the rec photo is tied to the '.is-warning' class, also makes it yellow
-    $nestContainer.on('click', '.is-warning', function(evt){
+    // the rec photo is tied to the '.is-primary' class, also makes it turquoise
+    $nestContainer.on('click', '.is-primary', function(evt){
       evt.stopPropagation();
       $btn = $(this);
       $btn.addClass('is-loading');
-      pubsub.emit('recBtnClicked', $btn); // controller subs
+      pubsub.emit('recBtnClicked', $btn); // controller subscribes
     });
 
     pubsub.on('recRegistered', function($btn){
-      $btn.removeClass('is-warning').removeClass('is-loading').addClass('is-success').text('added');
+      $btn.removeClass('is-primary').removeClass('is-loading').addClass('is-success').text('added');
       $btn.prop('disabled', true);
       setTimeout(function(){
         $btn.remove();
@@ -455,13 +454,13 @@ Photon.view = (function(pubsub){
       var url = $(this).data('large-url');
       var tags = $(this).data('tags');
       var landmarks = $(this).data('landmarks');
-      // var people = $(this).data('people');
+      var emotions = $(this).data('emotions');
       // var safesearch = $(this).data('safesearch');
       var $tagField = $popupBox.find('div.image-custom');
       $tagField.children().remove();
       renderTagsTo(tags, $tagField, 'blue');
       renderTagsTo(landmarks, $tagField, 'yellow');
-      // renderTagsTo(people, $tagField, 'green');
+      renderTagsTo(emotions, $tagField, 'green');
       // renderTagsTo(safesearch, $tagField, 'red');
       $popupBox.find('img').attr('src', url);
       $popupBox.addClass('is-active');
