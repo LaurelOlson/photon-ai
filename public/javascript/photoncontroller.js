@@ -62,6 +62,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   pubsub.on('searchRequested', function(query){
     var queryArr = sanitise(query);
     var foundPhotos = tagSearch(queryArr);
+    if (foundPhotos === null || foundPhotos === undefined || foundPhotos.length === 0){
+      return;
+    }
     pubsub.emit('nukePhotosFromView', 'all');
     for (var key in photoStates){
       photoStates[key] = 'removed';
@@ -105,7 +108,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
       console.log(error);
     });
   });
-
 
 
   //////////////////////////////////////////////////////////
@@ -266,6 +268,16 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
       return false;
   }
 
+  function emptyStateLogger(){
+      for (var key in photoStates){
+         photoStates[key] = 'removed';
+      }
+  }
+
+  pubsub.on('allPhotosNuked', function(){
+      emptyStateLogger();
+  });
+
   // this is more for construction and debugging
   function reportStates(){
     var loaded = [];
@@ -293,6 +305,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   }
 
   function tagSearch(termsArr){
+    if (termsArr === null ||termsArr.length === 0){
+      return;
+    }
     var matchedPhotos = [];
     currentUser.photos.forEach(function(ele, i, arr){
       var allLabels = ele.tags.concat(ele.landmarks.concat(ele.emotions));

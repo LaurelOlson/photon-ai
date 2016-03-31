@@ -174,7 +174,8 @@ Photon.view = (function(pubsub){
     $menuToggleBtn = $('#menuToggleBtn'),
     $searchGroup = $('#searchGroup'),
     $searchInput = $searchGroup.find('input.input'),
-    $searchBtn = $searchGroup.find('.button'),
+    $searchBtn = $('#searchBtn'),
+    $refreshBtn = $('#refreshBtn'),
     $statsLiked = $('#statsLiked'),
     $statsDiscovered = $('#statsDiscovered'),
     $statsDisplaying = $('#statsDisplaying'),
@@ -477,7 +478,6 @@ Photon.view = (function(pubsub){
     // search
     function fireSearchRequest(){
       var text = $searchInput.val();
-      console.log(text);
       pubsub.emit('searchRequested', text);
       $searchInput.val('');
     }
@@ -501,6 +501,16 @@ Photon.view = (function(pubsub){
       $searchInput.prop('disabled', true);
       $searchBtn.prop('disabled', true);
     });
+
+    //////////////////////////////////////////////////////////
+    // refresh page after search
+    $refreshBtn.on('click', function(evt){
+      pubsub.emit('nukePhotosFromView', 'all');
+      pubsub.emit('photosRequested', 'append');
+      pubsub.emit('recPhotosRequested', 'prepend');
+    });
+
+
 
     //////////////////////////////////////////////////////////
     // NOTE: this is work in progress and doesn't work!!! NOTE!
