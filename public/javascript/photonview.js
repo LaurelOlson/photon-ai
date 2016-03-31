@@ -5,22 +5,9 @@ if (!window.Photon) {
 
 Photon.view = (function(pubsub){
 
-  // //////////////////////////////////////////////////////////
-  // // helpers while building
-  // function makeBoxes() {
-  //   var boxes = [],
-  //   count = Math.random()*15;
-  //   if (count < 5) count = 5;
-  //   for (var i=0; i < count; i++ ) {
-  //     var box = document.createElement('div');
-  //     box.className = 'nestBox has-shadow is-loading size' +  Math.ceil( Math.random()*3 ) +  Math.ceil( Math.random()*3 );
-  //     box.setAttribute('data-large-url', 'http://placehold.it/1200x800');
-  //     box.setAttribute('data-tags', 'tag1,tag2,tag3,tag4,tag5,tag6');
-  //     // add box DOM node to array of new elements
-  //     boxes.push( box );
-  //   }
-  //   return boxes;
-  // }
+  //////////////////////////////////////////////////////////
+  // GRID HANDLERS /////////////////////////////////////////
+  //////////////////////////////////////////////////////////
 
   var gridDict = {
     // example
@@ -76,12 +63,9 @@ Photon.view = (function(pubsub){
     return output;
   }
 
-  function addUnlikeButtonTo($target){
-    // target must be the nestBox container div
-    var $payload = $('<button>').addClass('button is-small is-outlined').text('X');
-    $target.find('.overlay').append($payload);
-  }
-
+  //////////////////////////////////////////////////////////
+  // IMAGE CONVERSION //////////////////////////////////////
+  //////////////////////////////////////////////////////////
   function convertImgToNest(imgObj){
     var gridSpec = gridFitter(imgObj.width, imgObj.height);
     if (!gridSpec) {
@@ -90,9 +74,8 @@ Photon.view = (function(pubsub){
     var smallerLink = imgObj.smallURL || imgObj.url;
     var styleStr = 'background:url(' + smallerLink + ') no-repeat center center;' + gridSpec.css;
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
-    // var nestClass = 'size32';
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
-    if (imgObj.isRec){
+    if (imgObj.type === 'rec'){
       $imgElement.addClass('photonRec');
       var $payload = $('<div>').addClass('overlay');
       var $payloadHorse = $('<button>').addClass('button is-primary').text('+');
@@ -106,10 +89,37 @@ Photon.view = (function(pubsub){
     $imgElement.attr('data-tags', imgObj.tags);
     $imgElement.attr('data-landmarks', imgObj.landmarks);
     $imgElement.attr('data-emotions', imgObj.emotions);
-    // $imgElement.attr('data-safesearch', imgObj.safesearch);
     $imgElement.attr('data-large-url', imgObj.url);
     return $imgElement;
   }
+
+  function addUnlikeButtonTo($target){
+    // target must be the nestBox container div
+    var $payload = $('<button>').addClass('button is-small is-outlined').text('X');
+    $target.find('.overlay').append($payload);
+  }
+
+  function renderTagsTo(dataStr, $target, colour){
+    if (!dataStr){
+      return;
+    }
+    var bulmaColourDict = {
+      'white': '',
+      'blue': 'is-info',
+      'green': 'is-success',
+      'yellow': 'is-warning',
+      'red': 'is-danger',
+      'black': 'is-dark'
+    };
+    var dataArray = dataStr.split(',');
+    dataArray.forEach(function(ele, i, arr){
+      $target.append($('<span>').addClass('tag').addClass(bulmaColourDict[colour]).text(ele));
+    });
+  }
+
+  //////////////////////////////////////////////////////////
+  // IMAGE RENDERING ///////////////////////////////////////
+  //////////////////////////////////////////////////////////
 
   function renderNestImages(imagesObj, $target, direction){
     var imgArr = [];
@@ -134,27 +144,15 @@ Photon.view = (function(pubsub){
     }
   }
 
-  function renderTagsTo(dataStr, $target, colour){
-    if (!dataStr){
-      return;
-    }
-    var colourDict = {
-      'white': '',
-      'blue': 'is-info',
-      'green': 'is-success',
-      'yellow': 'is-warning',
-      'red': 'is-danger',
-      'black': 'is-dark'
-    };
-    var dataArray = dataStr.split(',');
-    dataArray.forEach(function(ele, i, arr){
-      $target.append($('<span>').addClass('tag').addClass(colourDict[colour]).text(ele));
-    });
-  }
-
+  //////////////////////////////////////////////////////////
+  // WRAPPER FOR DOM READY PARSE ///////////////////////////
+  //////////////////////////////////////////////////////////
   $(function(){
+  //////////////////////////////////////////////////////////
+
     //////////////////////////////////////////////////////////
     // all the vars for UI manipulation
+    // defined once so $ doesn't query too frequently
     var defaultPadding = 5,
     scrollPoint = 300,
     $fixnav = $('.fixnav'),
@@ -182,6 +180,7 @@ Photon.view = (function(pubsub){
     $statsDiscovered = $('#statsDiscovered'),
     $statsDisplaying = $('#statsDisplaying'),
     $window = $(window);
+
     var nestOptions = {
       minWidth: calcNestColWidth(),
       minColumns: 1,
@@ -196,9 +195,11 @@ Photon.view = (function(pubsub){
         speed: 20,
         duration: 100,
         queue: true,
-        complete: function(){} // call back :D works w/ or w/o animate
+        complete: function(){} // NOTE: optional call back :D works w/ or w/o animate
       }
     };
+
+    // optimising for mobile, tablet, desktop
     function calcNestColWidth(){
       var windowWidth = $window.width();
       if (windowWidth > 1024) {
@@ -211,10 +212,11 @@ Photon.view = (function(pubsub){
     }
 
     //////////////////////////////////////////////////////////
-    // server-side auth, duct tape fix for login
+    // server-side auth, workaround without passing around tokens
     if (document.getElementById("logoutBtn")) {
       pubsub.emit('userLoggedIn', null);
     }
+
     if (document.getElementById("loginBtn")) {
       pubsub.emit('noUserLoggedIn', null);
       $searchGroup.hide();
@@ -231,12 +233,11 @@ Photon.view = (function(pubsub){
     pubsub.on('renderImgsToPage', function(photoObj){
       renderNestImages(photoObj, $nestContainer, photoObj.direction);
     });
-    pubsub.on('userPhotosFetched', function(qty){
-      updateNavStats($statsLiked, qty);
+
+    pubsub.on('userPhotosNormalised', function(pPhotos){
+      updateNavStats($statsLiked, pPhotos.length);
     });
-    pubsub.on('recPhotosFetched', function(qty){
-      updateNavStats($statsDiscovered, 0); //initialise for this session
-    });
+
     pubsub.on('nukePhotosFromView', function(commandOrArr){
       switch (typeof(commandOrArr)) {
       case 'string':
@@ -291,35 +292,6 @@ Photon.view = (function(pubsub){
       updateNavStats($statsLiked, newVal);
     });
 
-
-    // NOTE: PENDING DELETION FOR PRODUCTION
-    // //////////////////////////////////////////////////////////
-    // // buttons during development
-    // $('#nestPrepend').click(function(){
-    //   var boxes = makeBoxes();
-    //   $nestContainer.prepend(boxes).nested('prepend',boxes);
-    // });
-    // $('#nestAppend').click(function(){
-    //   var boxes = makeBoxes();
-    //   $nestContainer.append(boxes).nested('append',boxes);
-    // });
-    // $('#nestNuke').click(function(){
-    //   nukeAllPhotos();
-    // });
-    // $('#testPrepend').on('click', function(){
-    //   renderNestImages(samplePhotosObj, $nestContainer, 'prepend');
-    // });
-    // $('#testAppend').on('click', function(){
-    //   renderNestImages(samplePhotosObj, $nestContainer);
-    // });
-    // $('#imgPrepend').on('click', function(){
-    //   pubsub.emit('photosRequested', 'prepend');
-    // });
-    // $('#imgAppend').on('click', function(){
-    //   pubsub.emit('photosRequested', 'append');
-    // });
-    //
-
     //////////////////////////////////////////////////////////
     // toggle entire page menu slide
     var menuUnhide = function(){
@@ -330,6 +302,7 @@ Photon.view = (function(pubsub){
       $menuBar.toggleClass('is-active');
       $menuToggle.toggleClass('is-active');
     };
+
     var menuHide = function(){
       $mainContent.removeClass('is-inactive');
       $menuBar.removeClass('is-active');
@@ -341,10 +314,10 @@ Photon.view = (function(pubsub){
     pubsub.on('rightSwipe', menuUnhide);
     pubsub.on('leftSwipe', menuHide);
 
-
     //////////////////////////////////////////////////////////
     // sidebar functions
     var optimizedWidth = calcNestColWidth();
+
     $sizeUp.on('click', function(){
       var newVal = +$sizeNumerator.text() + 1;
       nestOptions.minWidth += 15;
@@ -360,10 +333,6 @@ Photon.view = (function(pubsub){
     });
 
     //////////////////////////////////////////////////////////
-    // nestContainer
-    $nestContainer.nested(nestOptions);
-
-    //////////////////////////////////////////////////////////
     // removal of photos
     function nukeAllPhotos(){
       $nestContainer.children().remove();
@@ -371,45 +340,34 @@ Photon.view = (function(pubsub){
       pubsub.emit('allPhotosNuked', true);
     }
 
-    // TODO
-    function nukeSelectedPhotos(arrayOfURLs){
-
-    }
-
     //////////////////////////////////////////////////////////
     // login pop up
     $modalBackgrounds.on('click', function(){ // reusable for all modal-backgrounds
       $modals.removeClass('is-active');
     });
+
+    $(document).on('keydown', function(evt){
+      if (evt.keyCode == 27){
+        $modals.removeClass('is-active');
+      }
+    });
+
+
     $loginBtn.on('click', function(){
       $loginBox.addClass('is-active');
     });
+
     $logoutBtn.on('click', function(){
       $logoutBtn.addClass('is-loading');
     });
+
     $loginBox.on('click', 'button', function(){
       $(this).addClass('is-loading');
     });
 
-    //////////////////////////////////////////////////////////
-    // recommended photos manipulation
-    // $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
-    //   if ($(this).children('.overlay').length === 0) {
-    //     var $payload = $('<div>').addClass('overlay');
-    //     var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
-    //     $payload.append($payloadHorse);
-    //     $(this).append($payload);
-    //   }
-    // });
-    //
-    // $nestContainer.on('mouseenter', '.photonRec', function(leaveEvt){
-    //   $(this).find('.overlay').show();
-    // });
-    //
-    // $nestContainer.on('mouseleave', '.photonRec', function(leaveEvt){
-    //   $(this).find('.overlay').hide();
-    // });
 
+    //////////////////////////////////////////////////////////
+    // recommended photos handling and UI
     // the rec photo is tied to the '.is-primary' class, also makes it turquoise
     $nestContainer.on('click', '.is-primary', function(evt){
       evt.stopPropagation();
@@ -429,6 +387,7 @@ Photon.view = (function(pubsub){
       }, 800);
     });
 
+    // helper to hide elements for non-loggedin users
     function getCookie(key){
       var regexStr = '/(?:(?:^|.*;\s*)' + key + '\s*\=\s*([^;]*).*$)|^.*$/';
       return document.cookie.replace(regexStr, "$1");
@@ -482,16 +441,15 @@ Photon.view = (function(pubsub){
       var tags = $(this).data('tags');
       var landmarks = $(this).data('landmarks');
       var emotions = $(this).data('emotions');
-      // var safesearch = $(this).data('safesearch');
       var $tagField = $popupBox.find('div.image-custom');
       $tagField.children().remove();
       renderTagsTo(tags, $tagField, 'blue');
       renderTagsTo(landmarks, $tagField, 'yellow');
       renderTagsTo(emotions, $tagField, 'green');
-      // renderTagsTo(safesearch, $tagField, 'red');
       $popupBox.find('img').attr('src', url);
       $popupBox.addClass('is-active');
     });
+
     $popupBox.on('click', function(){
       $(this).removeClass('is-active');
     });
@@ -518,34 +476,11 @@ Photon.view = (function(pubsub){
       fireSearchRequest();
     });
 
-    // NOTE: not disabling. Prevent search for non users
-    pubsub.on('noUserLoggedIn', function(){
-      $searchInput.prop('disabled', true);
-      $searchBtn.prop('disabled', true);
-    });
-
-    //////////////////////////////////////////////////////////
-    // refresh page after search
+    // refresh page option to clear search
     $refreshBtn.on('click', function(evt){
       pubsub.emit('nukePhotosFromView', 'all');
       pubsub.emit('photosRequested', 'append');
-      pubsub.emit('recPhotosRequested', 'prepend');
     });
-
-
-
-    //////////////////////////////////////////////////////////
-    // NOTE: this is work in progress and doesn't work!!! NOTE!
-    // $nestContainer.one("DOMNodeInserted", '.nestBox', function() {
-    //   var $box = $(this);
-    //   $box.addClass('is-loading');
-    //   var $tempImg = $('<img/>').addClass('is-temp-img').attr('id', 'pTempPreloader');
-    //   $tempImg.attr('src', $box.data('large-url')).load(function() {
-    //     $box.attr('style', 'background:url(' + $box.data('large-url') + ') no-repeat center center;' + $box.data('gridSpec'));
-    //     $box.removeClass('is-loading');
-    //     $('#pTempPreloader').remove();
-    //   });
-    // });
 
     //////////////////////////////////////////////////////////
     // logo
@@ -607,12 +542,11 @@ Photon.view = (function(pubsub){
     }(90, 60));
   });
 
-
+  // NOTE: API has been converted mostly to eventbus driven
+  // can probably be deprecated pending testing
   // API
   return {
     POST: 'status: view is loaded',
-    renderNestImages: renderNestImages,
-    renderNestSingleImage: renderNestSingleImage
   };
 
 }(Photon.eventBus));

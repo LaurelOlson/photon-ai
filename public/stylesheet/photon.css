@@ -25,8 +25,10 @@ menu.pMenu {
   transition: all 600ms ease;
   box-shadow: inset -10px 0px 20px 0px rgba(50, 50, 50, 0.4);
   padding: 20px; }
+  menu.pMenu h2 {
+    color: #aeb1b5;
+    font-size: 1.5em; }
   menu.pMenu h1,
-  menu.pMenu h2,
   menu.pMenu p,
   menu.pMenu i {
     color: #fff; }
@@ -34,18 +36,6 @@ menu.pMenu {
     color: #1fc8db; }
   menu.pMenu i:hover {
     color: #42afe3; }
-  menu.pMenu #info {
-    color: #69707a;
-    width: 100%;
-    position: absolute;
-    bottom: 10px;
-    text-align: center; }
-    menu.pMenu #info a {
-      color: #aeb1b5; }
-    menu.pMenu #info :hover {
-      color: #fff; }
-    menu.pMenu #info :active {
-      color: #1fc8db; }
   menu.pMenu.is-active {
     transform: translateX(300px); }
 
