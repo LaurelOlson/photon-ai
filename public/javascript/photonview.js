@@ -75,7 +75,7 @@ Photon.view = (function(pubsub){
     var nestClass = 'size' + gridSpec.col + gridSpec.row;
     // var nestClass = 'size32';
     var $imgElement = $('<div>').addClass('nestBox has-shadow').addClass(nestClass);
-    if (imgObj.isRec){
+    if (imgObj.type === 'rec'){
       $imgElement.addClass('photonRec');
       var $payload = $('<div>').addClass('overlay');
       var $payloadHorse = $('<button>').addClass('button is-primary').text('+');
@@ -216,12 +216,16 @@ Photon.view = (function(pubsub){
     pubsub.on('renderImgsToPage', function(photoObj){
       renderNestImages(photoObj, $nestContainer, photoObj.direction);
     });
-    pubsub.on('userPhotosFetched', function(qty){
-      updateNavStats($statsLiked, qty);
+    pubsub.on('userPhotosNormalised', function(pPhotos){
+      updateNavStats($statsLiked, pPhotos.length);
     });
-    pubsub.on('recPhotosFetched', function(qty){
-      updateNavStats($statsDiscovered, 0); //initialise for this session
-    });
+
+    // NOTE: pending deletion
+    // pubsub.on('recPhotosFetched', function(qty){
+    //   // qty is ignored because this initialises counter ergo 0
+    //   updateNavStats($statsDiscovered, 0);
+    // });
+
     pubsub.on('nukePhotosFromView', function(commandOrArr){
       switch (typeof(commandOrArr)) {
       case 'string':

@@ -3,7 +3,7 @@ if (!window.Photon) {
   window.Photon = {};
 }
 
-Photon.Photo = function(imgObj, recBoolean){
+Photon.Photo = function(imgObj){
   // width x height, then add img URL w/o http(s), ex: 'images.unsplash.com/photo-1431051047106-f1e17d81042f'
   var monicasResizer = 'http://104.131.96.71/unsafe/fit-in/' + '800x4000/';
   var imgID = imgObj.id;
@@ -15,7 +15,7 @@ Photon.Photo = function(imgObj, recBoolean){
   // var imgSafesearch = null;
   var imgWidth = imgObj.width || null;
   var imgHeight = imgObj.height || null;
-  var imgRec = recBoolean || false;
+  var imgType = imgObj.type;
 
   this.id = imgID;
   this.url = imgURL;
@@ -55,11 +55,22 @@ Photon.Photo = function(imgObj, recBoolean){
     // imgSafesearch = allSafeSearch;
   }(imgObj.tags));
 
+  this.type = imgType;
   this.tags = imgTags;
   this.landmarks = imgLandmarks;
   this.emotions = imgEmotions;
   // this.safesearch = imgSafesearch;
-  this.isRec = imgRec;
+
+  //NOTE: this one can be deprecated, been replaced by this.type
+  //However, leaving it here until dependent modules are converted
+  // this.isRec = (function(){
+  //   if (imgObj.type === 'rec'){
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }());
+
 };
 
 // NOTE: this is not needed for production

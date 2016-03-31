@@ -33,32 +33,52 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // config important variables
   var serverURL = '/';
+  var subRoutes = {
+    userPhoto: 'photos',
+    recPhoto: 'photos/recommended',
+    topRatedPhoto: 'photos/top_rated'
+  };
   var photoQtyPerRender = 96;
   var currentUser = null;
+
+  var userPhotoPromise = Promise.resolve($.ajax(serverURL + subRoutes.userPhoto));
+  var recPhotoPromise = Promise.resolve($.ajax(serverURL + subRoutes.recPhoto));
+  var topRatedPhotoPromise = Promise.resolve($.ajax(serverURL + subRoutes.topRatedPhoto));
 
   // EVENT LISTENERS ///////////////////////////////////////
 
   //////////////////////////////////////////////////////////
   // from view (API via pubsub)
   pubsub.on('photosRequested', function(direction){
-    var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender);
-    var someRecPhotos = getRecPhotosFrom(currentUser, photoQtyPerRender);
-    someRecPhotos.forEach(function(photo) {
-      somePhotos.push(photo);
+    var userRecRatio = 0.8;
+    var somePhotos = getPhotosFrom(currentUser, photoQtyPerRender * userRecRatio, 'user');
+    var someRecPhotos = getPhotosFrom(currentUser, photoQtyPerRender * (1 - userRecRatio), 'rec');
+    var payload = somePhotos.concat(someRecPhotos);
+    // shuffles array to get random photos each time
+    // http://stackoverflow.com/questions/7158654/how-to-get-random-elements-from-an-array
+    payload.sort(function(){
+      return 0.5 - Math.random();
     });
-    somePhotos.sort( function() { return 0.5 - Math.random(); } );
-    sendPhotosToView(somePhotos, direction);
+    sendPhotosToView(payload, direction);
   });
 
-  pubsub.on('recPhotosRequested', function(direction){
-    var someRecPhotos = getRecPhotosFrom(currentUser, photoQtyPerRender);
-    sendPhotosToView(somePhotos, direction);
-  });
+  // // NOTE: pending deletion
+  // pubsub.on('recPhotosRequested', function(direction){
+  //   var someRecPhotos = getRecPhotosFrom(currentUser, photoQtyPerRender);
+  //   sendPhotosToView(somePhotos, direction);
+  // });
 
   pubsub.on('userLoggedIn', function(){
     currentUser = new User();
     setCookie('loggedIn', 'true');
     fetchPhotosFor(currentUser);
+    Promise.all([userPhotoPromise, recPhotoPromise]).then(function(resolveData){
+      pubsub.emit('photosRequested', 'append');
+    }, function(rejectReason){
+      // there isn't any reject reason in this usecase
+      // leaving it anyway to learn about the normal practice
+      console.log(rejectReason);
+    });
   });
 
   pubsub.on('noUserLoggedIn', function(){
@@ -116,15 +136,26 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     });
   });
 
+  // NOTE: PENDING DELETE
+  // //////////////////////////////////////////////////////////
+  // // auto loading images upon photo fetch, which is automatic upon user login
+  // pubsub.on('userPhotosFetched', function(){
+  //   pubsub.emit('photosRequested', 'append');
+  // });
 
-  //////////////////////////////////////////////////////////
-  // auto loading images upon photo fetch, which is automatic upon user login
-  pubsub.on('userPhotosFetched', function(){
-    pubsub.emit('photosRequested', 'append');
-  });
-  pubsub.on('recPhotosFetched', function(){
-    pubsub.emit('recPhotosRequested', 'append');
-  });
+  // var userPhotoPromise = new Promise (function(resolve, reject){
+  //   pubsub.on('userPhotosNormalised', resolve('user photos ready'));
+  // });
+  //
+  // var recPhotoPromise = new Promise (function(resolve, reject){
+  //   pubsub.on('recPhotosNormalised', resolve('rec photos ready'));
+  // });
+
+  // //NOTE pending deletion
+  // pubsub.on('recPhotosFetched', function(){
+  //   pubsub.emit('recPhotosRequested', 'append');
+  // });
+
   // USER CONTROLLER ///////////////////////////////////////
 
   //////////////////////////////////////////////////////////
@@ -145,108 +176,238 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   //////////////////////////////////////////////////////////
   // fetching user photos from server
   function fetchPhotosFor(userObj){
-    // first get recommended photos
-    $.getJSON(serverURL + 'photos/recommended')
-      .done(function(data){
-        if (data.length === 0) {
-          console.log('fetchRecPhotos: rec array is empty');
-        } else {
-        // NOTE: currently server returns an array, not JSON
-          var photonImgs = [];
-          data.forEach(function(ele, i, arr){
-            photonImgs.push(new Photo(ele, true));
-          });
-          userObj.setRecPhotos(photonImgs);
-        }
-        // pubsub.emit('recPhotosFetched', userObj.photos.length);
-        
-        // now get liked photos
-        $.getJSON(serverURL + 'photos')
-          .done(function(data){
-            // NOTE: currently server returns an array, not JSON
-            var photonImgs = [];
-            data.forEach(function(ele, i, arr){
-              photonImgs.push(new Photo(ele));
-            });
-            userObj.setPhotos(photonImgs);
-            // now render all the photos
-            pubsub.emit('userPhotosFetched', userObj.photos.length);
-          })
-          .fail(function(xhr, status, error){
-            console.log(status, error);
-          });
-      })
-      .fail(function(xhr, status, error){
-        console.log(status, error);
-      });
+    userPhotoPromise.then(function(response){
+      normaliseToPhotoModel(response, 'user');
+    });
+
+    recPhotoPromise.then(function(response){
+      normaliseToPhotoModel(response, 'rec');
+    });
+
+    // NOTE pending promise testing
+    // ajaxPhotos('user');
+    // ajaxPhotos('rec');
+
+    // NOTE: pending delete
+    // ajaxRecPhotos(userObj);
+    // ajaxUserPhotos(userObj);
   }
 
+  pubsub.on('userPhotosNormalised', function(pPhotos){
+    currentUser.photos = pPhotos;
+  });
+
+  pubsub.on('recPhotosNormalised', function(pPhotos){
+    currentUser.recPhotos = pPhotos;
+  });
+
   function fetchShowTopPhotos(){
-    $.getJSON(serverURL + 'photos/top_rated')
+    topRatedPhotoPromise.then(function(response){
+      normaliseToPhotoModel(response, 'topRated');
+    });
+    // NOTE delete pending promise testing
+    // ajaxPhotos('topRated');
+  }
+
+  pubsub.on('topRatedPhotosNormalised', function(pPhotos){
+    pPhotos.sort(function(){
+      return 0.5 - Math.random();
+    });
+    var payload = pPhotos.slice(0, photoQtyPerRender / 3);
+    sendPhotosToView(payload, 'append');
+  });
+
+  function ajaxPhotos(type){
+    var subRoute = null;
+    switch (type){
+      case 'user':
+        subRoute = 'photos';
+        break;
+      case 'rec':
+        subRoute = 'photos/recommended';
+        break;
+      case 'topRated':
+        subRoute = 'photos/top_rated';
+        break;
+    }
+    $.getJSON(serverURL + subRoute)
     .done(function(data){
-      // NOTE: currently server returns an array, not JSON
-      var photonImgs = [];
-      data.forEach(function(ele, i, arr){
-        photonImgs.push(new Photo(ele));
-      });
-      photonImgs.sort( function() { return 0.5 - Math.random(); } );
-      var payload = photonImgs.slice(0, photoQtyPerRender / 3);
-      sendPhotosToView(payload, 'append');
+      if (data.length === 0){
+        console.log('ajaxPhotos: 0', type, 'photos fetched (array empty)');
+      } else {
+        // NOTE: currently server returns an array, not JSON
+        console.log('ajaxPhotos:', data.length, type, 'photos fetched');
+        normaliseToPhotoModel(data, type);
+      }
     })
     .fail(function(xhr, status, error){
       console.log(status, error);
     });
   }
 
-  //////////////////////////////////////////////////////////
-  // load user photos from user
-  function getPhotosFrom(userObj, qty){
-    var outputQty = qty;
-    var photoArray = [];
-    for (var i = 0; i < outputQty; i++){
-      // shuffles array to get random photos each time
-      // http://stackoverflow.com/questions/7158654/how-to-get-random-elements-from-an-array
-      userObj.photos.sort( function() { return 0.5 - Math.random(); } );
-      var aPhoto = userObj.photos[i];
-      if (aPhoto === undefined){
-        console.log('getPhotosFrom: no more user photos to load');
-        // TODO: maybe emit an event for frontend
-        outputQty = 0;
-      } else if (isPhotoAlreadyLoaded(aPhoto.id)){
-        outputQty++;
-      } else {
-        photoArray.push(aPhoto);
-        registerPhotoState(aPhoto.id);
-      }
-    }
-    console.log('usr photo loaded qty:', photoArray.length);
-    return photoArray;
+  function normaliseToPhotoModel(photos, type){
+    // if (type === 'rec'){
+    //   photos.forEach(function(ele, i, arr){
+    //     ele.isRec = true;
+    //   });
+    // } else {
+    //   photos.forEach(function(ele, i, arr){
+    //     ele.isRec = false;
+    //   });
+    // }
+    var payload = [];
+    photos.forEach(function(ele, i, arr){
+      ele.type = type;
+      payload.push(new Photo(ele));
+    });
+    // switch (type){
+    //   case 'user':
+    //     pubsub.emit('userPhotosNormalised', payload);
+    //     break;
+    //   case 'rec':
+    //     pubsub.emit('recPhotosNormalised', payload);
+    //     break;
+    //   case 'topRated':
+    //     pubsub.emit('topRatedPhotosNormalised', payload);
+    //     break;
+    // }
+    pubsub.emit(type + 'PhotosNormalised', payload);
   }
 
+
+  // NOTE PENDING DELETE
+  // function ajaxRecPhotos(userObj){
+  //   $.getJSON(serverURL + 'photos/recommended')
+  //     .done(function(data){
+  //       if (data.length === 0) {
+  //         console.log('fetchRecPhotos: 0 fetched, array empty');
+  //       } else {
+  //       // NOTE: currently server returns an array, not JSON
+  //         var normalisedRecPhotos = [];
+  //         data.forEach(function(ele, i, arr){
+  //           normalisedRecPhotos.push(new Photo(ele, true));
+  //         });
+  //         userObj.setRecPhotos(normalisedRecPhotos);
+  //         // pubsub.emit('recPhotosFetched', userObj.recPhotos.length);
+  //       }
+  //     })
+  //     .fail(function(xhr, status, error){
+  //       console.log(status, error);
+  //     });
+  // }
+  //
+  // function ajaxUserPhotos(userObj){
+  //   $.getJSON(serverURL + 'photos')
+  //   .done(function(data){
+  //     // NOTE: currently server returns an array, not JSON
+  //     var normUserPhotos = [];
+  //     data.forEach(function(ele, i, arr){
+  //       normUserPhotos.push(new Photo(ele));
+  //     });
+  //     userObj.setPhotos(normUserPhotos);
+  //     pubsub.emit('userPhotosFetched', userObj.photos.length);
+  //   })
+  //   .fail(function(xhr, status, error){
+  //     console.log(status, error);
+  //   });
+  // }
+  //
+  // function fetchShowTopPhotos(){
+  //   $.getJSON(serverURL + 'photos/top_rated')
+  //   .done(function(data){
+  //     // NOTE: currently server returns an array, not JSON
+  //     var photonImgs = [];
+  //     data.forEach(function(ele, i, arr){
+  //       photonImgs.push(new Photo(ele));
+  //     });
+  //     photonImgs.sort( function() { return 0.5 - Math.random(); } );
+  //     var payload = photonImgs.slice(0, photoQtyPerRender / 3);
+  //     sendPhotosToView(payload, 'append');
+  //   })
+  //   .fail(function(xhr, status, error){
+  //     console.log(status, error);
+  //   });
+  // }
+
+
   //////////////////////////////////////////////////////////
-  // load recommended user photos from user
-  function getRecPhotosFrom(userObj, qty){
-    var outputQty = qty;
-    var photoArray = [];
-    for (var i = 0; i < outputQty; i++){
-      // shuffles array to get random photos each time
-      // http://stackoverflow.com/questions/7158654/how-to-get-random-elements-from-an-array
-      userObj.recPhotos.sort( function() { return 0.5 - Math.random(); } );
-      var aPhoto = userObj.recPhotos[i];
+  // load user photos from user
+  function getPhotosFrom(userObj, qty, typeStr){
+    var photoSource = null;
+    switch (typeStr){
+      case 'rec':
+        photoSource = userObj.recPhotos;
+        break;
+      case 'user':
+        photoSource = userObj.photos;
+        break;
+    }
+    var uniqueCounter = qty;
+    var payload = [];
+    for (var i = 0; i < uniqueCounter; i++){
+      var aPhoto = photoSource[i];
       if (aPhoto === undefined){
-        console.log('getRecPhotosFrom: no more rec photos to load');
-        // TODO: maybe emit an event for frontend
-        outputQty = 0;
+        console.log('getPhotosFrom: no more', typeStr, 'photos to load');
+        break;
       } else if (isPhotoAlreadyLoaded(aPhoto.id)){
-        outputQty++;
+        uniqueCounter++;
       } else {
-        photoArray.push(aPhoto);
+        payload.push(aPhoto);
         registerPhotoState(aPhoto.id);
       }
     }
-    console.log('rec photos loaded qty:', photoArray.length);
-    return photoArray;
+    console.log(typeStr, 'photo loaded qty:', payload.length);
+    return payload;
   }
+
+  // NOTE PENDING DELETE
+  // function getPhotosFrom(userObj, qty){
+  //   var outputQty = qty;
+  //   var photoArray = [];
+  //   for (var i = 0; i < outputQty; i++){
+  //     // shuffles array to get random photos each time
+  //     // http://stackoverflow.com/questions/7158654/how-to-get-random-elements-from-an-array
+  //     userObj.photos.sort( function() { return 0.5 - Math.random(); } );
+  //     var aPhoto = userObj.photos[i];
+  //     if (aPhoto === undefined){
+  //       console.log('getPhotosFrom: no more user photos to load');
+  //       // TODO: maybe emit an event for frontend
+  //       outputQty = 0;
+  //     } else if (isPhotoAlreadyLoaded(aPhoto.id)){
+  //       outputQty++;
+  //     } else {
+  //       photoArray.push(aPhoto);
+  //       registerPhotoState(aPhoto.id);
+  //     }
+  //   }
+  //   console.log('usr photo loaded qty:', photoArray.length);
+  //   return photoArray;
+  // }
+  //
+  // //////////////////////////////////////////////////////////
+  // // load recommended user photos from user
+  // function getRecPhotosFrom(userObj, qty){
+  //   var outputQty = qty;
+  //   var photoArray = [];
+  //   for (var i = 0; i < outputQty; i++){
+  //     // shuffles array to get random photos each time
+  //     // http://stackoverflow.com/questions/7158654/how-to-get-random-elements-from-an-array
+  //     userObj.recPhotos.sort( function() { return 0.5 - Math.random(); } );
+  //     var aPhoto = userObj.recPhotos[i];
+  //     if (aPhoto === undefined){
+  //       console.log('getRecPhotosFrom: no more rec photos to load');
+  //       // TODO: maybe emit an event for frontend
+  //       outputQty = 0;
+  //     } else if (isPhotoAlreadyLoaded(aPhoto.id)){
+  //       outputQty++;
+  //     } else {
+  //       photoArray.push(aPhoto);
+  //       registerPhotoState(aPhoto.id);
+  //     }
+  //   }
+  //   console.log('rec photos loaded qty:', photoArray.length);
+  //   return photoArray;
+  // }
 
   // PHOTO CONTROLLER //////////////////////////////////////
 
@@ -389,5 +550,5 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     getCookie: getCookie,
     deleteCookie: deleteCookie
   };
-  
+
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));

@@ -11,8 +11,7 @@
   // 'renderImgsToPage', photoObject (.photos, .direction)
   // 'userLoggedIn', null
   // 'noUserLoggedIn', null
-  // 'userPhotosFetched', qty
-  // 'recPhotosFetched', qty
+  // type + 'PhotosNormalised', payload // type: user, rec, topRated
   // 'searchRequested', string
   // 'nukePhotosFromView', ('all', or array of photo URLs to delete)
   // 'allPhotosNuked', true
@@ -20,6 +19,11 @@
   // 'recBtnClicked', $btn
   // 'recRegistered', $btn
   // 'unlikeBtnClicked', $btn
+  // 'photosRequested', directionString
+
+  // NOTE: PENDING DELETE
+  // 'userPhotosFetched', qty
+  // 'recPhotosFetched', qty
 
 if (!window.Photon) {
   window.Photon = {};

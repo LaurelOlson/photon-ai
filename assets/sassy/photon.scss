@@ -73,9 +73,11 @@ menu.pMenu {
   transition: $defaultTransition;
   box-shadow: inset -10px 0px 20px 0px rgba(50, 50, 50, 0.4);
   padding: 20px;
-
+  h2 {
+    color: $grey;
+    font-size: 1.5em;
+  }
   h1,
-  h2,
   p,
   i {
     color: $white;
@@ -86,22 +88,6 @@ menu.pMenu {
     }
     &:hover {
       color: $blue;
-    }
-  }
-  #info {
-    color: $grey-dark;
-    width: 100%;
-    position: absolute;;
-    bottom: 10px;
-    text-align: center;
-    a {
-      color: $grey;
-    }
-    :hover {
-      color: $white;
-    }
-    :active {
-      color: $primary;
     }
   }
   &.is-active{
