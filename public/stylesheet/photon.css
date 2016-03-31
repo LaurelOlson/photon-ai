@@ -1,9 +1,11 @@
 .tag {
   margin: 2px; }
 
+body {
+  overflow-x: hidden; }
+
 main {
   position: relative;
-  overflow-x: hidden;
   transition: all 600ms ease; }
   main.is-inactive {
     transform: translateX(300px); }
@@ -18,10 +20,32 @@ menu.pMenu {
   left: -300px;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
   transition: all 600ms ease;
   box-shadow: inset -10px 0px 20px 0px rgba(50, 50, 50, 0.4);
   padding: 20px; }
+  menu.pMenu h1,
+  menu.pMenu h2,
+  menu.pMenu p,
+  menu.pMenu i {
+    color: #fff; }
+  menu.pMenu i:active {
+    color: #1fc8db; }
+  menu.pMenu i:hover {
+    color: #42afe3; }
+  menu.pMenu #info {
+    color: #69707a;
+    width: 100%;
+    position: absolute;
+    bottom: 10px;
+    text-align: center; }
+    menu.pMenu #info a {
+      color: #aeb1b5; }
+    menu.pMenu #info :hover {
+      color: #fff; }
+    menu.pMenu #info :active {
+      color: #1fc8db; }
   menu.pMenu.is-active {
     transform: translateX(300px); }
 
@@ -55,6 +79,12 @@ menu.pMenu {
 
 .navpadding {
   width: 100%; }
+  @media (min-width: 1025px) {
+    .navpadding {
+      height: 93px; } }
+  @media (max-width: 1024px) {
+    .navpadding {
+      height: 100px; } }
 
 #nestContainer .nestBox {
   overflow: hidden;

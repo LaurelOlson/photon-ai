@@ -35,6 +35,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   var serverURL = '/';
   var photoQtyPerRender = 96;
   var currentUser = null;
+
   // EVENT LISTENERS ///////////////////////////////////////
 
   //////////////////////////////////////////////////////////
@@ -49,21 +50,19 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     sendPhotosToView(somePhotos, direction);
   });
 
-  // pubsub.on('recPhotosRequested', function(direction){
-  //   var someRecPhotos = getRecPhotosFrom(currentUser, photoQtyPerRender);
-  //   sendPhotosToView(someRecPhotos, direction);
-  // });
+  pubsub.on('recPhotosRequested', function(direction){
+    var someRecPhotos = getRecPhotosFrom(currentUser, photoQtyPerRender);
+    sendPhotosToView(somePhotos, direction);
+  });
 
   pubsub.on('userLoggedIn', function(){
     currentUser = new User();
     setCookie('loggedIn', 'true');
-    // localStorage.setItem('loggedIn', 'true');
     fetchPhotosFor(currentUser);
   });
 
   pubsub.on('noUserLoggedIn', function(){
     setCookie('loggedIn', 'false');
-    // localStorage.setItem('loggedIn', 'false');
     fetchShowTopPhotos();
   });
 
@@ -123,11 +122,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   pubsub.on('userPhotosFetched', function(){
     pubsub.emit('photosRequested', 'append');
   });
-  // pubsub.on('recPhotosFetched', function(){
-  //   pubsub.emit('recPhotosRequested', 'append');
-  // });
-
-
+  pubsub.on('recPhotosFetched', function(){
+    pubsub.emit('recPhotosRequested', 'append');
+  });
   // USER CONTROLLER ///////////////////////////////////////
 
   //////////////////////////////////////////////////////////
@@ -145,7 +142,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     document.cookie = key + '=' +'; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   }
 
-
   //////////////////////////////////////////////////////////
   // fetching user photos from server
   function fetchPhotosFor(userObj){
@@ -154,16 +150,16 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
       .done(function(data){
         if (data.length === 0) {
           console.log('fetchRecPhotos: rec array is empty');
-          pubsub.emit('userPhotosFetched', (userObj.photos.length + userObj.recPhotos.length));
-          return false;
-        }
+        } else {
         // NOTE: currently server returns an array, not JSON
-        var photonImgs = [];
-        data.forEach(function(ele, i, arr){
-          photonImgs.push(new Photo(ele, true));
-        });
-        userObj.setRecPhotos(photonImgs);
-
+          var photonImgs = [];
+          data.forEach(function(ele, i, arr){
+            photonImgs.push(new Photo(ele, true));
+          });
+          userObj.setRecPhotos(photonImgs);
+        }
+        // pubsub.emit('recPhotosFetched', userObj.photos.length);
+        
         // now get liked photos
         $.getJSON(serverURL + 'photos')
           .done(function(data){
@@ -174,7 +170,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
             });
             userObj.setPhotos(photonImgs);
             // now render all the photos
-            pubsub.emit('userPhotosFetched', (userObj.photos.length + userObj.recPhotos.length));
+            pubsub.emit('userPhotosFetched', userObj.photos.length);
           })
           .fail(function(xhr, status, error){
             console.log(status, error);
@@ -377,7 +373,6 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     return true;
   }
 
-
   //////////////////////////////////////////////////////////
   // testing variables
 
@@ -394,4 +389,5 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
     getCookie: getCookie,
     deleteCookie: deleteCookie
   };
+  
 }(Photon.eventBus, Photon.view, Photon.User, Photon.Photo));

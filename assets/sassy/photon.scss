@@ -45,14 +45,13 @@ $defaultTransition: all 600ms ease;
 ////////////////////////////////////////////////////////////////
 // LAYOUT //////////////////////////////////////////////////////
 
-
 body {
   // position: relative;
+  overflow-x: hidden;
 }
 
 main {
   position: relative;
-  overflow-x: hidden;
   transition: $defaultTransition;
   &.is-inactive {
     transform: translateX(300px);
@@ -69,10 +68,42 @@ menu.pMenu {
   left: -300px;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
   transition: $defaultTransition;
   box-shadow: inset -10px 0px 20px 0px rgba(50, 50, 50, 0.4);
   padding: 20px;
+
+  h1,
+  h2,
+  p,
+  i {
+    color: $white;
+  }
+  i {
+    &:active {
+      color: $primary;
+    }
+    &:hover {
+      color: $blue;
+    }
+  }
+  #info {
+    color: $grey-dark;
+    width: 100%;
+    position: absolute;;
+    bottom: 10px;
+    text-align: center;
+    a {
+      color: $grey;
+    }
+    :hover {
+      color: $white;
+    }
+    :active {
+      color: $primary;
+    }
+  }
   &.is-active{
     transform: translateX(300px);
   }
@@ -120,7 +151,12 @@ menu.pMenu {
 
 .navpadding {
   width: 100%;
-  // height: 1px; // auto set by photon
+  @media (min-width: 1025px) {
+    height: 93px;
+  }
+  @media (max-width: 1024px) {
+    height: 100px;
+  }
 }
 
 #nestContainer {
