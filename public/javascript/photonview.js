@@ -320,14 +320,14 @@ Photon.view = (function(pubsub){
 
     $sizeUp.on('click', function(){
       var newVal = +$sizeNumerator.text() + 1;
-      nestOptions.minWidth += 30;
+      nestOptions.minWidth += 15;
       $sizeNumerator.text(newVal);
       $nestContainer.nested('refresh', nestOptions);
     });
 
     $sizeDown.on('click', function(){
       var newVal = +$sizeNumerator.text() - 1;
-      nestOptions.minWidth -= 30;
+      nestOptions.minWidth -= 15;
       $sizeNumerator.text(newVal);
       $nestContainer.nested('refresh', nestOptions);
     });
