@@ -309,14 +309,29 @@ function seedTag(photo) {
     var landmarks = body.responses[0].landmarkAnnotations;
     var labels = body.responses[0].labelAnnotations;
 
-    var emotions = [];
-
     var faceAnnotations = body.responses[0].faceAnnotations;
+
+    // 
     if (faceAnnotations && faceAnnotations[0]) {
-      var joyLikelihood = faceAnnotations[0].joyLikelihood
-      var sorrowLikelihood = faceAnnotations[0].sorrowLikelihood
-      tags.push({ name: f})
+      // console.log('\n\n\n' + faceAnnotations[0].joyLikelihood + '\n\n\n');
+      if (faceAnnotations[0].joyLikelihood == 'VERY_LIKELY' || faceAnnotations[0].joyLikelihood == 'LIKELY') {
+        console.log('\n\n HAPPY \n\n');
+        tags.push({ name: 'happy', type: 'emotion' });
+      }
+      if (faceAnnotations[0].sorrowLikelihood == 'VERY_LIKELY' || faceAnnotations[0].sorrowLikelihood == 'LIKELY') {
+        console.log('\n\n SAD \n\n');
+        tags.push({ name: 'sad', type: 'emotion' });
+      }
+      if (faceAnnotations[0].angerLikelihood == 'VERY_LIKELY' || faceAnnotations[0].angerLikelihood == 'LIKELY') {
+        console.log('\n\n ANGRY \n\n');
+        tags.push({ name: 'angry', type: 'emotion' });
+      }
+      if (faceAnnotations[0].surpriseLikelihood == 'VERY_LIKELY' || faceAnnotations[0].surpriseLikelihood == 'LIKELY') {
+        console.log('\n\n SURPRISED \n\n');
+        tags.push({ name: 'surprised', type: 'emotion' });
+      }
     }
+
     if (labels) {
       labels.forEach(function(label) {
         if (label.score >= MIN_LABEL_SCORE) {
@@ -324,6 +339,7 @@ function seedTag(photo) {
         }
       });
     }
+
     if (landmarks) {
       landmarks.forEach(function(landmark) {
         tags.push({ name: landmark.description, type: 'landmark' });
