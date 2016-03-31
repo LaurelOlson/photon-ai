@@ -116,28 +116,9 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   pubsub.on('recPhotosFetched', function(){
     pubsub.emit('recPhotosRequested', 'append');
   });
+
+
   // USER CONTROLLER ///////////////////////////////////////
-
-  //////////////////////////////////////////////////////////
-  // cookies // NOTE: untested
-  function setUserIDCookie(userObj){
-    if (userObj){
-      document.cookie = 'userID=' + userObj.id;
-      return true;
-    }
-    console.log('setUserIDCookie: userObj missing');
-    return false;
-  }
-  function getUserIDCookie(){
-    return document.cookie.replace(/(?:(?:^|.*;\s*)userID\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-  }
-  function removeUserIDCookie(){
-    document.cookie = 'userID=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    return true;
-  }
-
-  //////////////////////////////////////////////////////////
-  // user login and create user object
 
 
   //////////////////////////////////////////////////////////
@@ -314,7 +295,7 @@ Photon.Controller = (function(pubsub, view, User, Photo) {
   function tagSearch(termsArr){
     var matchedPhotos = [];
     currentUser.photos.forEach(function(ele, i, arr){
-      var allLabels = ele.tags.concat(ele.landmarks);
+      var allLabels = ele.tags.concat(ele.landmarks.concat(ele.emotions));
       loop1:
       for (var j = 0; j < allLabels.length; j++){
         var haystack = allLabels[j].toLowerCase();

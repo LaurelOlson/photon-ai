@@ -95,7 +95,7 @@ Photon.view = (function(pubsub){
     if (imgObj.isRec){
       $imgElement.addClass('photonRec');
       var $payload = $('<div>').addClass('overlay');
-      var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
+      var $payloadHorse = $('<button>').addClass('button is-primary').text('+');
       $payload.append($payloadHorse);
       $imgElement.append($payload);
     } else {
