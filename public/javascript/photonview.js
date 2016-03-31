@@ -76,9 +76,9 @@ Photon.view = (function(pubsub){
     return output;
   }
 
-  function addUnlikeButton($target){
+  function addUnlikeButtonTo($target){
     var $payload = $('<div>').addClass('overlay');
-    var $payloadHorse = $('<button>').addClass('button is-small is-outlined').text('unlike');
+    var $payloadHorse = $('<button>').addClass('button is-small is-outlined').text('X');
     $payload.append($payloadHorse);
     $target.append($payload);
     return $target;
@@ -375,7 +375,7 @@ Photon.view = (function(pubsub){
     $nestContainer.on('mouseenter', '.photonRec', function(enterEvt){
       if ($(this).children('.overlay').length === 0) {
         var $payload = $('<div>').addClass('overlay');
-        var $payloadHorse = $('<button>').addClass('button is-warning').text('add to my collection');
+        var $payloadHorse = $('<button>').addClass('button is-warning').text('+');
         $payload.append($payloadHorse);
         $(this).append($payload);
       }
@@ -398,11 +398,12 @@ Photon.view = (function(pubsub){
     });
 
     pubsub.on('recRegistered', function($btn){
-      $btn.removeClass('is-warning').removeClass('is-loading').addClass('is-success').text('added to collection');
+      $btn.removeClass('is-warning').removeClass('is-loading').addClass('is-success').text('added');
       $btn.prop('disabled', true);
       setTimeout(function(){
         var $newLiked = $btn.closest('.photonRec').removeClass('photonRec').addClass('photonLiked');
-        addUnlikeButton($newLiked);
+        $btn.remove();
+        addUnlikeButtonTo($newLiked);
       }, 800);
     });
 
@@ -414,7 +415,7 @@ Photon.view = (function(pubsub){
       }
       if ($(this).children('.overlay').length === 0) {
         var $payload = $('<div>').addClass('overlay');
-        var $payloadHorse = $('<button>').addClass('button is-small is-outlined').text('unlike');
+        var $payloadHorse = $('<button>').addClass('button is-small is-outlined').text('X');
         $payload.append($payloadHorse);
         $(this).append($payload);
       }
