@@ -77,11 +77,9 @@ Photon.view = (function(pubsub){
   }
 
   function addUnlikeButtonTo($target){
-    var $payload = $('<div>').addClass('overlay');
+    // target must be the nestBox container div
     var $payloadHorse = $('<button>').addClass('button is-small is-outlined').text('X');
-    $payload.append($payloadHorse);
-    $target.append($payload);
-    return $target;
+    $target.find('.overlay').append($payloadHorse);
   }
 
   function convertImgToNest(imgObj){
@@ -401,8 +399,8 @@ Photon.view = (function(pubsub){
       $btn.removeClass('is-warning').removeClass('is-loading').addClass('is-success').text('added');
       $btn.prop('disabled', true);
       setTimeout(function(){
-        var $newLiked = $btn.closest('.photonRec').removeClass('photonRec').addClass('photonLiked');
         $btn.remove();
+        var $newLiked = $btn.closest('.photonRec').addClass('photonLiked').removeClass('photonRec');
         addUnlikeButtonTo($newLiked);
       }, 800);
     });
