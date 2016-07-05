@@ -1,8 +1,7 @@
 'use strict';
+/* globals require:false, module:false, console:false */
 
-var configDB = require('../config/database.js');
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize(configDB.url);
 var models = require('../models/index');
 var Promise = Sequelize.Promise;
 var fs = require('fs');
@@ -21,34 +20,35 @@ module.exports = function(app, passport, raccoon) {
   app.get('/photos/recommended', isLoggedIn, function(req, res) {
     var id = req.user.id;
     raccoon.recommendFor(id, 500, function(results) {
-      console.log(results);
-      models.photo.findAll({ where: { id: { in: results }}}).then(addPhotos).then(function(user_photos) {
-        res.json(user_photos);
-      });
+      models.photo.findAll({ where: { id: { in: results } } })
+        .then(addPhotos)
+        .then(function(user_photos) {
+          res.json(user_photos);
+        });
     });
   });
 
   /* GET random photos */
-  app.get('/photos/top_rated', function(req, res, next) {
+  app.get('/photos/top_rated', function(req, res) {
     raccoon.bestRated(function(results) {
       models.photo.findAll({ where: { id: { in: results } } })
         .then(addPhotos)
-          .then(function(user_photos) {
-            res.json(user_photos);
-          });
+        .then(function(user_photos) {
+          res.json(user_photos);
+        });
     });
   });
 
   /* GET user photos */
-  app.get('/photos', isLoggedIn, function(req, res, next) {
+  app.get('/photos', isLoggedIn, function(req, res) {
     var id = req.user.id;
     models.user.findById(id)
       .then(function(user) {
         user.getLikes()
           .then(addPhotos)
-            .then(function(user_photos) {
-              res.json(user_photos);
-            });
+          .then(function(user_photos) {
+            res.json(user_photos);
+          });
       });
   });
 
@@ -78,7 +78,7 @@ module.exports = function(app, passport, raccoon) {
     models.photo.findById(id).then(function(photo) {
       models.user.findById(req.user.id).then(function(user) {
         user.addLike(photo);
-        raccoon.liked(req.user.id, photo.id, function() { res.json('success') });
+        raccoon.liked(req.user.id, photo.id, function() { res.json('success'); });
       });
     });
   });
@@ -89,7 +89,7 @@ module.exports = function(app, passport, raccoon) {
     models.photo.findById(id).then(function(photo) {
       models.user.findById(req.user.id).then(function(user) {
         user.removeLike(photo);
-        raccoon.disliked(req.user.id, id, function() { res.json('success') });
+        raccoon.disliked(req.user.id, id, function() { res.json('success'); });
       });
     });
   });
@@ -105,11 +105,6 @@ module.exports = function(app, passport, raccoon) {
 
   // locally
 
-  // show login form
-  app.get('/login', isLoggedOut, function(req, res) {
-    res.render('login.ejs', { message: req.flash('loginMessage') });
-  });
-
   // local login extension
   app.post('/login/ext', passport.authenticate('local-login', {
    successRedirect: '/login/ext',
@@ -119,35 +114,23 @@ module.exports = function(app, passport, raccoon) {
 
   // facebook login extension
   app.post('/login/ext/facebook', function(req, res) {
-    models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user, created) {
+    models.user.findOrCreate({ where: { fbook_token: req.token } }).spread(function(user) {
       res.json(user.id);
     });
   });
 
-  app.get('/login/ext', function(req, res) {
-    res.json(req.user.id);
-  });
+  // app.get('/login/ext', function(req, res) {
+  //   res.json(req.user.id);
+  // });
 
+  // local login web app
   app.post('/login', passport.authenticate('local-login', {
     successRedirect: '/',
     failureRedirect: '/',
     failureFlash: true
   }));
 
-  // SIGNUP
-
-  // show signup form
-  app.get('/signup', isLoggedOut, function(req, res) {
-    res.render('signup.ejs', { message: req.flash('loginMessage') });
-  });
-
-  app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/',
-    failureRedirect: '/signup',
-    failureFlash: true
-  }));
-
-  // facebook
+  // facebook login web app
 
   // send to facebook for authentication
   app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
@@ -157,6 +140,14 @@ module.exports = function(app, passport, raccoon) {
     successRedirect: '/',
     failureRedirect: '/'
   }));
+
+  // SIGNUP
+
+  // app.post('/signup', passport.authenticate('local-signup', {
+  //   successRedirect: '/',
+  //   failureRedirect: '/signup',
+  //   failureFlash: true
+  // }));
 
   // AUTHORIZE (ALREADY LOGGED IN)
 
@@ -185,11 +176,6 @@ module.exports = function(app, passport, raccoon) {
 
 };
 
-function isLoggedOut(req, res, next) {
-  if (req.isAuthenticated()) { res.redirect('/'); }
-  return next();
-}
-
 function isLoggedIn(req, res, next) {
   // if authenticated, carry on
   if (req.isAuthenticated()) { return next(); }
@@ -198,10 +184,13 @@ function isLoggedIn(req, res, next) {
 }
 
 function addPhotos(photos) {
-  // Make addPhotos return a promise.
-  // This means when we call .then(addPhotos) on line 16, add photos won't return until the promise is resolved.
-  // Once the promise is resolved, .then(function(user_photos) { .. }) will run, taking in the argument of resolve_photos(), user_photos.
-  // return console.log(photos);
+  /*
+    Make addPhotos return a promise.
+    This means when we call .then(addPhotos) on line 25, 
+    add photos won't return until the promise is resolved.
+    Once the promise is resolved, .then(function(user_photos) { .. }) will run, 
+    taking in the argument of resolve_photos(), user_photos. 
+  */
   return new Promise(function(resolve_photos, reject_photos) {
 
     var user_photos = [];
@@ -231,10 +220,10 @@ function addPhotos(photos) {
             photo_hash.tags.push(tag_hash);
           }).then(resolve_photo); // once we've iterated over each tag, move onto the next photo
         });
-        // .then(resolve_photo); // once we've iterated over each tag, move onto the next photo
-      }); // promise
 
-    }).then(function() { resolve_photos(user_photos); }); // end photos.forEach
+      });
+
+    }).then(function() { resolve_photos(user_photos); }); // end Promise.each
   }); // end promise returned by addPhotos
 } // end addPhotos
 
@@ -304,32 +293,27 @@ function seedTag(photo) {
   }
 
   function parseResponse(error, response, body) {
+
     if (error) {
       return console.error(error);
     }
+
     var tags = [];
     var landmarks = body.responses[0].landmarkAnnotations;
     var labels = body.responses[0].labelAnnotations;
-
     var faceAnnotations = body.responses[0].faceAnnotations;
 
-    // 
     if (faceAnnotations && faceAnnotations[0]) {
-      // console.log('\n\n\n' + faceAnnotations[0].joyLikelihood + '\n\n\n');
       if (faceAnnotations[0].joyLikelihood == 'VERY_LIKELY' || faceAnnotations[0].joyLikelihood == 'LIKELY') {
-        console.log('\n\n HAPPY \n\n');
         tags.push({ name: 'happy', type: 'emotion' });
       }
       if (faceAnnotations[0].sorrowLikelihood == 'VERY_LIKELY' || faceAnnotations[0].sorrowLikelihood == 'LIKELY') {
-        console.log('\n\n SAD \n\n');
         tags.push({ name: 'sad', type: 'emotion' });
       }
       if (faceAnnotations[0].angerLikelihood == 'VERY_LIKELY' || faceAnnotations[0].angerLikelihood == 'LIKELY') {
-        console.log('\n\n ANGRY \n\n');
         tags.push({ name: 'angry', type: 'emotion' });
       }
       if (faceAnnotations[0].surpriseLikelihood == 'VERY_LIKELY' || faceAnnotations[0].surpriseLikelihood == 'LIKELY') {
-        console.log('\n\n SURPRISED \n\n');
         tags.push({ name: 'surprised', type: 'emotion' });
       }
     }
